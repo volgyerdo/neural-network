@@ -3,12 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package volgyerdo.neural.structure;
+package volgyerdo.neural.logic;
+
+import volgyerdo.neural.structure.Activation;
 
 /**
  *
  * @author Pőcze Zsolt
  */
-public class NeuralNetwork {
+public class ActivationLogic {
+    
+    public static float activate(float input, Activation parameters){
+        
+        return 0;
+    }
     
 }
