@@ -13,7 +13,8 @@ public class Activation {
     
     public float shiftX;
     public float shiftY;
-    public float stretch;
+    public float stretchX;
+    public float stretchY;
     public float leftSlope;
     public float rigthSlope;
 
