@@ -17,8 +17,33 @@ package volgyerdo.math.matrix;
 
 /**
  *
- * @author Pocze Zsolt
+ * @author Volgyerdo Nonprofit Kft.
  */
-public class Matrix {
-    
+public abstract class Matrix {
+
+    public final int[] dimensions;
+
+    protected Matrix(int... dimensions) {
+        if (dimensions.length == 0) {
+            throw new IllegalArgumentException("Dimensions element count is zero.");
+        }
+        this.dimensions = dimensions;
+    }
+
+    protected int index(int... indices) {
+        if (indices.length != dimensions.length) {
+            throw new IllegalArgumentException("Indices element count does not equal with dimensions element count.");
+        }
+        if (indices.length == 0) {
+            return indices[0];
+        }
+        int index = indices[0];
+        int multiplier = 1;
+        for (int i = 1; i < indices.length; i++) {
+            multiplier *= dimensions[i - 1];
+            index += multiplier * indices[i];
+        }
+        return index;
+    }
+
 }
