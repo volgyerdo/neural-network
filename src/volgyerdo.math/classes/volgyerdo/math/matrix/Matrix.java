@@ -23,17 +23,30 @@ public abstract class Matrix {
 
     public final int[] dimensions;
 
+    public static Matrix createByteMatrix(int... dimensions) {
+        return new ByteMatrix();
+    }
+
+    public static Matrix createShortMatrix(int... dimensions) {
+        return new ShortMatrix();
+    }
+
+    public static Matrix createFloatMatrix(int... dimensions) {
+        return new ShortMatrix();
+    }
+
     protected Matrix(int... dimensions) {
-        if (dimensions.length == 0) {
-            throw new IllegalArgumentException("Dimensions element count is zero.");
-        }
+        checkNewDimensions(dimensions);
         this.dimensions = dimensions;
+    }
+    
+    @Override
+    public Matrix clone() throws CloneNotSupportedException{
+        return (Matrix)super.clone();
     }
 
     protected int index(int... indices) {
-        if (indices.length != dimensions.length) {
-            throw new IllegalArgumentException("Indices element count does not equal with dimensions element count.");
-        }
+        checkDimensionCount(indices);
         if (indices.length == 0) {
             return indices[0];
         }
@@ -46,4 +59,85 @@ public abstract class Matrix {
         return index;
     }
 
+    public abstract void setValue(byte value, int... indices);
+
+    public abstract void setValue(short value, int... indices);
+
+    public abstract void setValue(float value, int... indices);
+
+    public abstract byte getByteValue(int... indices);
+
+    public abstract short getShortValue(int... indices);
+
+    public abstract float getFloatValue(int... indices);
+
+    public abstract void randomize(byte min, byte max);
+
+    public abstract void randomize(short min, short max);
+
+    public abstract void randomize(float min, float max);
+
+    public abstract void add(byte scaler);
+
+    public abstract void add(short scaler);
+
+    public abstract void add(float scaler);
+
+    public Matrix add(Matrix matrix) {
+        checkDimensionCount(matrix.dimensions);
+        checkDimensions(matrix);
+        if (matrix instanceof ByteMatrix) {
+            return add((ByteMatrix) matrix);
+        }else if (matrix instanceof ShortMatrix) {
+            return add((ShortMatrix) matrix);
+        }else if (matrix instanceof FloatMatrix) {
+            return add((FloatMatrix) matrix);
+        }
+        return null;
+    }
+
+    abstract Matrix add(ByteMatrix matrix);
+
+    abstract Matrix add(ShortMatrix matrix);
+
+    abstract Matrix add(FloatMatrix matrix);
+    
+    public Matrix substract(Matrix matrix) {
+        checkDimensionCount(matrix.dimensions);
+        checkDimensions(matrix);
+        if (matrix instanceof ByteMatrix) {
+            return substract((ByteMatrix) matrix);
+        }else if (matrix instanceof ShortMatrix) {
+            return substract((ShortMatrix) matrix);
+        }else if (matrix instanceof FloatMatrix) {
+            return substract((FloatMatrix) matrix);
+        }
+        return null;
+    }
+
+    abstract Matrix substract(ByteMatrix matrix);
+
+    abstract Matrix substract(ShortMatrix matrix);
+
+    abstract Matrix substract(FloatMatrix matrix);
+
+    private void checkNewDimensions(int... dimensions){
+        if (dimensions.length == 0) {
+            throw new IllegalArgumentException("Dimensions element count is zero.");
+        }
+    }
+    
+    private void checkDimensionCount(int... dimensions){
+        if (dimensions.length != dimensions.length) {
+            throw new IllegalArgumentException("Matrix dimension element count does not equal.");
+        }
+    }
+    
+    private void checkDimensions(Matrix matrix){
+        for (int i = 0; i < dimensions.length; i++) {
+            if (matrix.dimensions[i] != dimensions[i]) {
+                throw new IllegalArgumentException("Matrix dimensions does not match.");
+            }
+        }
+    }
 }

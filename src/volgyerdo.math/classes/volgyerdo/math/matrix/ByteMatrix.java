@@ -16,12 +16,13 @@
 package volgyerdo.math.matrix;
 
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  *
  * @author Pocze Zsolt
  */
-public class ByteMatrix extends Matrix {
+class ByteMatrix extends Matrix {
 
     public final byte[] values;
 
@@ -33,12 +34,34 @@ public class ByteMatrix extends Matrix {
         values = new byte[size];
     }
 
-    public byte getValue(int... indices) {
+    @Override
+    public void setValue(byte value, int... indices) {
+        values[index(indices)] = value;
+    }
+
+    @Override
+    public void setValue(float value, int... indices) {
+        values[index(indices)] = (byte) value;
+    }
+
+    @Override
+    public void setValue(short value, int... indices) {
+        values[index(indices)] = (byte) value;
+    }
+
+    @Override
+    public byte getByteValue(int... indices) {
         return values[index(indices)];
     }
 
-    public void setValue(byte value, int... indices) {
-        values[index(indices)] = value;
+    @Override
+    public short getShortValue(int... indices) {
+        return values[index(indices)];
+    }
+
+    @Override
+    public float getFloatValue(int... indices) {
+        return values[index(indices)];
     }
 
     @Override
@@ -65,5 +88,116 @@ public class ByteMatrix extends Matrix {
         }
         return true;
     }
-    
+
+    @Override
+    public void randomize(byte min, byte max) {
+        Random randomizer = new Random();
+        randomizer.nextBytes(values);
+    }
+
+    @Override
+    public void randomize(short min, short max) {
+        randomize((byte) min, (byte) max);
+    }
+
+    @Override
+    public void randomize(float min, float max) {
+        randomize((byte) min, (byte) max);
+    }
+
+    @Override
+    public void add(byte scaler) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] += scaler;
+        }
+    }
+
+    @Override
+    public void add(short scaler) {
+        add((byte) scaler);
+    }
+
+    @Override
+    public void add(float scaler) {
+        add((byte) scaler);
+    }
+
+    @Override
+    Matrix add(ByteMatrix matrix) {
+        try {
+            ByteMatrix clone = (ByteMatrix) clone();
+            for (int i = 0; i < values.length; i++) {
+                clone.values[i] = (byte) (values[i] + matrix.values[i]);
+            }
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+        return null;
+    }
+
+    @Override
+    Matrix add(ShortMatrix matrix) {
+        try {
+            ShortMatrix clone = (ShortMatrix) clone();
+            for (int i = 0; i < values.length; i++) {
+                clone.values[i] = (byte) (values[i] + matrix.values[i]);
+            }
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+        return null;
+    }
+
+    @Override
+    Matrix add(FloatMatrix matrix) {
+        try {
+            FloatMatrix clone = (FloatMatrix) clone();
+            for (int i = 0; i < values.length; i++) {
+                clone.values[i] = (byte) (values[i] + matrix.values[i]);
+            }
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+        return null;
+    }
+
+    @Override
+    Matrix substract(ByteMatrix matrix) {
+        try {
+            ByteMatrix clone = (ByteMatrix) clone();
+            for (int i = 0; i < values.length; i++) {
+                clone.values[i] = (byte) (values[i] - matrix.values[i]);
+            }
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+        return null;
+    }
+
+    @Override
+    Matrix substract(ShortMatrix matrix) {
+        try {
+            ShortMatrix clone = (ShortMatrix) clone();
+            for (int i = 0; i < values.length; i++) {
+                clone.values[i] = (byte) (values[i] - matrix.values[i]);
+            }
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+        return null;
+    }
+
+    @Override
+    Matrix substract(FloatMatrix matrix) {
+        try {
+            FloatMatrix clone = (FloatMatrix) clone();
+            for (int i = 0; i < values.length; i++) {
+                clone.values[i] = (byte) (values[i] - matrix.values[i]);
+            }
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+        return null;
+    }
+
 }
