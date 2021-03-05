@@ -22,7 +22,6 @@ package volgyerdo.math.matrix;
 public abstract class Matrix {
 
     public final int[] dimensions;
-    public final int[] multipliers;
 
     public static Matrix createByteMatrix(int... dimensions) {
         return new ByteMatrix();
@@ -39,16 +38,11 @@ public abstract class Matrix {
     protected Matrix(int... dimensions) {
         checkNewDimensions(dimensions);
         this.dimensions = dimensions;
-        multipliers = new int[dimensions.length-1];
-        multipliers[0] = 1;
-        for (int i = 0; i < dimensions.length - 1; i++) {
-            multipliers[i + 1] = multipliers[i] * dimensions[i];
-        }
     }
-
+    
     @Override
-    public Matrix clone() throws CloneNotSupportedException {
-        return (Matrix) super.clone();
+    public Matrix clone() throws CloneNotSupportedException{
+        return (Matrix)super.clone();
     }
 
     protected int index(int... indices) {
@@ -57,8 +51,10 @@ public abstract class Matrix {
             return indices[0];
         }
         int index = indices[0];
+        int multiplier = 1;
         for (int i = 1; i < indices.length; i++) {
-            index += multipliers[i] * indices[i];
+            multiplier *= dimensions[i - 1];
+            index += multiplier * indices[i];
         }
         return index;
     }
@@ -92,9 +88,9 @@ public abstract class Matrix {
         checkDimensions(matrix);
         if (matrix instanceof ByteMatrix) {
             return add((ByteMatrix) matrix);
-        } else if (matrix instanceof ShortMatrix) {
+        }else if (matrix instanceof ShortMatrix) {
             return add((ShortMatrix) matrix);
-        } else if (matrix instanceof FloatMatrix) {
+        }else if (matrix instanceof FloatMatrix) {
             return add((FloatMatrix) matrix);
         }
         return null;
@@ -105,15 +101,15 @@ public abstract class Matrix {
     abstract Matrix add(ShortMatrix matrix);
 
     abstract Matrix add(FloatMatrix matrix);
-
+    
     public Matrix substract(Matrix matrix) {
         checkDimensionCount(matrix.dimensions);
         checkDimensions(matrix);
         if (matrix instanceof ByteMatrix) {
             return substract((ByteMatrix) matrix);
-        } else if (matrix instanceof ShortMatrix) {
+        }else if (matrix instanceof ShortMatrix) {
             return substract((ShortMatrix) matrix);
-        } else if (matrix instanceof FloatMatrix) {
+        }else if (matrix instanceof FloatMatrix) {
             return substract((FloatMatrix) matrix);
         }
         return null;
@@ -125,19 +121,19 @@ public abstract class Matrix {
 
     abstract Matrix substract(FloatMatrix matrix);
 
-    private void checkNewDimensions(int... dimensions) {
+    private void checkNewDimensions(int... dimensions){
         if (dimensions.length == 0) {
             throw new IllegalArgumentException("Dimensions element count is zero.");
         }
     }
-
-    private void checkDimensionCount(int... dimensions) {
+    
+    private void checkDimensionCount(int... dimensions){
         if (dimensions.length != dimensions.length) {
             throw new IllegalArgumentException("Matrix dimension element count does not equal.");
         }
     }
-
-    private void checkDimensions(Matrix matrix) {
+    
+    private void checkDimensions(Matrix matrix){
         for (int i = 0; i < dimensions.length; i++) {
             if (matrix.dimensions[i] != dimensions[i]) {
                 throw new IllegalArgumentException("Matrix dimensions does not match.");
