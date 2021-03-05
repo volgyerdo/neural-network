@@ -22,10 +22,9 @@ import volgyerdo.neural.structure.Activation;
  * @author Pocze Zsolt
  */
 public class ActivationLogic {
-    
-    public static float activate(float input, Activation parameters){
-        
+
+    public static float activate(float x, Activation parameters) {
         return 0;
     }
-    
+
 }

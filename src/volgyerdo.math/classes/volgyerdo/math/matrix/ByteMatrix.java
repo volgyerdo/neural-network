@@ -122,12 +122,11 @@ class ByteMatrix extends Matrix {
         add((byte) scaler);
     }
 
-    @Override
-    Matrix add(ByteMatrix matrix) {
+    Matrix addMatrix(ByteMatrix matrix) {
         try {
             ByteMatrix clone = (ByteMatrix) clone();
             for (int i = 0; i < values.length; i++) {
-                clone.values[i] = (byte) (values[i] + matrix.values[i]);
+                clone.values[i] += matrix.values[i];
             }
         } catch (CloneNotSupportedException ex) {
             throw new RuntimeException("Cloning is not supported.");
@@ -135,38 +134,11 @@ class ByteMatrix extends Matrix {
         return null;
     }
 
-    @Override
-    Matrix add(ShortMatrix matrix) {
-        try {
-            ShortMatrix clone = (ShortMatrix) clone();
-            for (int i = 0; i < values.length; i++) {
-                clone.values[i] = (byte) (values[i] + matrix.values[i]);
-            }
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
-        }
-        return null;
-    }
-
-    @Override
-    Matrix add(FloatMatrix matrix) {
-        try {
-            FloatMatrix clone = (FloatMatrix) clone();
-            for (int i = 0; i < values.length; i++) {
-                clone.values[i] = (byte) (values[i] + matrix.values[i]);
-            }
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
-        }
-        return null;
-    }
-
-    @Override
-    Matrix substract(ByteMatrix matrix) {
+    Matrix substractMatrix(ByteMatrix matrix) {
         try {
             ByteMatrix clone = (ByteMatrix) clone();
             for (int i = 0; i < values.length; i++) {
-                clone.values[i] = (byte) (values[i] - matrix.values[i]);
+                clone.values[i] -= matrix.values[i];
             }
         } catch (CloneNotSupportedException ex) {
             throw new RuntimeException("Cloning is not supported.");
@@ -174,30 +146,31 @@ class ByteMatrix extends Matrix {
         return null;
     }
 
-    @Override
-    Matrix substract(ShortMatrix matrix) {
+    Matrix transposeMatrix() {
         try {
-            ShortMatrix clone = (ShortMatrix) clone();
-            for (int i = 0; i < values.length; i++) {
-                clone.values[i] = (byte) (values[i] - matrix.values[i]);
-            }
+            ByteMatrix clone = (ByteMatrix) clone();
+            int[] indices = new int[dimensions.length];
+            Arrays.fill(indices, 0);
+            transposeRecursive(clone, 0, indices);
         } catch (CloneNotSupportedException ex) {
             throw new RuntimeException("Cloning is not supported.");
         }
         return null;
     }
 
-    @Override
-    Matrix substract(FloatMatrix matrix) {
-        try {
-            FloatMatrix clone = (FloatMatrix) clone();
-            for (int i = 0; i < values.length; i++) {
-                clone.values[i] = (byte) (values[i] - matrix.values[i]);
+    void transposeRecursive(ByteMatrix matrix, int current, int[] indices) {
+        if (current == indices.length) {
+            matrix.setValue(getReversedValue(indices), indices);
+        } else {
+            int next = current + 1;
+            for (int i = 0; i < dimensions[current]; i++) {
+                indices[current] = i;
+                transposeRecursive(matrix, next, indices);
             }
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
         }
-        return null;
     }
 
+    private byte getReversedValue(int... indices) {
+        return values[index(indices)];
+    }
 }

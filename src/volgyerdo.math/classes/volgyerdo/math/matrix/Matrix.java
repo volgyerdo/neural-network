@@ -22,6 +22,7 @@ package volgyerdo.math.matrix;
 public abstract class Matrix {
 
     public final int[] dimensions;
+    public final int[] multipliers;
 
     public static Matrix createByteMatrix(int... dimensions) {
         return new ByteMatrix();
@@ -38,6 +39,11 @@ public abstract class Matrix {
     protected Matrix(int... dimensions) {
         checkNewDimensions(dimensions);
         this.dimensions = dimensions;
+        multipliers = new int[dimensions.length-1];
+        multipliers[0] = 1;
+        for (int i = 0; i < dimensions.length - 1; i++) {
+            multipliers[i + 1] = multipliers[i] * dimensions[i];
+    }
     }
     
     @Override
@@ -51,10 +57,20 @@ public abstract class Matrix {
             return indices[0];
         }
         int index = indices[0];
-        int multiplier = 1;
         for (int i = 1; i < indices.length; i++) {
-            multiplier *= dimensions[i - 1];
-            index += multiplier * indices[i];
+            index += multipliers[i] * indices[i];
+        }
+        return index;
+    }
+    
+    protected int reversedIndex(int... indices) {
+        checkDimensionCount(indices);
+        if (indices.length == 0) {
+            return indices[0];
+        }
+        int index = indices[0];
+        for (int i = indices.length - 1; i > 0; i--) {
+            index += multipliers[i] * indices[i];
         }
         return index;
     }
@@ -84,43 +100,50 @@ public abstract class Matrix {
     public abstract void add(float scaler);
 
     public Matrix add(Matrix matrix) {
+        checkClass(matrix);
         checkDimensionCount(matrix.dimensions);
         checkDimensions(matrix);
-        if (matrix instanceof ByteMatrix) {
-            return add((ByteMatrix) matrix);
-        }else if (matrix instanceof ShortMatrix) {
-            return add((ShortMatrix) matrix);
-        }else if (matrix instanceof FloatMatrix) {
-            return add((FloatMatrix) matrix);
+        if (this instanceof ByteMatrix) {
+            return ((ByteMatrix) this).addMatrix((ByteMatrix) matrix);
+        }else if (this instanceof ShortMatrix) {
+            return ((ShortMatrix) this).addMatrix((ShortMatrix) matrix);
+        }else if (this instanceof FloatMatrix) {
+            return ((FloatMatrix) this).addMatrix((FloatMatrix) matrix);
         }
         return null;
     }
-
-    abstract Matrix add(ByteMatrix matrix);
-
-    abstract Matrix add(ShortMatrix matrix);
-
-    abstract Matrix add(FloatMatrix matrix);
     
     public Matrix substract(Matrix matrix) {
+        checkClass(matrix);
         checkDimensionCount(matrix.dimensions);
         checkDimensions(matrix);
-        if (matrix instanceof ByteMatrix) {
-            return substract((ByteMatrix) matrix);
-        }else if (matrix instanceof ShortMatrix) {
-            return substract((ShortMatrix) matrix);
-        }else if (matrix instanceof FloatMatrix) {
-            return substract((FloatMatrix) matrix);
+        if (this instanceof ByteMatrix) {
+            return ((ByteMatrix) this).substractMatrix((ByteMatrix) matrix);
+        }else if (this instanceof ShortMatrix) {
+            return ((ShortMatrix) this).substractMatrix((ShortMatrix) matrix);
+        }else if (this instanceof FloatMatrix) {
+            return ((FloatMatrix) this).substractMatrix((FloatMatrix) matrix);
+        }
+        return null;
+    }
+    
+    public Matrix transpose() {
+        if (this instanceof ByteMatrix) {
+            return ((ByteMatrix) this).transposeMatrix();
+        }else if (this instanceof ShortMatrix) {
+            return ((ShortMatrix) this).transposeMatrix();
+        }else if (this instanceof FloatMatrix) {
+            return ((FloatMatrix) this).transposeMatrix();
         }
         return null;
     }
 
-    abstract Matrix substract(ByteMatrix matrix);
-
-    abstract Matrix substract(ShortMatrix matrix);
-
-    abstract Matrix substract(FloatMatrix matrix);
-
+    private void checkClass(Matrix matrix){
+        if (!matrix.getClass().equals(getClass())) {
+            throw new IllegalArgumentException("Matrix classes does not match.");
+        }
+    }
+    
     private void checkNewDimensions(int... dimensions){
         if (dimensions.length == 0) {
             throw new IllegalArgumentException("Dimensions element count is zero.");
