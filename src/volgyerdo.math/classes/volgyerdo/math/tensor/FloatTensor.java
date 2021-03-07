@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.math.matrix;
+package volgyerdo.math.tensor;
 
 import java.util.Arrays;
 import java.util.Random;
 
 /**
  *
- * @author Pocze Zsolt
+ * @author Volgyerdo Nonprofit Kft.
  */
-class ShortMatrix extends Matrix {
+class FloatTensor extends Tensor {
 
-    public final short[] values;
+    public final float[] values;
 
-    public ShortMatrix(int... dimensions) {
+    public FloatTensor(int... dimensions) {
         int size = 0;
         for (int i : dimensions) {
             size += i;
         }
-        values = new short[size];
+        values = new float[size];
     }
-    
+
     @Override
     public void setValue(float value, int... indices) {
-        values[index(indices)] = (short)value;
+        values[index(indices)] = value;
     }
 
     @Override
@@ -51,12 +51,12 @@ class ShortMatrix extends Matrix {
 
     @Override
     public byte getByteValue(int... indices) {
-        return (byte)values[index(indices)];
+        return (byte) values[index(indices)];
     }
 
     @Override
     public short getShortValue(int... indices) {
-        return values[index(indices)];
+        return (short) values[index(indices)];
     }
 
     @Override
@@ -67,7 +67,7 @@ class ShortMatrix extends Matrix {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 47 * hash + Arrays.hashCode(this.values);
+        hash = 53 * hash + Arrays.hashCode(this.values);
         return hash;
     }
 
@@ -82,7 +82,7 @@ class ShortMatrix extends Matrix {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ShortMatrix other = (ShortMatrix) obj;
+        final FloatTensor other = (FloatTensor) obj;
         if (!Arrays.equals(this.values, other.values)) {
             return false;
         }
@@ -91,42 +91,42 @@ class ShortMatrix extends Matrix {
 
     @Override
     public void randomize(byte min, byte max) {
-        randomize((short) min, (short) max);
+        randomize((float) min, (float) max);
     }
 
     @Override
     public void randomize(short min, short max) {
-        Random randomizer = new Random();
-        for (int i = 0; i < values.length; i++) {
-            values[i] = (short) randomizer.nextInt(Short.MAX_VALUE + 1);
-        }
+        randomize((float) min, (float) max);
     }
 
     @Override
     public void randomize(float min, float max) {
-        randomize((short) min, (short) max);
+        Random randomizer = new Random();
+        for (int i = 0; i < values.length; i++) {
+            values[i] = randomizer.nextFloat();
+        }
     }
-    
+
     @Override
     public void add(byte scaler) {
-        add((short)scaler);
+        add((float)scaler);
     }
 
     @Override
     public void add(short scaler) {
+        add((float)scaler);
+    }
+
+    @Override
+    public void add(float scaler) {
         for (int i = 0; i < values.length; i++) {
             values[i] += scaler;
         }
     }
 
-    @Override
-    public void add(float scaler) {
-        add((short)scaler);
-    }
-   
-    Matrix addMatrix(ShortMatrix matrix) {
+    Tensor addMatrix(FloatTensor matrix) {
         try {
-            ShortMatrix clone = (ShortMatrix) clone();
+            FloatTensor clone = (FloatTensor) clone();
             for (int i = 0; i < values.length; i++) {
                 clone.values[i] += matrix.values[i];
             }
@@ -136,9 +136,9 @@ class ShortMatrix extends Matrix {
         return null;
     }
 
-    Matrix substractMatrix(ShortMatrix matrix) {
+    Tensor substractMatrix(FloatTensor matrix) {
         try {
-            ShortMatrix clone = (ShortMatrix) clone();
+            FloatTensor clone = (FloatTensor) clone();
             for (int i = 0; i < values.length; i++) {
                 clone.values[i] -= matrix.values[i];
             }
@@ -148,9 +148,9 @@ class ShortMatrix extends Matrix {
         return null;
     }
 
-    Matrix transposeMatrix() {
+    Tensor transposeMatrix() {
         try {
-            FloatMatrix clone = (FloatMatrix) clone();
+            FloatTensor clone = (FloatTensor) clone();
             int[] indices = new int[dimensions.length];
             Arrays.fill(indices, 0);
             transposeRecursive(clone, 0, indices);
@@ -160,7 +160,7 @@ class ShortMatrix extends Matrix {
         return null;
     }
 
-    void transposeRecursive(FloatMatrix matrix, int current, int[] indices) {
+    void transposeRecursive(FloatTensor matrix, int current, int[] indices) {
         if (current == indices.length) {
             matrix.setValue(getReversedValue(indices), indices);
         } else {

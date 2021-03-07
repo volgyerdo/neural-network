@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.math.matrix;
+package volgyerdo.math.tensor;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -22,16 +22,21 @@ import java.util.Random;
  *
  * @author Pocze Zsolt
  */
-class ByteMatrix extends Matrix {
+class ShortTensor extends Tensor {
 
-    public final byte[] values;
+    public final short[] values;
 
-    public ByteMatrix(int... dimensions) {
+    public ShortTensor(int... dimensions) {
         int size = 0;
         for (int i : dimensions) {
             size += i;
         }
-        values = new byte[size];
+        values = new short[size];
+    }
+    
+    @Override
+    public void setValue(float value, int... indices) {
+        values[index(indices)] = (short)value;
     }
 
     @Override
@@ -40,18 +45,13 @@ class ByteMatrix extends Matrix {
     }
 
     @Override
-    public void setValue(float value, int... indices) {
-        values[index(indices)] = (byte) value;
-    }
-
-    @Override
     public void setValue(short value, int... indices) {
-        values[index(indices)] = (byte) value;
+        values[index(indices)] = value;
     }
 
     @Override
     public byte getByteValue(int... indices) {
-        return values[index(indices)];
+        return (byte)values[index(indices)];
     }
 
     @Override
@@ -66,8 +66,8 @@ class ByteMatrix extends Matrix {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + Arrays.hashCode(this.values);
+        int hash = 7;
+        hash = 47 * hash + Arrays.hashCode(this.values);
         return hash;
     }
 
@@ -82,7 +82,7 @@ class ByteMatrix extends Matrix {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ByteMatrix other = (ByteMatrix) obj;
+        final ShortTensor other = (ShortTensor) obj;
         if (!Arrays.equals(this.values, other.values)) {
             return false;
         }
@@ -91,40 +91,42 @@ class ByteMatrix extends Matrix {
 
     @Override
     public void randomize(byte min, byte max) {
-        Random randomizer = new Random();
-        randomizer.nextBytes(values);
+        randomize((short) min, (short) max);
     }
 
     @Override
     public void randomize(short min, short max) {
-        randomize((byte) min, (byte) max);
+        Random randomizer = new Random();
+        for (int i = 0; i < values.length; i++) {
+            values[i] = (short) randomizer.nextInt(Short.MAX_VALUE + 1);
+        }
     }
 
     @Override
     public void randomize(float min, float max) {
-        randomize((byte) min, (byte) max);
+        randomize((short) min, (short) max);
+    }
+    
+    @Override
+    public void add(byte scaler) {
+        add((short)scaler);
     }
 
     @Override
-    public void add(byte scaler) {
+    public void add(short scaler) {
         for (int i = 0; i < values.length; i++) {
             values[i] += scaler;
         }
     }
 
     @Override
-    public void add(short scaler) {
-        add((byte) scaler);
-    }
-
-    @Override
     public void add(float scaler) {
-        add((byte) scaler);
+        add((short)scaler);
     }
-
-    Matrix addMatrix(ByteMatrix matrix) {
+   
+    Tensor addMatrix(ShortTensor matrix) {
         try {
-            ByteMatrix clone = (ByteMatrix) clone();
+            ShortTensor clone = (ShortTensor) clone();
             for (int i = 0; i < values.length; i++) {
                 clone.values[i] += matrix.values[i];
             }
@@ -134,9 +136,9 @@ class ByteMatrix extends Matrix {
         return null;
     }
 
-    Matrix substractMatrix(ByteMatrix matrix) {
+    Tensor substractMatrix(ShortTensor matrix) {
         try {
-            ByteMatrix clone = (ByteMatrix) clone();
+            ShortTensor clone = (ShortTensor) clone();
             for (int i = 0; i < values.length; i++) {
                 clone.values[i] -= matrix.values[i];
             }
@@ -146,9 +148,9 @@ class ByteMatrix extends Matrix {
         return null;
     }
 
-    Matrix transposeMatrix() {
+    Tensor transposeMatrix() {
         try {
-            ByteMatrix clone = (ByteMatrix) clone();
+            FloatTensor clone = (FloatTensor) clone();
             int[] indices = new int[dimensions.length];
             Arrays.fill(indices, 0);
             transposeRecursive(clone, 0, indices);
@@ -158,7 +160,7 @@ class ByteMatrix extends Matrix {
         return null;
     }
 
-    void transposeRecursive(ByteMatrix matrix, int current, int[] indices) {
+    void transposeRecursive(FloatTensor matrix, int current, int[] indices) {
         if (current == indices.length) {
             matrix.setValue(getReversedValue(indices), indices);
         } else {
@@ -170,7 +172,7 @@ class ByteMatrix extends Matrix {
         }
     }
 
-    private byte getReversedValue(int... indices) {
+    private float getReversedValue(int... indices) {
         return values[index(indices)];
     }
 }

@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.math.matrix;
+package volgyerdo.math.tensor;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public abstract class Matrix {
+public abstract class Tensor {
 
     public final int[] dimensions;
     public final int[] multipliers;
 
-    public static Matrix createByteMatrix(int... dimensions) {
-        return new ByteMatrix();
+    public static Tensor createByteMatrix(int... dimensions) {
+        return new ByteTensor();
     }
 
-    public static Matrix createShortMatrix(int... dimensions) {
-        return new ShortMatrix();
+    public static Tensor createShortMatrix(int... dimensions) {
+        return new ShortTensor();
     }
 
-    public static Matrix createFloatMatrix(int... dimensions) {
-        return new ShortMatrix();
+    public static Tensor createFloatMatrix(int... dimensions) {
+        return new ShortTensor();
     }
 
-    protected Matrix(int... dimensions) {
+    protected Tensor(int... dimensions) {
         checkNewDimensions(dimensions);
         this.dimensions = dimensions;
         multipliers = new int[dimensions.length-1];
@@ -47,8 +47,8 @@ public abstract class Matrix {
     }
     
     @Override
-    public Matrix clone() throws CloneNotSupportedException{
-        return (Matrix)super.clone();
+    public Tensor clone() throws CloneNotSupportedException{
+        return (Tensor)super.clone();
     }
 
     protected int index(int... indices) {
@@ -99,46 +99,46 @@ public abstract class Matrix {
 
     public abstract void add(float scaler);
 
-    public Matrix add(Matrix matrix) {
+    public Tensor add(Tensor matrix) {
         checkClass(matrix);
         checkDimensionCount(matrix.dimensions);
         checkDimensions(matrix);
-        if (this instanceof ByteMatrix) {
-            return ((ByteMatrix) this).addMatrix((ByteMatrix) matrix);
-        }else if (this instanceof ShortMatrix) {
-            return ((ShortMatrix) this).addMatrix((ShortMatrix) matrix);
-        }else if (this instanceof FloatMatrix) {
-            return ((FloatMatrix) this).addMatrix((FloatMatrix) matrix);
+        if (this instanceof ByteTensor) {
+            return ((ByteTensor) this).addMatrix((ByteTensor) matrix);
+        }else if (this instanceof ShortTensor) {
+            return ((ShortTensor) this).addMatrix((ShortTensor) matrix);
+        }else if (this instanceof FloatTensor) {
+            return ((FloatTensor) this).addMatrix((FloatTensor) matrix);
         }
         return null;
     }
     
-    public Matrix substract(Matrix matrix) {
+    public Tensor substract(Tensor matrix) {
         checkClass(matrix);
         checkDimensionCount(matrix.dimensions);
         checkDimensions(matrix);
-        if (this instanceof ByteMatrix) {
-            return ((ByteMatrix) this).substractMatrix((ByteMatrix) matrix);
-        }else if (this instanceof ShortMatrix) {
-            return ((ShortMatrix) this).substractMatrix((ShortMatrix) matrix);
-        }else if (this instanceof FloatMatrix) {
-            return ((FloatMatrix) this).substractMatrix((FloatMatrix) matrix);
+        if (this instanceof ByteTensor) {
+            return ((ByteTensor) this).substractMatrix((ByteTensor) matrix);
+        }else if (this instanceof ShortTensor) {
+            return ((ShortTensor) this).substractMatrix((ShortTensor) matrix);
+        }else if (this instanceof FloatTensor) {
+            return ((FloatTensor) this).substractMatrix((FloatTensor) matrix);
         }
         return null;
     }
     
-    public Matrix transpose() {
-        if (this instanceof ByteMatrix) {
-            return ((ByteMatrix) this).transposeMatrix();
-        }else if (this instanceof ShortMatrix) {
-            return ((ShortMatrix) this).transposeMatrix();
-        }else if (this instanceof FloatMatrix) {
-            return ((FloatMatrix) this).transposeMatrix();
+    public Tensor transpose() {
+        if (this instanceof ByteTensor) {
+            return ((ByteTensor) this).transposeMatrix();
+        }else if (this instanceof ShortTensor) {
+            return ((ShortTensor) this).transposeMatrix();
+        }else if (this instanceof FloatTensor) {
+            return ((FloatTensor) this).transposeMatrix();
         }
         return null;
     }
 
-    private void checkClass(Matrix matrix){
+    private void checkClass(Tensor matrix){
         if (!matrix.getClass().equals(getClass())) {
             throw new IllegalArgumentException("Matrix classes does not match.");
         }
@@ -156,7 +156,7 @@ public abstract class Matrix {
         }
     }
     
-    private void checkDimensions(Matrix matrix){
+    private void checkDimensions(Tensor matrix){
         for (int i = 0; i < dimensions.length; i++) {
             if (matrix.dimensions[i] != dimensions[i]) {
                 throw new IllegalArgumentException("Matrix dimensions does not match.");

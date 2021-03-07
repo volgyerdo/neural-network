@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.math.matrix;
+package volgyerdo.math.tensor;
 
 import java.util.Arrays;
 import java.util.Random;
 
 /**
  *
- * @author Volgyerdo Nonprofit Kft.
+ * @author Pocze Zsolt
  */
-class FloatMatrix extends Matrix {
+class ByteTensor extends Tensor {
 
-    public final float[] values;
+    public final byte[] values;
 
-    public FloatMatrix(int... dimensions) {
+    public ByteTensor(int... dimensions) {
         int size = 0;
         for (int i : dimensions) {
             size += i;
         }
-        values = new float[size];
-    }
-
-    @Override
-    public void setValue(float value, int... indices) {
-        values[index(indices)] = value;
+        values = new byte[size];
     }
 
     @Override
@@ -45,18 +40,23 @@ class FloatMatrix extends Matrix {
     }
 
     @Override
+    public void setValue(float value, int... indices) {
+        values[index(indices)] = (byte) value;
+    }
+
+    @Override
     public void setValue(short value, int... indices) {
-        values[index(indices)] = value;
+        values[index(indices)] = (byte) value;
     }
 
     @Override
     public byte getByteValue(int... indices) {
-        return (byte) values[index(indices)];
+        return values[index(indices)];
     }
 
     @Override
     public short getShortValue(int... indices) {
-        return (short) values[index(indices)];
+        return values[index(indices)];
     }
 
     @Override
@@ -66,8 +66,8 @@ class FloatMatrix extends Matrix {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 53 * hash + Arrays.hashCode(this.values);
+        int hash = 3;
+        hash = 89 * hash + Arrays.hashCode(this.values);
         return hash;
     }
 
@@ -82,7 +82,7 @@ class FloatMatrix extends Matrix {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FloatMatrix other = (FloatMatrix) obj;
+        final ByteTensor other = (ByteTensor) obj;
         if (!Arrays.equals(this.values, other.values)) {
             return false;
         }
@@ -91,42 +91,40 @@ class FloatMatrix extends Matrix {
 
     @Override
     public void randomize(byte min, byte max) {
-        randomize((float) min, (float) max);
+        Random randomizer = new Random();
+        randomizer.nextBytes(values);
     }
 
     @Override
     public void randomize(short min, short max) {
-        randomize((float) min, (float) max);
+        randomize((byte) min, (byte) max);
     }
 
     @Override
     public void randomize(float min, float max) {
-        Random randomizer = new Random();
-        for (int i = 0; i < values.length; i++) {
-            values[i] = randomizer.nextFloat();
-        }
+        randomize((byte) min, (byte) max);
     }
 
     @Override
     public void add(byte scaler) {
-        add((float)scaler);
-    }
-
-    @Override
-    public void add(short scaler) {
-        add((float)scaler);
-    }
-
-    @Override
-    public void add(float scaler) {
         for (int i = 0; i < values.length; i++) {
             values[i] += scaler;
         }
     }
 
-    Matrix addMatrix(FloatMatrix matrix) {
+    @Override
+    public void add(short scaler) {
+        add((byte) scaler);
+    }
+
+    @Override
+    public void add(float scaler) {
+        add((byte) scaler);
+    }
+
+    Tensor addMatrix(ByteTensor matrix) {
         try {
-            FloatMatrix clone = (FloatMatrix) clone();
+            ByteTensor clone = (ByteTensor) clone();
             for (int i = 0; i < values.length; i++) {
                 clone.values[i] += matrix.values[i];
             }
@@ -136,9 +134,9 @@ class FloatMatrix extends Matrix {
         return null;
     }
 
-    Matrix substractMatrix(FloatMatrix matrix) {
+    Tensor substractMatrix(ByteTensor matrix) {
         try {
-            FloatMatrix clone = (FloatMatrix) clone();
+            ByteTensor clone = (ByteTensor) clone();
             for (int i = 0; i < values.length; i++) {
                 clone.values[i] -= matrix.values[i];
             }
@@ -148,9 +146,9 @@ class FloatMatrix extends Matrix {
         return null;
     }
 
-    Matrix transposeMatrix() {
+    Tensor transposeMatrix() {
         try {
-            FloatMatrix clone = (FloatMatrix) clone();
+            ByteTensor clone = (ByteTensor) clone();
             int[] indices = new int[dimensions.length];
             Arrays.fill(indices, 0);
             transposeRecursive(clone, 0, indices);
@@ -160,7 +158,7 @@ class FloatMatrix extends Matrix {
         return null;
     }
 
-    void transposeRecursive(FloatMatrix matrix, int current, int[] indices) {
+    void transposeRecursive(ByteTensor matrix, int current, int[] indices) {
         if (current == indices.length) {
             matrix.setValue(getReversedValue(indices), indices);
         } else {
@@ -172,7 +170,7 @@ class FloatMatrix extends Matrix {
         }
     }
 
-    private float getReversedValue(int... indices) {
+    private byte getReversedValue(int... indices) {
         return values[index(indices)];
     }
 }
