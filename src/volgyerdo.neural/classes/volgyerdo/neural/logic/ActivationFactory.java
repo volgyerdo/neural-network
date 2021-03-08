@@ -44,8 +44,8 @@ public class ActivationFactory {
         Activation activation = new Activation();
         activation.shiftX = 0f;
         activation.shiftY = 0f;
-        activation.stretchX = 0f;
-        activation.stretchY = 0f;
+        activation.stretchX = 1f;
+        activation.stretchY = 1f;
         activation.swish = 0f;
         activation.slope = 0f;
         return activation;
@@ -55,8 +55,8 @@ public class ActivationFactory {
         Activation activation = new Activation();
         activation.shiftX = 0f;
         activation.shiftY = 0f;
-        activation.stretchX = 0f;
-        activation.stretchY = 0f;
+        activation.stretchX = 1f;
+        activation.stretchY = 1f;
         activation.swish = 1f;
         activation.slope = 0f;
         return activation;
