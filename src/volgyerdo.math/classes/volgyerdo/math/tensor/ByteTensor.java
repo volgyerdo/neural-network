@@ -50,6 +50,15 @@ class ByteTensor extends Tensor {
     }
 
     @Override
+    public void setValue(Object value, int... indices) {
+        if (value instanceof Number) {
+            values[index(indices)] = ((Number) value).byteValue();
+        }else{
+            throw new RuntimeException("Can't store an object in a byte tensor.");
+        }
+    }
+
+    @Override
     public byte getByteValue(int... indices) {
         return values[index(indices)];
     }
@@ -64,6 +73,11 @@ class ByteTensor extends Tensor {
         return values[index(indices)];
     }
 
+    @Override
+    public Object getObjectValue(int... indices) {
+        return values[index(indices)];
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;

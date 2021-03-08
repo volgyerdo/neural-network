@@ -5,4 +5,8 @@
  */
 
 module volgyerdo.math {
+
+    exports volgyerdo.math.array;
+    exports volgyerdo.math.tensor;
+
 }

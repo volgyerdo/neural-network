@@ -19,21 +19,25 @@ package volgyerdo.math.tensor;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public abstract class Tensor {
+public abstract class Tensor{
 
     public final int[] dimensions;
     public final int[] multipliers;
 
-    public static Tensor createByteMatrix(int... dimensions) {
+    public static Tensor createByteTensor(int... dimensions) {
         return new ByteTensor();
     }
 
-    public static Tensor createShortMatrix(int... dimensions) {
+    public static Tensor createShortTensor(int... dimensions) {
         return new ShortTensor();
     }
 
-    public static Tensor createFloatMatrix(int... dimensions) {
+    public static Tensor createFloatTensor(int... dimensions) {
         return new ShortTensor();
+    }
+    
+    public static Tensor createObjectTensor(int... dimensions) {
+        return new ObjectTensor();
     }
 
     protected Tensor(int... dimensions) {
@@ -80,12 +84,16 @@ public abstract class Tensor {
     public abstract void setValue(short value, int... indices);
 
     public abstract void setValue(float value, int... indices);
+    
+    public abstract void setValue(Object value, int... indices);
 
     public abstract byte getByteValue(int... indices);
 
     public abstract short getShortValue(int... indices);
 
     public abstract float getFloatValue(int... indices);
+    
+    public abstract Object getObjectValue(int... indices);
 
     public abstract void randomize(byte min, byte max);
 
@@ -136,6 +144,10 @@ public abstract class Tensor {
             return ((FloatTensor) this).transposeMatrix();
         }
         return null;
+    }
+    
+    public Tensor product(Tensor tensor) {
+        throw new IllegalArgumentException("Tensor product is not implemented.");
     }
 
     private void checkClass(Tensor matrix){

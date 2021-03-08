@@ -15,10 +15,17 @@
  */
 package volgyerdo.neural.structure;
 
+import volgyerdo.math.tensor.Tensor;
+
 /**
  *
  * @author Pocze Zsolt
  */
-public class NeuralNetwork {
+public class Network {
+    
+    public int[] inputDimensions;
+    public int[] outputDimensions;
+    public Layer[] layers;
+    public Tensor connections;
     
 }

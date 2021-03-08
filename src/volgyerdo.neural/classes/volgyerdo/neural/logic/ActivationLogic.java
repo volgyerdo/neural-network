@@ -23,8 +23,19 @@ import volgyerdo.neural.structure.Activation;
  */
 public class ActivationLogic {
 
+    private ActivationLogic() {
+    }
+    
     public static float activate(float x, Activation parameters) {
-        return 0;
+        x = (x + parameters.shiftX) * parameters.stretchX;
+        x = (1 + parameters.swish * x) / (1 + (float)Math.exp(-x)) + parameters.slope * x;
+        x = x * parameters.stretchY + parameters.shiftY;
+        return x;
+    }
+    
+    // Derivative of activate()
+    public static float deactivate(float y, Activation parameters) {
+        return y;
     }
 
 }

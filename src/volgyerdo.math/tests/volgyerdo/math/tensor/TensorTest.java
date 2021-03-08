@@ -48,31 +48,41 @@ public class TensorTest {
     }
 
     @Test
-    public void testCreateByteMatrix() {
-        System.out.println("createByteMatrix");
+    public void testCreateByteTensor() {
+        System.out.println("createByteTensor");
         int[] dimensions = null;
         Tensor expResult = null;
-        Tensor result = Tensor.createByteMatrix(dimensions);
+        Tensor result = Tensor.createByteTensor(dimensions);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
 
     @Test
-    public void testCreateShortMatrix() {
-        System.out.println("createShortMatrix");
+    public void testCreateShortTensor() {
+        System.out.println("createShortTensor");
         int[] dimensions = null;
         Tensor expResult = null;
-        Tensor result = Tensor.createShortMatrix(dimensions);
+        Tensor result = Tensor.createShortTensor(dimensions);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
 
     @Test
-    public void testCreateFloatMatrix() {
-        System.out.println("createFloatMatrix");
+    public void testCreateFloatTensor() {
+        System.out.println("createFloatTensor");
         int[] dimensions = null;
         Tensor expResult = null;
-        Tensor result = Tensor.createFloatMatrix(dimensions);
+        Tensor result = Tensor.createFloatTensor(dimensions);
+        assertEquals(expResult, result);
+        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testCreateObjectTensor() {
+        System.out.println("createObjectTensor");
+        int[] dimensions = null;
+        Tensor expResult = null;
+        Tensor result = Tensor.createObjectTensor(dimensions);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
@@ -140,6 +150,16 @@ public class TensorTest {
     }
 
     @Test
+    public void testSetValue_Object_intArr() {
+        System.out.println("setValue");
+        Object value = null;
+        int[] indices = null;
+        Tensor instance = null;
+        instance.setValue(value, indices);
+        fail("The test case is a prototype.");
+    }
+
+    @Test
     public void testGetByteValue() {
         System.out.println("getByteValue");
         int[] indices = null;
@@ -169,6 +189,17 @@ public class TensorTest {
         float expResult = 0.0F;
         float result = instance.getFloatValue(indices);
         assertEquals(expResult, result, 0.0);
+        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testGetObjectValue() {
+        System.out.println("getObjectValue");
+        int[] indices = null;
+        Tensor instance = null;
+        Object expResult = null;
+        Object result = instance.getObjectValue(indices);
+        assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
 
@@ -261,6 +292,17 @@ public class TensorTest {
         fail("The test case is a prototype.");
     }
 
+    @Test
+    public void testProduct() {
+        System.out.println("product");
+        Tensor tensor = null;
+        Tensor instance = null;
+        Tensor expResult = null;
+        Tensor result = instance.product(tensor);
+        assertEquals(expResult, result);
+        fail("The test case is a prototype.");
+    }
+
     public class TensorImpl extends Tensor {
 
         public TensorImpl() {
@@ -276,6 +318,9 @@ public class TensorTest {
         public void setValue(float value, int[] indices) {
         }
 
+        public void setValue(Object value, int[] indices) {
+        }
+
         public byte getByteValue(int[] indices) {
             return 0;
         }
@@ -286,6 +331,10 @@ public class TensorTest {
 
         public float getFloatValue(int[] indices) {
             return 0.0F;
+        }
+
+        public Object getObjectValue(int[] indices) {
+            return null;
         }
 
         public void randomize(byte min, byte max) {

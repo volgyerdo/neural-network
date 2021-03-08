@@ -48,6 +48,15 @@ class FloatTensor extends Tensor {
     public void setValue(short value, int... indices) {
         values[index(indices)] = value;
     }
+    
+    @Override
+    public void setValue(Object value, int... indices) {
+        if (value instanceof Number) {
+            values[index(indices)] = ((Number) value).floatValue();
+        }else{
+            throw new RuntimeException("Can't store an object in a byte tensor.");
+        }
+    }
 
     @Override
     public byte getByteValue(int... indices) {
@@ -61,6 +70,11 @@ class FloatTensor extends Tensor {
 
     @Override
     public float getFloatValue(int... indices) {
+        return values[index(indices)];
+    }
+    
+    @Override
+    public Object getObjectValue(int... indices) {
         return values[index(indices)];
     }
 

@@ -15,17 +15,16 @@
  */
 package volgyerdo.neural.structure;
 
+import volgyerdo.math.tensor.Tensor;
+
 /**
  *
- * @author Pocze Zsolt
+ * @author Volgyerdo Nonprofit Kft.
  */
-public class Activation {
-
-    public float shiftX;
-    public float shiftY;
-    public float stretchX;
-    public float stretchY;
-    public float swish;
-    public float slope;
-
+public class Layer {
+    
+    public int[] dimensions;
+    public Tensor states;
+    public Tensor activations;
+    
 }

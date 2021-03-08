@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.neural.structure;
+package volgyerdo.neural.logic;
+
+import volgyerdo.neural.structure.Network;
 
 /**
  *
- * @author Pocze Zsolt
+ * @author Volgyerdo Nonprofit Kft.
  */
-public class Activation {
+public class NetworkLogic {
 
-    public float shiftX;
-    public float shiftY;
-    public float stretchX;
-    public float stretchY;
-    public float swish;
-    public float slope;
-
+    private NetworkLogic() {
+    }
+    
+    public static Network create(int[]... dimensions){
+        return null;
+    }
+    
+    public static void randomize(Network network){
+        
+    }
+    
 }
