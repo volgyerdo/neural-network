@@ -15,10 +15,16 @@
  */
 package volgyerdo.neural.logic;
 
+import volgyerdo.neural.structure.Network;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
 public class NetworkFactory {
-    
+
+    public static Network create(int[]... dimensions){
+        return null;
+    }
+
 }

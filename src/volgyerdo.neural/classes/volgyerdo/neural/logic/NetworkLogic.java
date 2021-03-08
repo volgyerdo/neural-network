@@ -26,10 +26,6 @@ public class NetworkLogic {
     private NetworkLogic() {
     }
     
-    public static Network create(int[]... dimensions){
-        return null;
-    }
-    
     public static void randomize(Network network){
         
     }
