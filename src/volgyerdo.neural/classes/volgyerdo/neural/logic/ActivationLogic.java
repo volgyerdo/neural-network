@@ -26,6 +26,8 @@ public class ActivationLogic {
     private ActivationLogic() {
     }
     
+    // f(x) = [(1 + (x + shiftX) * stretchX * swish)) / (1 + exp(-(x + shiftX) * stretchX)) 
+    //        + slope * (x + shiftX) * stretchX] * stretchY + shiftY
     public static float activate(float x, Activation parameters) {
         x = (x + parameters.shiftX) * parameters.stretchX;
         x = (1 + parameters.swish * x) / (1 + (float)Math.exp(-x)) + parameters.slope * x;
@@ -34,6 +36,7 @@ public class ActivationLogic {
     }
     
     // Derivative of activate()
+    // f(x)' = 
     public static float deactivate(float y, Activation parameters) {
         return y;
     }
