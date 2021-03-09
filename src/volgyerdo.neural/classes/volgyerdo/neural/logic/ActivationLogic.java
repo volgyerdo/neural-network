@@ -36,8 +36,20 @@ public class ActivationLogic {
     }
     
     // Derivative of activate()
-    // f(x)' = 
+    // f(x)' = -((a/2+1)*(b-e^(-x)))/(e^(-x)+b*x+1)^2
+    //  ahol    a: swish valtozo
+    //          b: slope valtozo
+    // x-et itt y reprezentalja?
     public static float deactivate(float y, Activation parameters) {
+        
+       //a fuggvenyben negyzeten van nevezo es Math.pow() elso valtozoja nem fogad el fuggvenyt
+       //ezert ezt emeljuk majd negyzetre
+        double SqrtDenominator = (float)Math.exp(-y) + parameters.slope * y + 1;
+        
+        y = (y + parameters.shiftX) * parameters.stretchX;
+        y = -(parameters.swish/2+1) * (parameters.slope - (float)Math.exp(-y))
+             / (float)Math.pow(SqrtDenominator, 2) ;
+        y = y * parameters.stretchY + parameters.shiftY;
         return y;
     }
 
