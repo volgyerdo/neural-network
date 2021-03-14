@@ -17,6 +17,7 @@ package volgyerdo.math.tensor;
 
 import java.util.Arrays;
 import java.util.Random;
+import volgyerdo.math.ArrayUtils;
 
 /**
  *
@@ -27,11 +28,7 @@ class FloatTensor extends Tensor {
     public final float[] values;
 
     public FloatTensor(int... dimensions) {
-        int size = 0;
-        for (int i : dimensions) {
-            size += i;
-        }
-        values = new float[size];
+        values = new float[ArrayUtils.product(dimensions)];
     }
 
     @Override

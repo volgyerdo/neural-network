@@ -16,6 +16,7 @@
 package volgyerdo.math.tensor;
 
 import java.util.Arrays;
+import volgyerdo.math.ArrayUtils;
 
 /**
  *
@@ -26,11 +27,7 @@ class ObjectTensor extends Tensor {
     public final Object[] values;
 
     public ObjectTensor(int... dimensions) {
-        int size = 0;
-        for (int i : dimensions) {
-            size += i;
-        }
-        values = new Object[size];
+        values = new Object[ArrayUtils.product(dimensions)];
     }
 
     @Override

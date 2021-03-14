@@ -17,6 +17,7 @@ package volgyerdo.math.tensor;
 
 import java.util.Arrays;
 import java.util.Random;
+import volgyerdo.math.ArrayUtils;
 
 /**
  *
@@ -27,11 +28,7 @@ class ShortTensor extends Tensor {
     public final short[] values;
 
     public ShortTensor(int... dimensions) {
-        int size = 0;
-        for (int i : dimensions) {
-            size += i;
-        }
-        values = new short[size];
+        values = new short[ArrayUtils.product(dimensions)];
     }
     
     @Override

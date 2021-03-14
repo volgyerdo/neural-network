@@ -146,7 +146,7 @@ public abstract class Tensor{
         return null;
     }
     
-    public Tensor product(Tensor tensor) {
+    public Tensor convolution(Tensor kernel) {
         throw new IllegalArgumentException("Tensor product is not implemented.");
     }
 

@@ -293,12 +293,12 @@ public class TensorTest {
     }
 
     @Test
-    public void testProduct() {
+    public void testConvolution() {
         System.out.println("product");
-        Tensor tensor = null;
+        Tensor kernel = null;
         Tensor instance = null;
         Tensor expResult = null;
-        Tensor result = instance.product(tensor);
+        Tensor result = instance.convolution(kernel);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }

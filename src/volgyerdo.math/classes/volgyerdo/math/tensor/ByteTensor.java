@@ -17,6 +17,7 @@ package volgyerdo.math.tensor;
 
 import java.util.Arrays;
 import java.util.Random;
+import volgyerdo.math.ArrayUtils;
 
 /**
  *
@@ -27,11 +28,7 @@ class ByteTensor extends Tensor {
     public final byte[] values;
 
     public ByteTensor(int... dimensions) {
-        int size = 0;
-        for (int i : dimensions) {
-            size += i;
-        }
-        values = new byte[size];
+        values = new byte[ArrayUtils.product(dimensions)];
     }
 
     @Override
