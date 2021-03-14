@@ -18,6 +18,7 @@ package volgyerdo.math.tensor;
 import java.util.Arrays;
 import java.util.Random;
 import volgyerdo.math.ArrayUtils;
+import volgyerdo.math.PrimitiveUtils;
 
 /**
  *
@@ -30,10 +31,10 @@ class ShortTensor extends Tensor {
     public ShortTensor(int... dimensions) {
         values = new short[ArrayUtils.product(dimensions)];
     }
-    
+
     @Override
     public void setValue(float value, int... indices) {
-        values[index(indices)] = (short)value;
+        values[index(indices)] = PrimitiveUtils.toShort(value);
     }
 
     @Override
@@ -45,19 +46,15 @@ class ShortTensor extends Tensor {
     public void setValue(short value, int... indices) {
         values[index(indices)] = value;
     }
-    
+
     @Override
     public void setValue(Object value, int... indices) {
-        if (value instanceof Number) {
-            values[index(indices)] = ((Number) value).shortValue();
-        }else{
-            throw new RuntimeException("Can't store an object in a byte tensor.");
-        }
+        throw new RuntimeException("Can't store an object in a byte tensor.");
     }
 
     @Override
     public byte getByteValue(int... indices) {
-        return (byte)values[index(indices)];
+        return PrimitiveUtils.toByte(values[index(indices)]);
     }
 
     @Override
@@ -69,7 +66,7 @@ class ShortTensor extends Tensor {
     public float getFloatValue(int... indices) {
         return values[index(indices)];
     }
-    
+
     @Override
     public Object getObjectValue(int... indices) {
         return values[index(indices)];
@@ -115,12 +112,12 @@ class ShortTensor extends Tensor {
 
     @Override
     public void randomize(float min, float max) {
-        randomize((short) min, (short) max);
+        randomize(PrimitiveUtils.toShort(min), PrimitiveUtils.toShort(max));
     }
-    
+
     @Override
     public void add(byte scaler) {
-        add((short)scaler);
+        add((short) scaler);
     }
 
     @Override
@@ -132,9 +129,11 @@ class ShortTensor extends Tensor {
 
     @Override
     public void add(float scaler) {
-        add((short)scaler);
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toShort((float) values[i] + scaler);
+        }
     }
-   
+
     Tensor addMatrix(ShortTensor matrix) {
         try {
             ShortTensor clone = (ShortTensor) clone();

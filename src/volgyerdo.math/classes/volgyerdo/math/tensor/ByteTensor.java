@@ -18,6 +18,7 @@ package volgyerdo.math.tensor;
 import java.util.Arrays;
 import java.util.Random;
 import volgyerdo.math.ArrayUtils;
+import volgyerdo.math.PrimitiveUtils;
 
 /**
  *
@@ -38,21 +39,17 @@ class ByteTensor extends Tensor {
 
     @Override
     public void setValue(float value, int... indices) {
-        values[index(indices)] = (byte) value;
+        values[index(indices)] = PrimitiveUtils.toByte(value);
     }
 
     @Override
     public void setValue(short value, int... indices) {
-        values[index(indices)] = (byte) value;
+        values[index(indices)] = PrimitiveUtils.toByte(value);
     }
 
     @Override
     public void setValue(Object value, int... indices) {
-        if (value instanceof Number) {
-            values[index(indices)] = ((Number) value).byteValue();
-        }else{
-            throw new RuntimeException("Can't store an object in a byte tensor.");
-        }
+        throw new RuntimeException("Can't store an object in a byte tensor.");
     }
 
     @Override
@@ -74,7 +71,7 @@ class ByteTensor extends Tensor {
     public Object getObjectValue(int... indices) {
         return values[index(indices)];
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 3;
@@ -108,12 +105,12 @@ class ByteTensor extends Tensor {
 
     @Override
     public void randomize(short min, short max) {
-        randomize((byte) min, (byte) max);
+        randomize(PrimitiveUtils.toByte(min), PrimitiveUtils.toByte(max));
     }
 
     @Override
     public void randomize(float min, float max) {
-        randomize((byte) min, (byte) max);
+        randomize(PrimitiveUtils.toByte(min), PrimitiveUtils.toByte(max));
     }
 
     @Override
@@ -125,12 +122,16 @@ class ByteTensor extends Tensor {
 
     @Override
     public void add(short scaler) {
-        add((byte) scaler);
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((short) values[i] + scaler);
+        }
     }
 
     @Override
     public void add(float scaler) {
-        add((byte) scaler);
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((float) values[i] + scaler);
+        }
     }
 
     Tensor addMatrix(ByteTensor matrix) {

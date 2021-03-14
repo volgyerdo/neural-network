@@ -58,24 +58,6 @@ public class ArrayUtils {
         }
     }
     
-    public static void substract(byte array[], byte x) {
-        for (int i = 0; i < array.length; i++) {
-            array[i] -= x;
-        }
-    }
-    
-    public static void substract(short array[], short x) {
-        for (int i = 0; i < array.length; i++) {
-            array[i] -= x;
-        }
-    }
-    
-    public static void substract(float array[], float x) {
-        for (int i = 0; i < array.length; i++) {
-            array[i] -= x;
-        }
-    }
-    
     public static void multiply(byte array[], byte x) {
         for (int i = 0; i < array.length; i++) {
             array[i] *= x;

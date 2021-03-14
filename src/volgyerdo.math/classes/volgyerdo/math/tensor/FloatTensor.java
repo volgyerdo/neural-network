@@ -18,6 +18,7 @@ package volgyerdo.math.tensor;
 import java.util.Arrays;
 import java.util.Random;
 import volgyerdo.math.ArrayUtils;
+import volgyerdo.math.PrimitiveUtils;
 
 /**
  *
@@ -45,31 +46,27 @@ class FloatTensor extends Tensor {
     public void setValue(short value, int... indices) {
         values[index(indices)] = value;
     }
-    
+
     @Override
     public void setValue(Object value, int... indices) {
-        if (value instanceof Number) {
-            values[index(indices)] = ((Number) value).floatValue();
-        }else{
-            throw new RuntimeException("Can't store an object in a byte tensor.");
-        }
+        throw new RuntimeException("Can't store an object in a byte tensor.");
     }
 
     @Override
     public byte getByteValue(int... indices) {
-        return (byte) values[index(indices)];
+        return PrimitiveUtils.toByte(values[index(indices)]);
     }
 
     @Override
     public short getShortValue(int... indices) {
-        return (short) values[index(indices)];
+        return PrimitiveUtils.toShort(values[index(indices)]);
     }
 
     @Override
     public float getFloatValue(int... indices) {
         return values[index(indices)];
     }
-    
+
     @Override
     public Object getObjectValue(int... indices) {
         return values[index(indices)];
@@ -120,12 +117,12 @@ class FloatTensor extends Tensor {
 
     @Override
     public void add(byte scaler) {
-        add((float)scaler);
+        add((float) scaler);
     }
 
     @Override
     public void add(short scaler) {
-        add((float)scaler);
+        add((float) scaler);
     }
 
     @Override
