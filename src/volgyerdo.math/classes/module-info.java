@@ -6,7 +6,7 @@
 
 module volgyerdo.math {
 
-    exports volgyerdo.math.array;
+    exports volgyerdo.math;
     exports volgyerdo.math.tensor;
 
 }

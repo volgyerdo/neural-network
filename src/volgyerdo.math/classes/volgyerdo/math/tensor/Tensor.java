@@ -19,40 +19,35 @@ package volgyerdo.math.tensor;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public abstract class Tensor{
+public abstract class Tensor {
 
     public final int[] dimensions;
     public final int[] multipliers;
 
     public static Tensor createByteTensor(int... dimensions) {
-        return new ByteTensor();
+        return new ByteTensor(dimensions);
     }
 
     public static Tensor createShortTensor(int... dimensions) {
-        return new ShortTensor();
+        return new ShortTensor(dimensions);
     }
 
     public static Tensor createFloatTensor(int... dimensions) {
-        return new ShortTensor();
+        return new ShortTensor(dimensions);
     }
-    
+
     public static Tensor createObjectTensor(int... dimensions) {
-        return new ObjectTensor();
+        return new ObjectTensor(dimensions);
     }
 
     protected Tensor(int... dimensions) {
         checkNewDimensions(dimensions);
         this.dimensions = dimensions;
-        multipliers = new int[dimensions.length-1];
+        multipliers = new int[dimensions.length];
         multipliers[0] = 1;
         for (int i = 0; i < dimensions.length - 1; i++) {
             multipliers[i + 1] = multipliers[i] * dimensions[i];
-    }
-    }
-    
-    @Override
-    public Tensor clone() throws CloneNotSupportedException{
-        return (Tensor)super.clone();
+        }
     }
 
     protected int index(int... indices) {
@@ -66,33 +61,21 @@ public abstract class Tensor{
         }
         return index;
     }
-    
-    protected int reversedIndex(int... indices) {
-        checkDimensionCount(indices);
-        if (indices.length == 0) {
-            return indices[0];
-        }
-        int index = indices[0];
-        for (int i = indices.length - 1; i > 0; i--) {
-            index += multipliers[i] * indices[i];
-        }
-        return index;
-    }
 
-    public abstract void setValue(byte value, int... indices);
+    public abstract void setByteValue(byte value, int... indices);
 
-    public abstract void setValue(short value, int... indices);
+    public abstract void setShortValue(short value, int... indices);
 
-    public abstract void setValue(float value, int... indices);
-    
-    public abstract void setValue(Object value, int... indices);
+    public abstract void setFloatValue(float value, int... indices);
+
+    public abstract void setObjectValue(Object value, int... indices);
 
     public abstract byte getByteValue(int... indices);
 
     public abstract short getShortValue(int... indices);
 
     public abstract float getFloatValue(int... indices);
-    
+
     public abstract Object getObjectValue(int... indices);
 
     public abstract void randomize(byte min, byte max);
@@ -107,72 +90,126 @@ public abstract class Tensor{
 
     public abstract void add(float scaler);
 
-    public Tensor add(Tensor matrix) {
-        checkClass(matrix);
-        checkDimensionCount(matrix.dimensions);
-        checkDimensions(matrix);
+    public Tensor add(Tensor tensor) {
+        checkNull(tensor);
+        checkClass(tensor);
+        checkDimensionCount(tensor.dimensions);
+        checkDimensions(tensor);
         if (this instanceof ByteTensor) {
-            return ((ByteTensor) this).addMatrix((ByteTensor) matrix);
-        }else if (this instanceof ShortTensor) {
-            return ((ShortTensor) this).addMatrix((ShortTensor) matrix);
-        }else if (this instanceof FloatTensor) {
-            return ((FloatTensor) this).addMatrix((FloatTensor) matrix);
+            return ((ByteTensor) this).addTensor((ByteTensor) tensor);
+        } else if (this instanceof ShortTensor) {
+            return ((ShortTensor) this).addTensor((ShortTensor) tensor);
+        } else if (this instanceof FloatTensor) {
+            return ((FloatTensor) this).addTensor((FloatTensor) tensor);
         }
         return null;
     }
-    
-    public Tensor substract(Tensor matrix) {
-        checkClass(matrix);
-        checkDimensionCount(matrix.dimensions);
-        checkDimensions(matrix);
+
+    public Tensor negate() {
         if (this instanceof ByteTensor) {
-            return ((ByteTensor) this).substractMatrix((ByteTensor) matrix);
-        }else if (this instanceof ShortTensor) {
-            return ((ShortTensor) this).substractMatrix((ShortTensor) matrix);
-        }else if (this instanceof FloatTensor) {
-            return ((FloatTensor) this).substractMatrix((FloatTensor) matrix);
+            return ((ByteTensor) this).negateTensor();
+        } else if (this instanceof ShortTensor) {
+            return ((ShortTensor) this).negateTensor();
+        } else if (this instanceof FloatTensor) {
+            return ((FloatTensor) this).negateTensor();
         }
         return null;
     }
-    
+
     public Tensor transpose() {
         if (this instanceof ByteTensor) {
-            return ((ByteTensor) this).transposeMatrix();
-        }else if (this instanceof ShortTensor) {
-            return ((ShortTensor) this).transposeMatrix();
-        }else if (this instanceof FloatTensor) {
-            return ((FloatTensor) this).transposeMatrix();
+            return ((ByteTensor) this).transposeTensor();
+        } else if (this instanceof ShortTensor) {
+            return ((ShortTensor) this).transposeTensor();
+        } else if (this instanceof FloatTensor) {
+            return ((FloatTensor) this).transposeTensor();
         }
         return null;
     }
-    
+
     public Tensor convolution(Tensor kernel) {
+        checkNull(kernel);
+        checkClass(kernel);
         throw new IllegalArgumentException("Tensor product is not implemented.");
     }
 
-    private void checkClass(Tensor matrix){
-        if (!matrix.getClass().equals(getClass())) {
-            throw new IllegalArgumentException("Matrix classes does not match.");
+    private void checkNull(Tensor tensor) {
+        if (!tensor.getClass().equals(getClass())) {
+            throw new IllegalArgumentException("Tensor is null.");
         }
     }
-    
-    private void checkNewDimensions(int... dimensions){
+
+    private void checkClass(Tensor tensor) {
+        if (!tensor.getClass().equals(getClass())) {
+            throw new IllegalArgumentException("Tensor classes does not match.");
+        }
+    }
+
+    private void checkNewDimensions(int... dimensions) {
         if (dimensions.length == 0) {
             throw new IllegalArgumentException("Dimensions element count is zero.");
         }
     }
-    
-    private void checkDimensionCount(int... dimensions){
+
+    private void checkDimensionCount(int... dimensions) {
         if (dimensions.length != dimensions.length) {
-            throw new IllegalArgumentException("Matrix dimension element count does not equal.");
+            throw new IllegalArgumentException("Tensor dimension element count does not equal.");
         }
     }
-    
-    private void checkDimensions(Tensor matrix){
+
+    private void checkDimensions(Tensor tensor) {
         for (int i = 0; i < dimensions.length; i++) {
-            if (matrix.dimensions[i] != dimensions[i]) {
-                throw new IllegalArgumentException("Matrix dimensions does not match.");
+            if (tensor.dimensions[i] != dimensions[i]) {
+                throw new IllegalArgumentException("Tensor dimensions does not match.");
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        if (this instanceof ByteTensor) {
+            return ((ByteTensor) this).equals(obj);
+        } else if (this instanceof ShortTensor) {
+            return ((ShortTensor) this).equals(obj);
+        } else if (this instanceof FloatTensor) {
+            return ((FloatTensor) this).equals(obj);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        if (this instanceof ByteTensor) {
+            return ((ByteTensor) this).hashCode();
+        } else if (this instanceof ShortTensor) {
+            return ((ShortTensor) this).hashCode();
+        } else if (this instanceof FloatTensor) {
+            return ((FloatTensor) this).hashCode();
+        }
+        return 0;
+    }
+
+    @Override
+    public Tensor clone() throws CloneNotSupportedException {
+        Tensor clone = null;
+        if (this instanceof ByteTensor) {
+            clone = ((ByteTensor) this).clone();
+        } else if (this instanceof ShortTensor) {
+            clone = ((ShortTensor) this).clone();
+        } else if (this instanceof FloatTensor) {
+            clone = ((FloatTensor) this).clone();
+        }
+        System.arraycopy(dimensions, 0, clone.dimensions, 0, dimensions.length);
+        System.arraycopy(multipliers, 0, clone.multipliers, 0, multipliers.length);
+        return clone;
     }
 }

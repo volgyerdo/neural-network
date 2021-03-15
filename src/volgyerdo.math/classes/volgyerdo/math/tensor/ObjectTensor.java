@@ -27,26 +27,27 @@ class ObjectTensor extends Tensor {
     public final Object[] values;
 
     public ObjectTensor(int... dimensions) {
+        super(dimensions);
         values = new Object[ArrayUtils.product(dimensions)];
     }
 
     @Override
-    public void setValue(float value, int... indices) {
+    public void setFloatValue(float value, int... indices) {
         values[index(indices)] = (short) value;
     }
 
     @Override
-    public void setValue(byte value, int... indices) {
+    public void setByteValue(byte value, int... indices) {
         values[index(indices)] = value;
     }
 
     @Override
-    public void setValue(short value, int... indices) {
+    public void setShortValue(short value, int... indices) {
         values[index(indices)] = value;
     }
 
     @Override
-    public void setValue(Object value, int... indices) {
+    public void setObjectValue(Object value, int... indices) {
         values[index(indices)] = value;
     }
 
@@ -118,12 +119,11 @@ class ObjectTensor extends Tensor {
         throw new RuntimeException("Object tensor can not be randomized.");
     }
 
-    
     @Override
     public void randomize(short min, short max) {
         throw new RuntimeException("Object tensor can not be randomized.");
     }
-    
+
     @Override
     public void randomize(float min, float max) {
         throw new RuntimeException("Object tensor can not be randomized.");
@@ -144,17 +144,43 @@ class ObjectTensor extends Tensor {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
 
-    Tensor addMatrix(ObjectTensor matrix) {
+    Tensor addTensor(ObjectTensor tensor) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
 
-    Tensor substractMatrix(ObjectTensor matrix) {
+    Tensor substractTensor(ObjectTensor tensor) {
         throw new RuntimeException("Object tensor doesn't have substract function.");
     }
 
-    Tensor transposeMatrix() {
-        throw new RuntimeException("Object tensor doesn't have transpose function.");
+    Tensor transposeTensor() {
+        try {
+            FloatTensor clone = (FloatTensor) clone();
+            int[] indices = new int[dimensions.length];
+            Arrays.fill(indices, 0);
+            transposeRecursive(clone, 0, indices);
+            return clone;
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+    }
+
+    private void transposeRecursive(FloatTensor tensor, int current, int[] indices) {
+        if (current == indices.length) {
+            tensor.setObjectValue(getObjectValue(indices), ArrayUtils.reverse(indices));
+        } else {
+            int next = current + 1;
+            for (int i = 0; i < dimensions[current]; i++) {
+                indices[current] = i;
+                transposeRecursive(tensor, next, indices);
+            }
+        }
     }
 
 
+    @Override
+    public Tensor clone() throws CloneNotSupportedException{
+        ObjectTensor clone = new ObjectTensor(dimensions);
+        System.arraycopy(values, 0, clone.values, 0, values.length);
+        return clone;
+    }
 }

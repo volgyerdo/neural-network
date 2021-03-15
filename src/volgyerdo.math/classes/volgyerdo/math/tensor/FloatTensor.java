@@ -16,7 +16,6 @@
 package volgyerdo.math.tensor;
 
 import java.util.Arrays;
-import java.util.Random;
 import volgyerdo.math.ArrayUtils;
 import volgyerdo.math.PrimitiveUtils;
 
@@ -29,26 +28,27 @@ class FloatTensor extends Tensor {
     public final float[] values;
 
     public FloatTensor(int... dimensions) {
+        super(dimensions);
         values = new float[ArrayUtils.product(dimensions)];
     }
 
     @Override
-    public void setValue(float value, int... indices) {
+    public void setFloatValue(float value, int... indices) {
         values[index(indices)] = value;
     }
 
     @Override
-    public void setValue(byte value, int... indices) {
+    public void setByteValue(byte value, int... indices) {
         values[index(indices)] = value;
     }
 
     @Override
-    public void setValue(short value, int... indices) {
+    public void setShortValue(short value, int... indices) {
         values[index(indices)] = value;
     }
 
     @Override
-    public void setValue(Object value, int... indices) {
+    public void setObjectValue(Object value, int... indices) {
         throw new RuntimeException("Can't store an object in a byte tensor.");
     }
 
@@ -69,7 +69,7 @@ class FloatTensor extends Tensor {
 
     @Override
     public Object getObjectValue(int... indices) {
-        return values[index(indices)];
+        throw new RuntimeException("Can't get an object from a tensor.");
     }
 
     @Override
@@ -109,9 +109,12 @@ class FloatTensor extends Tensor {
 
     @Override
     public void randomize(float min, float max) {
-        Random randomizer = new Random();
+        if(max < min){
+            throw new RuntimeException("Max < min in randomize parameters.");
+        }
+        double interval = max - min;
         for (int i = 0; i < values.length; i++) {
-            values[i] = randomizer.nextFloat();
+            values[i] = PrimitiveUtils.toFloat((Math.random() * interval + min));
         }
     }
 
@@ -132,55 +135,58 @@ class FloatTensor extends Tensor {
         }
     }
 
-    Tensor addMatrix(FloatTensor matrix) {
+    Tensor addTensor(FloatTensor tensor) {
         try {
             FloatTensor clone = (FloatTensor) clone();
             for (int i = 0; i < values.length; i++) {
-                clone.values[i] += matrix.values[i];
+                clone.values[i] += tensor.values[i];
             }
+            return clone;
         } catch (CloneNotSupportedException ex) {
             throw new RuntimeException("Cloning is not supported.");
         }
-        return null;
     }
 
-    Tensor substractMatrix(FloatTensor matrix) {
+    Tensor negateTensor() {
         try {
-            FloatTensor clone = (FloatTensor) clone();
+            FloatTensor clone = (FloatTensor)clone();
             for (int i = 0; i < values.length; i++) {
-                clone.values[i] -= matrix.values[i];
+                clone.values[i] = (float)-clone.values[i];
             }
+            return clone;
         } catch (CloneNotSupportedException ex) {
             throw new RuntimeException("Cloning is not supported.");
         }
-        return null;
     }
 
-    Tensor transposeMatrix() {
+    Tensor transposeTensor() {
         try {
             FloatTensor clone = (FloatTensor) clone();
             int[] indices = new int[dimensions.length];
             Arrays.fill(indices, 0);
             transposeRecursive(clone, 0, indices);
+            return clone;
         } catch (CloneNotSupportedException ex) {
             throw new RuntimeException("Cloning is not supported.");
         }
-        return null;
     }
 
-    void transposeRecursive(FloatTensor matrix, int current, int[] indices) {
+    private void transposeRecursive(FloatTensor tensor, int current, int[] indices) {
         if (current == indices.length) {
-            matrix.setValue(getReversedValue(indices), indices);
+            tensor.setFloatValue(getFloatValue(indices), ArrayUtils.reverse(indices));
         } else {
             int next = current + 1;
             for (int i = 0; i < dimensions[current]; i++) {
                 indices[current] = i;
-                transposeRecursive(matrix, next, indices);
+                transposeRecursive(tensor, next, indices);
             }
         }
     }
 
-    private float getReversedValue(int... indices) {
-        return values[index(indices)];
+    @Override
+    public Tensor clone() throws CloneNotSupportedException{
+        FloatTensor clone = new FloatTensor(dimensions);
+        System.arraycopy(values, 0, clone.values, 0, values.length);
+        return clone;
     }
 }

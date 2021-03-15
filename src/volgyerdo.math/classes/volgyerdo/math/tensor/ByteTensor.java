@@ -16,7 +16,6 @@
 package volgyerdo.math.tensor;
 
 import java.util.Arrays;
-import java.util.Random;
 import volgyerdo.math.ArrayUtils;
 import volgyerdo.math.PrimitiveUtils;
 
@@ -29,26 +28,27 @@ class ByteTensor extends Tensor {
     public final byte[] values;
 
     public ByteTensor(int... dimensions) {
+        super(dimensions);
         values = new byte[ArrayUtils.product(dimensions)];
     }
 
     @Override
-    public void setValue(byte value, int... indices) {
+    public void setByteValue(byte value, int... indices) {
         values[index(indices)] = value;
     }
 
     @Override
-    public void setValue(float value, int... indices) {
+    public void setFloatValue(float value, int... indices) {
         values[index(indices)] = PrimitiveUtils.toByte(value);
     }
 
     @Override
-    public void setValue(short value, int... indices) {
+    public void setShortValue(short value, int... indices) {
         values[index(indices)] = PrimitiveUtils.toByte(value);
     }
 
     @Override
-    public void setValue(Object value, int... indices) {
+    public void setObjectValue(Object value, int... indices) {
         throw new RuntimeException("Can't store an object in a byte tensor.");
     }
 
@@ -69,7 +69,7 @@ class ByteTensor extends Tensor {
 
     @Override
     public Object getObjectValue(int... indices) {
-        return values[index(indices)];
+        throw new RuntimeException("Can't get an object from a byte tensor.");
     }
 
     @Override
@@ -99,8 +99,13 @@ class ByteTensor extends Tensor {
 
     @Override
     public void randomize(byte min, byte max) {
-        Random randomizer = new Random();
-        randomizer.nextBytes(values);
+        if (max < min) {
+            throw new RuntimeException("Max < min in randomize parameters.");
+        }
+        double interval = max - min;
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((Math.random() * interval + min));
+        }
     }
 
     @Override
@@ -134,55 +139,54 @@ class ByteTensor extends Tensor {
         }
     }
 
-    Tensor addMatrix(ByteTensor matrix) {
+    Tensor addTensor(ByteTensor matrix) {
         try {
             ByteTensor clone = (ByteTensor) clone();
             for (int i = 0; i < values.length; i++) {
                 clone.values[i] += matrix.values[i];
             }
+            return clone;
         } catch (CloneNotSupportedException ex) {
             throw new RuntimeException("Cloning is not supported.");
         }
-        return null;
     }
 
-    Tensor substractMatrix(ByteTensor matrix) {
+    Tensor negateTensor() {
         try {
             ByteTensor clone = (ByteTensor) clone();
             for (int i = 0; i < values.length; i++) {
-                clone.values[i] -= matrix.values[i];
+                clone.values[i] = (byte) -clone.values[i];
             }
+            return clone;
         } catch (CloneNotSupportedException ex) {
             throw new RuntimeException("Cloning is not supported.");
         }
-        return null;
     }
 
-    Tensor transposeMatrix() {
-        try {
-            ByteTensor clone = (ByteTensor) clone();
-            int[] indices = new int[dimensions.length];
-            Arrays.fill(indices, 0);
-            transposeRecursive(clone, 0, indices);
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
-        }
-        return null;
+    Tensor transposeTensor() {
+        ByteTensor transposed = (ByteTensor) Tensor.createByteTensor(ArrayUtils.reverse(dimensions));
+        int[] indices = new int[dimensions.length];
+        Arrays.fill(indices, 0);
+        transposeRecursive(transposed, 0, indices);
+        return transposed;
     }
 
-    void transposeRecursive(ByteTensor matrix, int current, int[] indices) {
+    private void transposeRecursive(ByteTensor tensor, int current, int[] indices) {
         if (current == indices.length) {
-            matrix.setValue(getReversedValue(indices), indices);
+            tensor.setByteValue(getByteValue(indices), ArrayUtils.reverse(indices));
         } else {
             int next = current + 1;
             for (int i = 0; i < dimensions[current]; i++) {
                 indices[current] = i;
-                transposeRecursive(matrix, next, indices);
+                transposeRecursive(tensor, next, indices);
             }
         }
     }
 
-    private byte getReversedValue(int... indices) {
-        return values[index(indices)];
+    @Override
+    public Tensor clone() throws CloneNotSupportedException {
+        ByteTensor clone = new ByteTensor(dimensions);
+        System.arraycopy(values, 0, clone.values, 0, values.length);
+        return clone;
     }
 }
