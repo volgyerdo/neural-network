@@ -42,7 +42,7 @@ public class PrimitiveUtils {
     }
     
     public static float toFloat(double x){
-        return (float)min(max(x, Float.MIN_VALUE), Float.MAX_VALUE);
+        return (float)min(max(x, -Float.MAX_VALUE), Float.MAX_VALUE);
     }
     
     public static byte min(byte a, byte b){

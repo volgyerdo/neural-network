@@ -33,7 +33,7 @@ public abstract class Tensor {
     }
 
     public static Tensor createFloatTensor(int... dimensions) {
-        return new ShortTensor(dimensions);
+        return new FloatTensor(dimensions);
     }
 
     public static Tensor createObjectTensor(int... dimensions) {
@@ -152,7 +152,7 @@ public abstract class Tensor {
     }
 
     private void checkDimensionCount(int... dimensions) {
-        if (dimensions.length != dimensions.length) {
+        if (this.dimensions.length != dimensions.length) {
             throw new IllegalArgumentException("Tensor dimension element count does not equal.");
         }
     }

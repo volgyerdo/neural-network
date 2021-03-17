@@ -114,7 +114,7 @@ class FloatTensor extends Tensor {
         }
         double interval = max - min;
         for (int i = 0; i < values.length; i++) {
-            values[i] = PrimitiveUtils.toFloat((Math.random() * interval + min));
+            values[i] = PrimitiveUtils.toFloat(Math.random() * interval + min);
         }
     }
 
@@ -160,15 +160,11 @@ class FloatTensor extends Tensor {
     }
 
     Tensor transposeTensor() {
-        try {
-            FloatTensor clone = (FloatTensor) clone();
-            int[] indices = new int[dimensions.length];
-            Arrays.fill(indices, 0);
-            transposeRecursive(clone, 0, indices);
-            return clone;
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
-        }
+        FloatTensor transposed = (FloatTensor) Tensor.createFloatTensor(ArrayUtils.reverse(dimensions));
+        int[] indices = new int[dimensions.length];
+        Arrays.fill(indices, 0);
+        transposeRecursive(transposed, 0, indices);
+        return transposed;
     }
 
     private void transposeRecursive(FloatTensor tensor, int current, int[] indices) {

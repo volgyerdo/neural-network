@@ -24,6 +24,8 @@ import static org.junit.Assert.*;
  */
 public class ByteTensorTest {
 
+    private static final double FLOATING_VALUE_ACCURACY = 0.0001;
+
     public ByteTensorTest() {
     }
 
@@ -56,7 +58,8 @@ public class ByteTensorTest {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 3; k++) {
-                    values[i][j][k] = (float) (Math.random() * (Float.MAX_VALUE - Float.MIN_VALUE) - Float.MAX_VALUE);
+                    values[i][j][k] = (float) (Math.random()
+                            * ((double) Float.MAX_VALUE * 2) - Float.MAX_VALUE);
                     t.setFloatValue(values[i][j][k], i, j, k);
                 }
             }
@@ -81,7 +84,7 @@ public class ByteTensorTest {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 3; k++) {
                     values[i][j][k] = (short) (Math.random() * (Short.MAX_VALUE - Short.MIN_VALUE) - Short.MAX_VALUE);
-                    t.setFloatValue(values[i][j][k], i, j, k);
+                    t.setShortValue(values[i][j][k], i, j, k);
                 }
             }
         }
@@ -90,7 +93,7 @@ public class ByteTensorTest {
                 for (int k = 0; k < 3; k++) {
                     byte byteValue = values[i][j][k] < Byte.MIN_VALUE ? Byte.MIN_VALUE
                             : (values[i][j][k] > Byte.MAX_VALUE ? Byte.MAX_VALUE : (byte) values[i][j][k]);
-                    assertEquals("Float value match (" + i + "," + j + "," + k + ")",
+                    assertEquals("Short value match (" + i + "," + j + "," + k + ")",
                             byteValue, t.values[i + 8 * j + 8 * 4 * k]);
                 }
             }
@@ -145,7 +148,7 @@ public class ByteTensorTest {
         for (byte i = 0; i < 4; i++) {
             for (byte j = 0; j < 5; j++) {
                 for (byte k = 0; k < 6; k++) {
-                    assertEquals("Byte value match (" + i + "," + j + "," + k + ")",
+                    assertEquals("Short value match (" + i + "," + j + "," + k + ")",
                             t.getShortValue(i, j, k), (short) t.values[i + 4 * j + 4 * 5 * k]);
                 }
             }
@@ -167,8 +170,8 @@ public class ByteTensorTest {
         for (byte i = 0; i < 4; i++) {
             for (byte j = 0; j < 5; j++) {
                 for (byte k = 0; k < 6; k++) {
-                    assertEquals("Byte value match (" + i + "," + j + "," + k + ")",
-                            t.getFloatValue(i, j, k), (float) t.values[i + 4 * j + 4 * 5 * k], 0.001);
+                    assertEquals("Float value match (" + i + "," + j + "," + k + ")",
+                            t.getFloatValue(i, j, k), (float) t.values[i + 4 * j + 4 * 5 * k], FLOATING_VALUE_ACCURACY);
                 }
             }
         }
@@ -396,7 +399,7 @@ public class ByteTensorTest {
         } catch (Exception e) {
             assertTrue("Add different type of tensor.", e instanceof RuntimeException);
         }
-        ShortTensor t3 = new ShortTensor(3, 2, 5);
+        ByteTensor t3 = new ByteTensor(3, 2, 5);
         try {
             t1.add(t3);
             fail("Add different size of tensor");
@@ -459,6 +462,24 @@ public class ByteTensorTest {
         assertEquals("Transposed tensor", (byte) 34, transposed.getByteValue(1, 0));
         assertEquals("Transposed tensor", (byte) 2, transposed.getByteValue(1, 1));
         assertEquals("Transposed tensor", (byte) 78, transposed.getByteValue(1, 2));
+    }
+
+    @Test
+    public void testCloneTensor() throws CloneNotSupportedException {
+        ByteTensor t1 = new ByteTensor(3, 2);
+        t1.setByteValue((byte) -34, 0, 0);
+        t1.setByteValue((byte) -67, 1, 0);
+        t1.setByteValue((byte) 6, 2, 0);
+        t1.setByteValue((byte) 34, 0, 1);
+        t1.setByteValue((byte) 2, 1, 1);
+        t1.setByteValue((byte) 78, 2, 1);
+        Tensor transposed = t1.clone();
+        assertEquals("Transposed tensor", (byte) -34, transposed.getByteValue(0, 0));
+        assertEquals("Transposed tensor", (byte) -67, transposed.getByteValue(1, 0));
+        assertEquals("Transposed tensor", (byte) 6, transposed.getByteValue(2, 0));
+        assertEquals("Transposed tensor", (byte) 34, transposed.getByteValue(0, 1));
+        assertEquals("Transposed tensor", (byte) 2, transposed.getByteValue(1, 1));
+        assertEquals("Transposed tensor", (byte) 78, transposed.getByteValue(2, 1));
     }
 
 }
