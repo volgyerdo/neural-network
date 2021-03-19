@@ -51,6 +51,11 @@ public class ActivationFactoryTest {
         averageError /= n;
         assertTrue("Sigmoid average difference", averageError < MAXIMUM_AVERAGE_ERROR);
         assertTrue("Sigmoid maximum difference", maximumError < MAXIMUM_ERROR);
+        
+        float minimum = -Float.MAX_VALUE;
+        float maximum = Float.MAX_VALUE;
+        assertEquals("Sigmoid minimum value", ActivationLogic.activate(minimum, sigmoidParameters));
+        assertEquals("Sigmoid maximum value", ActivationLogic.activate(maximum, sigmoidParameters));
     }
 
     private float idealSigmoid(float x) {
