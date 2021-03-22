@@ -24,6 +24,16 @@ public abstract class Tensor {
     public final int[] dimensions;
     public final int[] multipliers;
 
+    protected Tensor(int... dimensions) {
+        checkNewDimensions(dimensions);
+        this.dimensions = dimensions;
+        multipliers = new int[dimensions.length];
+        multipliers[0] = 1;
+        for (int i = 0; i < dimensions.length - 1; i++) {
+            multipliers[i + 1] = multipliers[i] * dimensions[i];
+        }
+    }
+
     public static Tensor createByteTensor(int... dimensions) {
         return new ByteTensor(dimensions);
     }
@@ -39,36 +49,14 @@ public abstract class Tensor {
     public static Tensor createObjectTensor(int... dimensions) {
         return new ObjectTensor(dimensions);
     }
-    
+
     abstract public Tensor convertToByteTensor();
-    
+
     abstract public Tensor convertToShortTensor();
-    
+
     abstract public Tensor convertToFloatTensor();
-    
+
     abstract public Tensor convertToObjectTensor();
-
-    protected Tensor(int... dimensions) {
-        checkNewDimensions(dimensions);
-        this.dimensions = dimensions;
-        multipliers = new int[dimensions.length];
-        multipliers[0] = 1;
-        for (int i = 0; i < dimensions.length - 1; i++) {
-            multipliers[i + 1] = multipliers[i] * dimensions[i];
-        }
-    }
-
-    protected int index(int... indices) {
-        checkDimensionCount(indices);
-        if (indices.length == 0) {
-            return indices[0];
-        }
-        int index = indices[0];
-        for (int i = 1; i < indices.length; i++) {
-            index += multipliers[i] * indices[i];
-        }
-        return index;
-    }
 
     public abstract void setByteValue(byte value, int... indices);
 
@@ -105,17 +93,29 @@ public abstract class Tensor {
         checkDimensions(tensor);
         return addTensor(tensor);
     }
-    
+
     protected abstract Tensor addTensor(Tensor tensor);
 
     public abstract Tensor negate();
-    
+
     public abstract Tensor transpose();
 
     public Tensor convolution(Tensor kernel) {
         checkNull(kernel);
         checkClass(kernel);
-        throw new IllegalArgumentException("Tensor product is not implemented.");
+        throw new IllegalArgumentException("Tensor convolution is not implemented.");
+    }
+
+    protected int index(int... indices) {
+        checkDimensionCount(indices);
+        if (indices.length == 0) {
+            return indices[0];
+        }
+        int index = indices[0];
+        for (int i = 1; i < indices.length; i++) {
+            index += multipliers[i] * indices[i];
+        }
+        return index;
     }
 
     private void checkNull(Tensor tensor) {
