@@ -39,6 +39,14 @@ public abstract class Tensor {
     public static Tensor createObjectTensor(int... dimensions) {
         return new ObjectTensor(dimensions);
     }
+    
+    abstract public Tensor convertToByteTensor();
+    
+    abstract public Tensor convertToShortTensor();
+    
+    abstract public Tensor convertToFloatTensor();
+    
+    abstract public Tensor convertToObjectTensor();
 
     protected Tensor(int... dimensions) {
         checkNewDimensions(dimensions);
@@ -100,9 +108,9 @@ public abstract class Tensor {
     
     protected abstract Tensor addTensor(Tensor tensor);
 
-    protected abstract Tensor negate();
+    public abstract Tensor negate();
     
-    protected abstract Tensor transpose();
+    public abstract Tensor transpose();
 
     public Tensor convolution(Tensor kernel) {
         checkNull(kernel);

@@ -31,6 +31,42 @@ class ByteTensor extends Tensor {
         super(dimensions);
         values = new byte[ArrayUtils.product(dimensions)];
     }
+    
+    @Override
+    public Tensor convertToByteTensor(){
+        try {
+            return clone();
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }
+    }
+    
+    @Override
+    public Tensor convertToShortTensor(){
+        ShortTensor shortTensor = (ShortTensor)Tensor.createShortTensor(dimensions);
+        for (int i = 0; i < values.length; i++) {
+            shortTensor.values[i] = values[i];
+        }
+        return shortTensor;
+    }
+    
+    @Override
+    public Tensor convertToFloatTensor(){
+        FloatTensor floatTensor = (FloatTensor)Tensor.createFloatTensor(dimensions);
+        for (int i = 0; i < values.length; i++) {
+            floatTensor.values[i] = values[i];
+        }
+        return floatTensor;
+    }
+    
+    @Override
+    public Tensor convertToObjectTensor(){
+        ObjectTensor objectTensor = (ObjectTensor)Tensor.createObjectTensor(dimensions);
+        for (int i = 0; i < values.length; i++) {
+            objectTensor.values[i] = values[i];
+        }
+        return objectTensor;
+    }
 
     @Override
     public void setByteValue(byte value, int... indices) {
@@ -153,7 +189,7 @@ class ByteTensor extends Tensor {
     }
 
     @Override
-    protected Tensor negate() {
+    public Tensor negate() {
         try {
             ByteTensor clone = (ByteTensor) clone();
             for (int i = 0; i < values.length; i++) {
@@ -166,7 +202,7 @@ class ByteTensor extends Tensor {
     }
 
     @Override
-    protected Tensor transpose() {
+    public Tensor transpose() {
         ByteTensor transposed = (ByteTensor) Tensor.createByteTensor(ArrayUtils.reverse(dimensions));
         int[] indices = new int[dimensions.length];
         Arrays.fill(indices, 0);

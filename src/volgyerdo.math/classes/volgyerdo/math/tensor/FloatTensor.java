@@ -31,6 +31,42 @@ class FloatTensor extends Tensor {
         super(dimensions);
         values = new float[ArrayUtils.product(dimensions)];
     }
+    
+    @Override
+    public Tensor convertToByteTensor(){
+        ByteTensor byteTensor = (ByteTensor)Tensor.createByteTensor(dimensions);
+        for (int i = 0; i < values.length; i++) {
+            byteTensor.values[i] = PrimitiveUtils.toByte(values[i]);
+        }
+        return byteTensor;
+    }
+    
+    @Override
+    public Tensor convertToShortTensor(){
+        ShortTensor shortTensor = (ShortTensor)Tensor.createShortTensor(dimensions);
+        for (int i = 0; i < values.length; i++) {
+            shortTensor.values[i] = PrimitiveUtils.toShort(values[i]);
+        }
+        return shortTensor;
+    }
+    
+    @Override
+    public Tensor convertToFloatTensor(){
+        try {
+            return clone();
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }
+    }
+    
+    @Override
+    public Tensor convertToObjectTensor(){
+        ObjectTensor objectTensor = (ObjectTensor)Tensor.createObjectTensor(dimensions);
+        for (int i = 0; i < values.length; i++) {
+            objectTensor.values[i] = values[i];
+        }
+        return objectTensor;
+    }
 
     @Override
     public void setFloatValue(float value, int... indices) {
@@ -147,7 +183,7 @@ class FloatTensor extends Tensor {
         }
     }
 
-    protected Tensor negate() {
+    public Tensor negate() {
         try {
             FloatTensor clone = (FloatTensor)clone();
             for (int i = 0; i < values.length; i++) {
@@ -159,7 +195,7 @@ class FloatTensor extends Tensor {
         }
     }
 
-    protected Tensor transpose() {
+    public Tensor transpose() {
         FloatTensor transposed = (FloatTensor) Tensor.createFloatTensor(ArrayUtils.reverse(dimensions));
         int[] indices = new int[dimensions.length];
         Arrays.fill(indices, 0);

@@ -30,6 +30,30 @@ class ObjectTensor extends Tensor {
         super(dimensions);
         values = new Object[ArrayUtils.product(dimensions)];
     }
+    
+    @Override
+    public Tensor convertToByteTensor(){
+        throw new RuntimeException("Object tensor cannot be converted to byte tensor.");
+    }
+    
+    @Override
+    public Tensor convertToShortTensor(){
+        throw new RuntimeException("Object tensor cannot be converted to short tensor.");
+    }
+    
+    @Override
+    public Tensor convertToFloatTensor(){
+        throw new RuntimeException("Object tensor cannot be converted to float tensor.");
+    }
+    
+    @Override
+    public Tensor convertToObjectTensor(){
+        try {
+            return clone();
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }
+    }
 
     @Override
     public void setFloatValue(float value, int... indices) {
@@ -150,12 +174,12 @@ class ObjectTensor extends Tensor {
     }
 
     @Override
-    protected Tensor negate() {
+    public Tensor negate() {
         throw new RuntimeException("Object tensor doesn't have negate function.");
     }
     
     @Override
-    protected Tensor transpose() {
+    public Tensor transpose() {
         try {
             FloatTensor clone = (FloatTensor) clone();
             int[] indices = new int[dimensions.length];
