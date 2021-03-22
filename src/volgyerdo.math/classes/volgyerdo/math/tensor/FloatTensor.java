@@ -135,11 +135,11 @@ class FloatTensor extends Tensor {
         }
     }
 
-    Tensor addTensor(FloatTensor tensor) {
+    protected Tensor addTensor(Tensor tensor) {
         try {
             FloatTensor clone = (FloatTensor) clone();
             for (int i = 0; i < values.length; i++) {
-                clone.values[i] += tensor.values[i];
+                clone.values[i] += ((FloatTensor)tensor).values[i];
             }
             return clone;
         } catch (CloneNotSupportedException ex) {
@@ -147,7 +147,7 @@ class FloatTensor extends Tensor {
         }
     }
 
-    Tensor negateTensor() {
+    protected Tensor negate() {
         try {
             FloatTensor clone = (FloatTensor)clone();
             for (int i = 0; i < values.length; i++) {
@@ -159,7 +159,7 @@ class FloatTensor extends Tensor {
         }
     }
 
-    Tensor transposeTensor() {
+    protected Tensor transpose() {
         FloatTensor transposed = (FloatTensor) Tensor.createFloatTensor(ArrayUtils.reverse(dimensions));
         int[] indices = new int[dimensions.length];
         Arrays.fill(indices, 0);

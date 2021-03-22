@@ -95,37 +95,14 @@ public abstract class Tensor {
         checkClass(tensor);
         checkDimensionCount(tensor.dimensions);
         checkDimensions(tensor);
-        if (this instanceof ByteTensor) {
-            return ((ByteTensor) this).addTensor((ByteTensor) tensor);
-        } else if (this instanceof ShortTensor) {
-            return ((ShortTensor) this).addTensor((ShortTensor) tensor);
-        } else if (this instanceof FloatTensor) {
-            return ((FloatTensor) this).addTensor((FloatTensor) tensor);
-        }
-        return null;
+        return addTensor(tensor);
     }
+    
+    protected abstract Tensor addTensor(Tensor tensor);
 
-    public Tensor negate() {
-        if (this instanceof ByteTensor) {
-            return ((ByteTensor) this).negateTensor();
-        } else if (this instanceof ShortTensor) {
-            return ((ShortTensor) this).negateTensor();
-        } else if (this instanceof FloatTensor) {
-            return ((FloatTensor) this).negateTensor();
-        }
-        return null;
-    }
-
-    public Tensor transpose() {
-        if (this instanceof ByteTensor) {
-            return ((ByteTensor) this).transposeTensor();
-        } else if (this instanceof ShortTensor) {
-            return ((ShortTensor) this).transposeTensor();
-        } else if (this instanceof FloatTensor) {
-            return ((FloatTensor) this).transposeTensor();
-        }
-        return null;
-    }
+    protected abstract Tensor negate();
+    
+    protected abstract Tensor transpose();
 
     public Tensor convolution(Tensor kernel) {
         checkNull(kernel);

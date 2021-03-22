@@ -137,11 +137,12 @@ class ShortTensor extends Tensor {
         }
     }
 
-    Tensor addTensor(ShortTensor tensor) {
+    @Override
+    protected Tensor addTensor(Tensor tensor) {
         try {
             ShortTensor clone = (ShortTensor) clone();
             for (int i = 0; i < values.length; i++) {
-                clone.values[i] += tensor.values[i];
+                clone.values[i] += ((ShortTensor)tensor).values[i];
             }
             return clone;
         } catch (CloneNotSupportedException ex) {
@@ -149,7 +150,8 @@ class ShortTensor extends Tensor {
         }
     }
 
-    Tensor negateTensor() {
+    @Override
+    protected Tensor negate() {
         try {
             ShortTensor clone = (ShortTensor)clone();
             for (int i = 0; i < values.length; i++) {
@@ -161,16 +163,13 @@ class ShortTensor extends Tensor {
         }
     }
 
-    Tensor transposeTensor() {
-        try {
-            ShortTensor clone = (ShortTensor) clone();
-            int[] indices = new int[dimensions.length];
-            Arrays.fill(indices, 0);
-            transposeRecursive(clone, 0, indices);
-            return clone;
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
-        }
+    @Override
+    protected Tensor transpose() {
+        ShortTensor transposed = (ShortTensor) Tensor.createShortTensor(ArrayUtils.reverse(dimensions));
+        int[] indices = new int[dimensions.length];
+        Arrays.fill(indices, 0);
+        transposeRecursive(transposed, 0, indices);
+        return transposed;
     }
 
     private void transposeRecursive(ShortTensor tensor, int current, int[] indices) {

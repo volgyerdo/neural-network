@@ -144,15 +144,18 @@ class ObjectTensor extends Tensor {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
 
-    Tensor addTensor(ObjectTensor tensor) {
+    @Override
+    protected Tensor addTensor(Tensor tensor) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
 
-    Tensor substractTensor(ObjectTensor tensor) {
-        throw new RuntimeException("Object tensor doesn't have substract function.");
+    @Override
+    protected Tensor negate() {
+        throw new RuntimeException("Object tensor doesn't have negate function.");
     }
-
-    Tensor transposeTensor() {
+    
+    @Override
+    protected Tensor transpose() {
         try {
             FloatTensor clone = (FloatTensor) clone();
             int[] indices = new int[dimensions.length];

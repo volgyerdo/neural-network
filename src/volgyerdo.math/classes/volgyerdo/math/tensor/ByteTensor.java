@@ -139,11 +139,12 @@ class ByteTensor extends Tensor {
         }
     }
 
-    Tensor addTensor(ByteTensor matrix) {
+    @Override
+    protected Tensor addTensor(Tensor tensor) {
         try {
             ByteTensor clone = (ByteTensor) clone();
             for (int i = 0; i < values.length; i++) {
-                clone.values[i] += matrix.values[i];
+                clone.values[i] += ((ByteTensor)tensor).values[i];
             }
             return clone;
         } catch (CloneNotSupportedException ex) {
@@ -151,7 +152,8 @@ class ByteTensor extends Tensor {
         }
     }
 
-    Tensor negateTensor() {
+    @Override
+    protected Tensor negate() {
         try {
             ByteTensor clone = (ByteTensor) clone();
             for (int i = 0; i < values.length; i++) {
@@ -163,7 +165,8 @@ class ByteTensor extends Tensor {
         }
     }
 
-    Tensor transposeTensor() {
+    @Override
+    protected Tensor transpose() {
         ByteTensor transposed = (ByteTensor) Tensor.createByteTensor(ArrayUtils.reverse(dimensions));
         int[] indices = new int[dimensions.length];
         Arrays.fill(indices, 0);
