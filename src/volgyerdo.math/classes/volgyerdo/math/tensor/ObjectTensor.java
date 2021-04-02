@@ -169,7 +169,7 @@ class ObjectTensor extends Tensor {
     }
 
     @Override
-    protected Tensor addTensor(Tensor tensor) {
+    protected Tensor add(Tensor tensor) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
 
@@ -203,6 +203,10 @@ class ObjectTensor extends Tensor {
         }
     }
 
+    @Override
+    public Tensor convolution(Tensor kernel) {
+        throw new RuntimeException("Object tensor doesn't have convolution function.");
+    }
 
     @Override
     public Tensor clone() throws CloneNotSupportedException{

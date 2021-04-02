@@ -171,7 +171,12 @@ class FloatTensor extends Tensor {
         }
     }
 
-    protected Tensor addTensor(Tensor tensor) {
+    @Override
+    protected Tensor add(Tensor tensor) {
+        checkNull(tensor);
+        checkClass(tensor);
+        checkDimensionCount(tensor.dimensions);
+        checkDimensions(tensor);
         try {
             FloatTensor clone = (FloatTensor) clone();
             for (int i = 0; i < values.length; i++) {
@@ -183,6 +188,7 @@ class FloatTensor extends Tensor {
         }
     }
 
+    @Override
     public Tensor negate() {
         try {
             FloatTensor clone = (FloatTensor)clone();
@@ -195,6 +201,7 @@ class FloatTensor extends Tensor {
         }
     }
 
+    @Override
     public Tensor transpose() {
         FloatTensor transposed = (FloatTensor) Tensor.createFloatTensor(ArrayUtils.reverse(dimensions));
         int[] indices = new int[dimensions.length];
@@ -215,6 +222,32 @@ class FloatTensor extends Tensor {
         }
     }
 
+    @Override
+    public Tensor convolution(Tensor kernel) {
+        checkNull(kernel);
+        checkClass(kernel);
+        checkKernelDimensions(kernel);
+        try {
+            ByteTensor clone = (ByteTensor) clone();
+            if (dimensions.length == kernel.dimensions.length) {
+                return simpleConvolution(clone, kernel);
+            } else if (dimensions.length * 2 == kernel.dimensions.length) {
+                return fullConvolution(clone, kernel);
+            }
+            return clone;
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+    }
+
+    public Tensor simpleConvolution(Tensor tensor, Tensor kernel) {
+        return tensor;
+    }
+
+    public Tensor fullConvolution(Tensor tensor, Tensor kernel) {
+        return tensor;
+    }
+    
     @Override
     public Tensor clone() throws CloneNotSupportedException{
         FloatTensor clone = new FloatTensor(dimensions);

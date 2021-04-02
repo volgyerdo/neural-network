@@ -86,25 +86,13 @@ public abstract class Tensor {
 
     public abstract void add(float scaler);
 
-    public Tensor add(Tensor tensor) {
-        checkNull(tensor);
-        checkClass(tensor);
-        checkDimensionCount(tensor.dimensions);
-        checkDimensions(tensor);
-        return addTensor(tensor);
-    }
-
-    protected abstract Tensor addTensor(Tensor tensor);
+    protected abstract Tensor add(Tensor tensor);
 
     public abstract Tensor negate();
 
     public abstract Tensor transpose();
 
-    public Tensor convolution(Tensor kernel) {
-        checkNull(kernel);
-        checkClass(kernel);
-        throw new IllegalArgumentException("Tensor convolution is not implemented.");
-    }
+    public abstract Tensor convolution(Tensor kernel);
 
     protected int index(int... indices) {
         checkDimensionCount(indices);
@@ -118,34 +106,55 @@ public abstract class Tensor {
         return index;
     }
 
-    private void checkNull(Tensor tensor) {
+    protected void checkNull(Tensor tensor) {
         if (!tensor.getClass().equals(getClass())) {
             throw new IllegalArgumentException("Tensor is null.");
         }
     }
 
-    private void checkClass(Tensor tensor) {
+    protected void checkClass(Tensor tensor) {
         if (!tensor.getClass().equals(getClass())) {
             throw new IllegalArgumentException("Tensor classes does not match.");
         }
     }
 
-    private void checkNewDimensions(int... dimensions) {
+    protected void checkNewDimensions(int... dimensions) {
         if (dimensions.length == 0) {
             throw new IllegalArgumentException("Dimensions element count is zero.");
         }
     }
 
-    private void checkDimensionCount(int... dimensions) {
+    protected void checkDimensionCount(int... dimensions) {
         if (this.dimensions.length != dimensions.length) {
             throw new IllegalArgumentException("Tensor dimension element count does not equal.");
         }
     }
 
-    private void checkDimensions(Tensor tensor) {
+    protected void checkDimensions(Tensor tensor) {
         for (int i = 0; i < dimensions.length; i++) {
             if (tensor.dimensions[i] != dimensions[i]) {
                 throw new IllegalArgumentException("Tensor dimensions does not match.");
+            }
+        }
+    }
+
+    protected void checkKernelDimensions(Tensor kernel) {
+        if (dimensions.length != kernel.dimensions.length
+                && dimensions.length * 2 != kernel.dimensions.length) {
+            throw new IllegalArgumentException("Tensor dimension count does not match.");
+        }
+        if (dimensions.length == kernel.dimensions.length) {
+            for (int i = 0; i < dimensions.length; i++) {
+                if (kernel.dimensions[i] > dimensions[i]) {
+                    throw new IllegalArgumentException("Tensor dimensions does not match.");
+                }
+            }
+        } else if (dimensions.length * 2 == kernel.dimensions.length) {
+            for (int i = 0; i < dimensions.length; i++) {
+                if (kernel.dimensions[i] != dimensions[i]
+                        || kernel.dimensions[dimensions.length + i] != dimensions[i]) {
+                    throw new IllegalArgumentException("Tensor dimensions does not match.");
+                }
             }
         }
     }

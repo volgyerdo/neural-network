@@ -31,37 +31,37 @@ class ByteTensor extends Tensor {
         super(dimensions);
         values = new byte[ArrayUtils.product(dimensions)];
     }
-    
+
     @Override
-    public Tensor convertToByteTensor(){
+    public Tensor convertToByteTensor() {
         try {
             return clone();
         } catch (CloneNotSupportedException ex) {
             return null;
         }
     }
-    
+
     @Override
-    public Tensor convertToShortTensor(){
-        ShortTensor shortTensor = (ShortTensor)Tensor.createShortTensor(dimensions);
+    public Tensor convertToShortTensor() {
+        ShortTensor shortTensor = (ShortTensor) Tensor.createShortTensor(dimensions);
         for (int i = 0; i < values.length; i++) {
             shortTensor.values[i] = values[i];
         }
         return shortTensor;
     }
-    
+
     @Override
-    public Tensor convertToFloatTensor(){
-        FloatTensor floatTensor = (FloatTensor)Tensor.createFloatTensor(dimensions);
+    public Tensor convertToFloatTensor() {
+        FloatTensor floatTensor = (FloatTensor) Tensor.createFloatTensor(dimensions);
         for (int i = 0; i < values.length; i++) {
             floatTensor.values[i] = values[i];
         }
         return floatTensor;
     }
-    
+
     @Override
-    public Tensor convertToObjectTensor(){
-        ObjectTensor objectTensor = (ObjectTensor)Tensor.createObjectTensor(dimensions);
+    public Tensor convertToObjectTensor() {
+        ObjectTensor objectTensor = (ObjectTensor) Tensor.createObjectTensor(dimensions);
         for (int i = 0; i < values.length; i++) {
             objectTensor.values[i] = values[i];
         }
@@ -176,11 +176,15 @@ class ByteTensor extends Tensor {
     }
 
     @Override
-    protected Tensor addTensor(Tensor tensor) {
+    public Tensor add(Tensor tensor) {
+        checkNull(tensor);
+        checkClass(tensor);
+        checkDimensionCount(tensor.dimensions);
+        checkDimensions(tensor);
         try {
             ByteTensor clone = (ByteTensor) clone();
             for (int i = 0; i < values.length; i++) {
-                clone.values[i] += ((ByteTensor)tensor).values[i];
+                clone.values[i] += ((ByteTensor) tensor).values[i];
             }
             return clone;
         } catch (CloneNotSupportedException ex) {
@@ -220,6 +224,32 @@ class ByteTensor extends Tensor {
                 transposeRecursive(tensor, next, indices);
             }
         }
+    }
+
+    @Override
+    public Tensor convolution(Tensor kernel) {
+        checkNull(kernel);
+        checkClass(kernel);
+        checkKernelDimensions(kernel);
+        try {
+            ByteTensor clone = (ByteTensor) clone();
+            if (dimensions.length == kernel.dimensions.length) {
+                return simpleConvolution(clone, kernel);
+            } else if (dimensions.length * 2 == kernel.dimensions.length) {
+                return fullConvolution(clone, kernel);
+            }
+            return clone;
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+    }
+
+    public Tensor simpleConvolution(Tensor tensor, Tensor kernel) {
+        return tensor;
+    }
+
+    public Tensor fullConvolution(Tensor tensor, Tensor kernel) {
+        return tensor;
     }
 
     @Override
