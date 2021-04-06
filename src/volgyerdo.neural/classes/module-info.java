@@ -7,5 +7,8 @@
 module volgyerdo.neural {
     
     requires volgyerdo.math;
+    
+    exports volgyerdo.neural.logic;
+    exports volgyerdo.neural.structure;
 
 }
