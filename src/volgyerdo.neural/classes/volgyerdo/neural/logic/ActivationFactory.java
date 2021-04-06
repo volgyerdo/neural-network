@@ -114,7 +114,7 @@ public class ActivationFactory {
         activation.stretchX = 1f;
         activation.stretchY = 1f;
         activation.swish = 0f;
-        activation.slope = 1f;
+        activation.slope = 0.99f; //eredeti: 1, valtoztatni
         return activation;
     }
 
