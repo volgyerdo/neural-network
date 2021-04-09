@@ -25,8 +25,8 @@ import static org.junit.Assert.*;
  */
 public class ActivationFactoryTest {
 
-    private static final float MINIMUM = -10;
-    private static final float MAXIMUM = 10;
+    private static final float MINIMUM = -5;
+    private static final float MAXIMUM = 5;
     private static final float STEP = 0.1f;
     
     private static final double MAXIMUM_ERROR = 1;
@@ -51,6 +51,9 @@ public class ActivationFactoryTest {
             n++;
         }
         averageError /= n;
+        errorLogger("Sigmoid averageError: ", averageError);
+        errorLogger("Sigmoid maximumError: ", maximumError);
+        
         assertTrue("Sigmoid average difference", averageError < MAXIMUM_AVERAGE_ERROR);
         assertTrue("Sigmoid maximum difference", maximumError < MAXIMUM_ERROR);
         
@@ -66,28 +69,28 @@ public class ActivationFactoryTest {
 
     @Test
     public void testCreateSwish() { //DONE SAMPLE
+        System.out.println("Swish: ");
         Activation swishParameters = ActivationFactory.createSwish();
         double averageError = 0;
         double maximumError = 0;
-        int n = 0;
-        System.out.println("Swish: ");
+        int n = 0;        
         for(float x = MINIMUM; x <=MAXIMUM; x += STEP){
               double error = Math.abs(idealSwish(x)-ActivationLogic.activate(x, swishParameters));
               averageError += error;
               maximumError = Math.max(maximumError, error);
               n++;
               
-              logResultBetween(x, -1, 1, error); //Console Logging
+//              logResultBetween(x, -1, 1, error); //Console Logging
         }
-        averageError /= n;
-        
-        errorLogger("Swish: ", averageError); //Console Logging
+        averageError /= n;        
+        errorLogger("Swish averageError: ", averageError);
+        errorLogger("Swish maximumError: ", maximumError);
         
         assertTrue("Swish average difference", averageError < MAXIMUM_AVERAGE_ERROR);
         assertTrue("Swish maximum difference", maximumError < MAXIMUM_ERROR);
         
-        float minimum = -Float.MAX_VALUE;
-        float maximum = Float.MAX_VALUE;
+//        float minimum = -Float.MAX_VALUE;
+//        float maximum = Float.MAX_VALUE;
 //        assertEquals("swish minimum value", ActivationLogic.activate(minimum, swishParameters), idealSwish(minimum), MAXIMUM_ERROR);
 //        assertEquals("Swish maximum value", ActivationLogic.activate(maximum, swishParameters), idealSwish(maximum), MAXIMUM_ERROR);
     }
@@ -97,29 +100,32 @@ public class ActivationFactoryTest {
     }
 
     @Test
-    public void testCreateTanH() { 
+    public void testCreateTanH() {         
+        System.out.println("TanH:");
         Activation tanhParameters = ActivationFactory.createTanH();
         double averageError = 0;
         double maximumError = 0;
         int n = 0;
-        System.out.println("TanH:");
         for(float x = MINIMUM; x <= MAXIMUM; x += STEP){
             double error = Math.abs(idealTanh(x)-ActivationLogic.activate(x, tanhParameters));
+            
+            System.out.println(x + ";" +idealTanh(x) + ";" + ActivationLogic.activate(x, tanhParameters));
+            
             averageError += error;
             maximumError = Math.max(maximumError, error);
             n++;
             
-            logResultBetween(x, -1, 1, error);
+//            logResultBetween(x, -1, 1, error);
         }
-        averageError /= n;               
-        
-        errorLogger("TanH: ", averageError);
+        averageError /= n;
+        errorLogger("TanH averageError: ", averageError);
+        errorLogger("TanH maximumError: ", maximumError);
         
         assertTrue("TanH average difference", averageError < MAXIMUM_AVERAGE_ERROR);
         assertTrue("TanH maximum difference", maximumError < MAXIMUM_ERROR);
         
-        float minimum = -Float.MAX_VALUE;
-        float maximum = Float.MAX_VALUE;
+//        float minimum = -Float.MAX_VALUE;
+//        float maximum = Float.MAX_VALUE;
 //        assertEquals("TanH minimum value", ActivationLogic.activate(minimum, tanhParameters), idealTanh(minimum), MAXIMUM_ERROR);
 //        assertEquals("TanH maximum value", ActivationLogic.activate(maximum, tanhParameters), idealTanh(maximum), MAXIMUM_ERROR);
     }
@@ -129,32 +135,31 @@ public class ActivationFactoryTest {
     }
 
     @Test
-    public void testCreateReLu() {
+    public void testCreateReLu() {        
+        System.out.println("ReLu:");
         Activation ReLuParameters = ActivationFactory.createReLu();
         double averageError = 0;
         double maximumError = 0;
         int n = 0;
-        System.out.println("ReLu:");
         for(float x = MINIMUM; x <= MAXIMUM; x += STEP){
             double error = Math.abs(idealReLu(x)-ActivationLogic.activate(x, ReLuParameters));
             averageError += error;
             maximumError = Math.max(maximumError, error);              
             n++;         
-            logResultBetween(x, -1, 1, error);
+            
+//            logResultBetween(x, -1, 1, error);
         }
         averageError /= n;
-        
-        errorLogger("ReLu: ", averageError);
-    
+        errorLogger("ReLu averageError: ", averageError);
+        errorLogger("ReLu maximumError: ", maximumError);
         
         assertTrue("ReLu average difference", averageError < MAXIMUM_AVERAGE_ERROR);
         assertTrue("ReLu maximum difference", maximumError < MAXIMUM_ERROR);
         
-        float minimum = -Float.MAX_VALUE;
-        float maximum = Float.MAX_VALUE;
+//        float minimum = -Float.MAX_VALUE;
+//        float maximum = Float.MAX_VALUE;
 //        assertEquals("ReLu minimum value", ActivationLogic.activate(minimum, ReLuParameters), idealReLu(minimum), MAXIMUM_ERROR);
 //        assertEquals("ReLu maximum value", ActivationLogic.activate(maximum, ReLuParameters), idealReLu(maximum), MAXIMUM_ERROR);       
-        errorLogger("ReLu: ", averageError);
     }
     
     private float idealReLu(float x){
@@ -163,32 +168,30 @@ public class ActivationFactoryTest {
 
     @Test
     public void testCreateLeakyReLu() {
+        System.out.println("LeakyReLu: ");
         Activation LeakyReLuParameters = ActivationFactory.createLeakyReLu();
         double averageError = 0;
         double maximumError = 0;
         int n = 0;
-        System.out.println("LeakyReLu:");
         for(float x = MINIMUM; x <= MAXIMUM; x += STEP){
             double error = Math.abs(idealLeakyReLu(x)-ActivationLogic.activate(x, LeakyReLuParameters));
             averageError += error;
             maximumError = Math.max(maximumError, error);              
-            n++;         
-            logResultBetween(x, -1, 1, error);
+            n++;  
+            
+//            logResultBetween(x, -1, 1, error);
         }
         averageError /= n;
-        
-        errorLogger("LeakyReLu: ", averageError);
+        errorLogger("LeakyReLu averageError: ", averageError);
     
         
         assertTrue("LeakyReLu average difference", averageError < MAXIMUM_AVERAGE_ERROR);
         assertTrue("LeakyReLu maximum difference", maximumError < MAXIMUM_ERROR);
         
-        float minimum = -Float.MAX_VALUE;
-        float maximum = Float.MAX_VALUE;
+//        float minimum = -Float.MAX_VALUE;
+//        float maximum = Float.MAX_VALUE;
 //        assertEquals("LeakyReLu minimum value", ActivationLogic.activate(minimum, LeakyReLuParameters), idealLeakyReLu(minimum), MAXIMUM_ERROR);
 //        assertEquals("LeakyReLu maximum value", ActivationLogic.activate(maximum, LeakyReLuParameters), idealLeakyReLu(maximum), MAXIMUM_ERROR);
-        
-        errorLogger("LeakyReLu: ", averageError);
     }
     
     private float idealLeakyReLu(float x){
@@ -197,32 +200,28 @@ public class ActivationFactoryTest {
 
     @Test
     public void testCreateStep() {
+        System.out.println("Step:");
         Activation StepParameters = ActivationFactory.createStep();
         double averageError = 0;
         double maximumError = 0;
         int n = 0;
-        System.out.println("Step:");
         for(float x = MINIMUM; x <= MAXIMUM; x += STEP){
             double error = Math.abs(idealStep(x)-ActivationLogic.activate(x, StepParameters));
             averageError += error;
             maximumError = Math.max(maximumError, error);              
             n++;         
-            logResultBetween(x, -1, 1, error);
+//            logResultBetween(x, -1, 1, error);
         }
         averageError /= n;
-        
         errorLogger("Step: ", averageError);
-    
-        
+
         assertTrue("Step average difference", averageError < MAXIMUM_AVERAGE_ERROR);
         assertTrue("Step maximum difference", maximumError < MAXIMUM_ERROR);
         
-        float minimum = -Float.MAX_VALUE;
-        float maximum = Float.MAX_VALUE;
+//        float minimum = -Float.MAX_VALUE;
+//        float maximum = Float.MAX_VALUE;
 //        assertEquals("Step minimum value", ActivationLogic.activate(minimum, StepParameters), idealStep(minimum), MAXIMUM_ERROR);
 //        assertEquals("Step maximum value", ActivationLogic.activate(maximum, StepParameters), idealStep(maximum), MAXIMUM_ERROR);
-        
-        errorLogger("Step: ", averageError);
     }
     
     public float idealStep(float x){
@@ -241,29 +240,28 @@ public class ActivationFactoryTest {
         System.out.println("Linear:");
         for(float x = MINIMUM; x <= MAXIMUM; x += STEP){
             double error = Math.abs(idealLinear(x)-ActivationLogic.activate(x, LinearParameters));
+            
             System.out.println(x + ";" +idealLinear(x) + ";" + ActivationLogic.activate(x, LinearParameters));
+            
             averageError += error;
             maximumError = Math.max(maximumError, error);              
             n++;         
-            //logResultBetween(x, -1, 1, error);
+
+//            logResultBetween(x, -1, 1, error);
         }
         averageError /= n;
-        
         errorLogger("Linear: ", averageError);
     
         
         assertTrue("Linear average difference", averageError < MAXIMUM_AVERAGE_ERROR);
         assertTrue("Linear maximum difference", maximumError < MAXIMUM_ERROR);
         
-        float minimum = -Float.MAX_VALUE;
-        float maximum = Float.MAX_VALUE;
-        //assertEquals("Linear minimum value", ActivationLogic.activate(minimum, LinearParameters), idealLinear(minimum), MAXIMUM_ERROR);
+//        float minimum = -Float.MAX_VALUE;
+//        float maximum = Float.MAX_VALUE;
+//        assertEquals("Linear minimum value", ActivationLogic.activate(minimum, LinearParameters), idealLinear(minimum), MAXIMUM_ERROR);
 //        assertEquals("Linear maximum value", ActivationLogic.activate(maximum, LinearParameters), idealLinear(maximum), MAXIMUM_ERROR);
-        
-        errorLogger("Linear: ", averageError);
     }
     
-    //kell ez?
     public float idealLinear(float x){
         return x;
     }
@@ -271,7 +269,7 @@ public class ActivationFactoryTest {
     
     //LOG AVG AND MAX AVG ERROR    
     private void errorLogger(String functionName,double avgErr){
-        System.out.println(functionName + "Average error: " + avgErr);
+        System.out.println(functionName + avgErr);
         System.out.println("Max  average error: " + MAXIMUM_AVERAGE_ERROR);    
         System.out.println("");
     }
