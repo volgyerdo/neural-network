@@ -92,7 +92,9 @@ public abstract class Tensor {
 
     public abstract Tensor transpose();
 
-    public abstract Tensor convolution(Tensor kernel);
+    public abstract Tensor multiply(Tensor tensor);
+    
+    public abstract Tensor convolve(Tensor kernel);
 
     protected int index(int... indices) {
         checkDimensionCount(indices);

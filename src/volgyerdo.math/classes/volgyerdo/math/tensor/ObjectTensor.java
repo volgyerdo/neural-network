@@ -204,7 +204,12 @@ class ObjectTensor extends Tensor {
     }
 
     @Override
-    public Tensor convolution(Tensor kernel) {
+    public Tensor multiply(Tensor tensor) {
+        throw new RuntimeException("Object tensor doesn't have convolution function.");
+    }
+    
+    @Override
+    public Tensor convolve(Tensor kernel) {
         throw new RuntimeException("Object tensor doesn't have convolution function.");
     }
 

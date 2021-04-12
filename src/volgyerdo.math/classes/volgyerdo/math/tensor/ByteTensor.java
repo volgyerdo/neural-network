@@ -226,30 +226,24 @@ class ByteTensor extends Tensor {
         }
     }
 
+    
     @Override
-    public Tensor convolution(Tensor kernel) {
+    public Tensor multiply(Tensor tensor) {
+        return tensor;
+    }
+
+    
+    @Override
+    public Tensor convolve(Tensor kernel) {
         checkNull(kernel);
         checkClass(kernel);
         checkKernelDimensions(kernel);
         try {
             ByteTensor clone = (ByteTensor) clone();
-            if (dimensions.length == kernel.dimensions.length) {
-                return simpleConvolution(clone, kernel);
-            } else if (dimensions.length * 2 == kernel.dimensions.length) {
-                return fullConvolution(clone, kernel);
-            }
             return clone;
         } catch (CloneNotSupportedException ex) {
             throw new RuntimeException("Cloning is not supported.");
         }
-    }
-
-    public Tensor simpleConvolution(Tensor tensor, Tensor kernel) {
-        return tensor;
-    }
-
-    public Tensor fullConvolution(Tensor tensor, Tensor kernel) {
-        return tensor;
     }
 
     @Override
