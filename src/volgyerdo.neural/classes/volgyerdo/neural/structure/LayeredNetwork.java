@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Volgyerdo Nonprofit Kft.
+ * Copyright 2021 antal.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,13 @@ import volgyerdo.math.tensor.Tensor;
 
 /**
  *
- * @author Pocze Zsolt
+ * @author antal
  */
-public abstract class Network {
+public abstract class LayeredNetwork extends Network{
     
-    public NetworkDataType dataType;
+    public int[] inputDimensions;
+    public int[] outputDimensions;
+    public Layer[] layers;
+    public Tensor[] connections;
     
 }

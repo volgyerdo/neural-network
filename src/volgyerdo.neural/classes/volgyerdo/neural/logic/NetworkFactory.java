@@ -15,7 +15,11 @@
  */
 package volgyerdo.neural.logic;
 
+import volgyerdo.neural.structure.ConvolutionalNetwork;
+import volgyerdo.neural.structure.Layer;
+import volgyerdo.neural.structure.LayeredNetwork;
 import volgyerdo.neural.structure.Network;
+import volgyerdo.neural.structure.NetworkDataType;
 
 /**
  *
@@ -23,8 +27,13 @@ import volgyerdo.neural.structure.Network;
  */
 public class NetworkFactory {
 
-    public static Network create(int[]... dimensions){
+    public static ConvolutionalNetwork createConvolutionalNetwork(
+            NetworkDataType dataType){
         return null;
+    }
+    
+    public static void addLayer(LayeredNetwork network, Layer layer){
+        
     }
 
 }

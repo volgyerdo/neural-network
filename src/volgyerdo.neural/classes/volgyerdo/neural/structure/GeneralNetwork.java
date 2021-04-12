@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Volgyerdo Nonprofit Kft.
+ * Copyright 2021 antal.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
  */
 package volgyerdo.neural.structure;
 
-import volgyerdo.math.tensor.Tensor;
-
 /**
  *
- * @author Pocze Zsolt
+ * @author antal
  */
-public abstract class Network {
-    
-    public NetworkDataType dataType;
+public class GeneralNetwork extends Network{
     
 }

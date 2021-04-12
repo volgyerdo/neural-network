@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Volgyerdo Nonprofit Kft.
+ * Copyright 2021 antal.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.neural.structure;
+package volgyerdo.neural.logic;
 
-import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.structure.Layer;
+import volgyerdo.neural.structure.NetworkDataType;
 
 /**
  *
- * @author Pocze Zsolt
+ * @author antal
  */
-public abstract class Network {
+public class LayerFactory {
     
-    public NetworkDataType dataType;
+    public Layer createLayer(NetworkDataType dataType, int... dimensions){
+        return null;
+    }
     
 }
