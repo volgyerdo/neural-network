@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.neural.structure;
-
-import volgyerdo.math.tensor.Tensor;
+package volgyerdo.neural.logic;
 
 /**
  *
  * @author antal
  */
-public abstract class LayeredNetwork extends Network{
-    
-    public int[] inputDimensions;
-    public int[] outputDimensions;
-    public Layer[] layers;
-    public Connection[] connections;
+public class ConnectionLogic {
     
 }
