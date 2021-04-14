@@ -13,28 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.neural.logic;
-
-import volgyerdo.neural.structure.Network;
+package volgyerdo.neural.structure;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class NetworkLogic {
-
-    private NetworkLogic() {
-    }
+public class PartiallyConnectedNetwork extends LayeredNetwork{
     
-    public static void randomize(Network network){
-        
-    }
-    
-    public static void propagate(Network network){
-        
-    }
-    
-    public static void backPropagate(Network network){
-        
-    }
 }
