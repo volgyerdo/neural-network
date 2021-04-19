@@ -15,7 +15,7 @@
  */
 package volgyerdo.neural.structure;
 
-import volgyerdo.math.tensor.Tensor;
+import java.util.List;
 
 /**
  *
@@ -25,7 +25,7 @@ public abstract class LayeredNetwork extends Network{
     
     public int[] inputDimensions;
     public int[] outputDimensions;
-    public Layer[] layers;
-    public Connection[] connections;
+    public List<Layer> layers;
+    public List<Connection> connections;
     
 }

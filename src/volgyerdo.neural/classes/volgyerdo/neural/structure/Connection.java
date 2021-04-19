@@ -22,6 +22,6 @@ import volgyerdo.math.tensor.Tensor;
  * @author antal
  */
 public class Connection {
-    Tensor weights[];
+    Tensor weights;
 
 }
