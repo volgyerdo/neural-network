@@ -28,30 +28,38 @@ class FloatTensor extends Tensor {
     public final float[] values;
 
     public FloatTensor(int... dimensions) {
-        super(dimensions);
+        super(TYPE.FLOAT, dimensions);
         values = new float[ArrayUtils.product(dimensions)];
     }
     
     @Override
-    public Tensor convertToByteTensor(){
-        ByteTensor byteTensor = (ByteTensor)Tensor.createByteTensor(dimensions);
+    public Tensor convertTo(TYPE type) {
+        return switch (type) {
+            case BYTE -> convertToByteTensor();
+            case SHORT -> convertToShortTensor();
+            case FLOAT -> convertToFloatTensor();
+            case OBJECT -> convertToObjectTensor();
+            default -> null;
+        };
+    }
+    
+    private Tensor convertToByteTensor(){
+        ByteTensor byteTensor = (ByteTensor)Tensor.create(TYPE.BYTE, dimensions);
         for (int i = 0; i < values.length; i++) {
             byteTensor.values[i] = PrimitiveUtils.toByte(values[i]);
         }
         return byteTensor;
     }
     
-    @Override
-    public Tensor convertToShortTensor(){
-        ShortTensor shortTensor = (ShortTensor)Tensor.createShortTensor(dimensions);
+    private Tensor convertToShortTensor(){
+        ShortTensor shortTensor = (ShortTensor)Tensor.create(TYPE.SHORT, dimensions);
         for (int i = 0; i < values.length; i++) {
             shortTensor.values[i] = PrimitiveUtils.toShort(values[i]);
         }
         return shortTensor;
     }
     
-    @Override
-    public Tensor convertToFloatTensor(){
+    private Tensor convertToFloatTensor(){
         try {
             return clone();
         } catch (CloneNotSupportedException ex) {
@@ -59,9 +67,8 @@ class FloatTensor extends Tensor {
         }
     }
     
-    @Override
-    public Tensor convertToObjectTensor(){
-        ObjectTensor objectTensor = (ObjectTensor)Tensor.createObjectTensor(dimensions);
+    private Tensor convertToObjectTensor(){
+        ObjectTensor objectTensor = (ObjectTensor)Tensor.create(TYPE.OBJECT, dimensions);
         for (int i = 0; i < values.length; i++) {
             objectTensor.values[i] = values[i];
         }
@@ -203,7 +210,7 @@ class FloatTensor extends Tensor {
 
     @Override
     public Tensor transpose() {
-        FloatTensor transposed = (FloatTensor) Tensor.createFloatTensor(ArrayUtils.reverse(dimensions));
+        FloatTensor transposed = (FloatTensor) Tensor.create(TYPE.FLOAT, ArrayUtils.reverse(dimensions));
         int[] indices = new int[dimensions.length];
         Arrays.fill(indices, 0);
         transposeRecursive(transposed, 0, indices);

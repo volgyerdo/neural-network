@@ -23,7 +23,7 @@ import volgyerdo.math.tensor.Tensor;
  */
 public class Layer {
     
-    public NetworkDataType dataType;
+    public Tensor.TYPE dataType;
     public int[] dimensions;
     public Tensor states;
     public Tensor activations;

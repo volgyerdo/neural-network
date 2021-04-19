@@ -23,6 +23,6 @@ import volgyerdo.math.tensor.Tensor;
  */
 public abstract class Network {
     
-    public NetworkDataType dataType;
+    public Tensor.TYPE dataType;
     
 }

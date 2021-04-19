@@ -15,13 +15,12 @@
  */
 package volgyerdo.neural.logic;
 
+import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConvolutionalNetwork;
 import volgyerdo.neural.structure.FullyConnectedNetwork;
 import volgyerdo.neural.structure.GeneralNetwork;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.LayeredNetwork;
-import volgyerdo.neural.structure.Network;
-import volgyerdo.neural.structure.NetworkDataType;
 import volgyerdo.neural.structure.PartiallyConnectedNetwork;
 
 /**
@@ -31,22 +30,22 @@ import volgyerdo.neural.structure.PartiallyConnectedNetwork;
 public class NetworkFactory {
 
     public static ConvolutionalNetwork createConvolutionalNetwork(
-            NetworkDataType dataType){
+            Tensor.TYPE dataType){
         return null;
     }
     
     public static FullyConnectedNetwork createFullyConnectedNetwork(
-            NetworkDataType dataType){
+            Tensor.TYPE dataType){
         return null;
     }
     
     public static PartiallyConnectedNetwork createPartiallyConnectedNetwork(
-            NetworkDataType dataType){
+            Tensor.TYPE dataType){
         return null;
     }
     
     public static GeneralNetwork createGeneralNetwork(
-            NetworkDataType dataType){
+            Tensor.TYPE dataType){
         return null;
     }
     

@@ -15,8 +15,8 @@
  */
 package volgyerdo.neural.logic;
 
+import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.NetworkDataType;
 
 /**
  *
@@ -24,7 +24,7 @@ import volgyerdo.neural.structure.NetworkDataType;
  */
 public class LayerFactory {
     
-    public Layer createLayer(NetworkDataType dataType, int... dimensions){
+    public Layer createLayer(Tensor.TYPE dataType, int... dimensions){
         return null;
     }
     

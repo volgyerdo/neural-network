@@ -23,11 +23,17 @@ import java.util.Arrays;
  */
 public abstract class Tensor {
 
+    public static enum TYPE {
+        BYTE, SHORT, FLOAT, OBJECT
+    };
+
+    public final TYPE type;
     public final int[] dimensions;
     public final int[] multipliers;
 
-    protected Tensor(int... dimensions) {
+    protected Tensor(TYPE type, int... dimensions) {
         checkNewDimensions(dimensions);
+        this.type = type;
         this.dimensions = dimensions;
         multipliers = new int[dimensions.length];
         multipliers[0] = 1;
@@ -36,29 +42,30 @@ public abstract class Tensor {
         }
     }
 
-    public static Tensor createByteTensor(int... dimensions) {
-        return new ByteTensor(dimensions);
+    public static Tensor create(TYPE type, int... dimensions) {
+        return switch (type) {
+            case BYTE ->
+                new ByteTensor(dimensions);
+            case SHORT ->
+                new ShortTensor(dimensions);
+            case FLOAT ->
+                new FloatTensor(dimensions);
+            case OBJECT ->
+                new ObjectTensor(dimensions);
+            default ->
+                null;
+        };
     }
 
-    public static Tensor createShortTensor(int... dimensions) {
-        return new ShortTensor(dimensions);
+    public Tensor createSimilar(int... dimensions) {
+        return create(type, dimensions);
     }
 
-    public static Tensor createFloatTensor(int... dimensions) {
-        return new FloatTensor(dimensions);
+    public Tensor createSimilar() {
+        return create(type, dimensions);
     }
 
-    public static Tensor createObjectTensor(int... dimensions) {
-        return new ObjectTensor(dimensions);
-    }
-    
-    abstract public Tensor convertToByteTensor();
-
-    abstract public Tensor convertToShortTensor();
-
-    abstract public Tensor convertToFloatTensor();
-
-    abstract public Tensor convertToObjectTensor();
+    abstract public Tensor convertTo(TYPE type);
 
     public abstract void setByteValue(byte value, int... indices);
 
@@ -100,7 +107,7 @@ public abstract class Tensor {
         int m = dimensions.length;
         int n = multiplier.dimensions.length;
         int c = determineCommonPart(multiplier);
-        if(c == 0){
+        if (c == 0) {
             throw new IllegalArgumentException("Multiply with no common dimension part.");
         }
         int a = m - c;
@@ -109,7 +116,7 @@ public abstract class Tensor {
         int[] rd = new int[z];
         System.arraycopy(multiplier.dimensions, 0, rd, 0, b);
         System.arraycopy(dimensions, c, rd, b, a);
-        Tensor result = createSimilarTensor(rd);
+        Tensor result = createSimilar(rd);
         multiplyRecursive(multiplier, result, a, b, c, z, 0, new int[z]);
         return result;
     }
@@ -186,65 +193,6 @@ public abstract class Tensor {
         return common;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        if (this instanceof ByteTensor) {
-            return ((ByteTensor) this).equals(obj);
-        } else if (this instanceof ShortTensor) {
-            return ((ShortTensor) this).equals(obj);
-        } else if (this instanceof FloatTensor) {
-            return ((FloatTensor) this).equals(obj);
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        if (this instanceof ByteTensor) {
-            return ((ByteTensor) this).hashCode();
-        } else if (this instanceof ShortTensor) {
-            return ((ShortTensor) this).hashCode();
-        } else if (this instanceof FloatTensor) {
-            return ((FloatTensor) this).hashCode();
-        }
-        return 0;
-    }
-
-    public Tensor createSimilarTensor(int... dimensions){
-        if (this instanceof ByteTensor) {
-            return createByteTensor(dimensions);
-        } else if (this instanceof ShortTensor) {
-            return createShortTensor(dimensions);
-        } else if (this instanceof FloatTensor) {
-            return createFloatTensor(dimensions);
-        } else if (this instanceof FloatTensor) {
-            return createObjectTensor(dimensions);
-        }
-        return null;
-    }
-    
-    public Tensor createSimilarTensor(){
-        if (this instanceof ByteTensor) {
-            return createByteTensor(dimensions);
-        } else if (this instanceof ShortTensor) {
-            return createShortTensor(dimensions);
-        } else if (this instanceof FloatTensor) {
-            return createFloatTensor(dimensions);
-        } else if (this instanceof FloatTensor) {
-            return createObjectTensor(dimensions);
-        }
-        return null;
-    }
-    
     @Override
     public Tensor clone() throws CloneNotSupportedException {
         Tensor clone = null;

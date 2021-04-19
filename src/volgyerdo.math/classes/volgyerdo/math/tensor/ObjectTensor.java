@@ -27,27 +27,34 @@ class ObjectTensor extends Tensor {
     public final Object[] values;
 
     public ObjectTensor(int... dimensions) {
-        super(dimensions);
+        super(TYPE.OBJECT, dimensions);
         values = new Object[ArrayUtils.product(dimensions)];
     }
     
     @Override
-    public Tensor convertToByteTensor(){
+    public Tensor convertTo(TYPE type) {
+        return switch (type) {
+            case BYTE -> convertToByteTensor();
+            case SHORT -> convertToShortTensor();
+            case FLOAT -> convertToFloatTensor();
+            case OBJECT -> convertToObjectTensor();
+            default -> null;
+        };
+    }
+    
+    private Tensor convertToByteTensor(){
         throw new RuntimeException("Object tensor cannot be converted to byte tensor.");
     }
     
-    @Override
-    public Tensor convertToShortTensor(){
+    private Tensor convertToShortTensor(){
         throw new RuntimeException("Object tensor cannot be converted to short tensor.");
     }
     
-    @Override
-    public Tensor convertToFloatTensor(){
+    private Tensor convertToFloatTensor(){
         throw new RuntimeException("Object tensor cannot be converted to float tensor.");
     }
     
-    @Override
-    public Tensor convertToObjectTensor(){
+    private Tensor convertToObjectTensor(){
         try {
             return clone();
         } catch (CloneNotSupportedException ex) {
