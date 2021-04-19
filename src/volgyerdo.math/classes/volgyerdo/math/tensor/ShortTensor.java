@@ -225,13 +225,66 @@ class ShortTensor extends Tensor {
     }
 
     @Override
-    public Tensor multiply(Tensor tensor) {
-        throw new RuntimeException("Object tensor doesn't have convolution function.");
+    protected void multiplyRecursive(Tensor multiplier, Tensor result, int a, int b, int c, int z, int n, int[] d) {
+        if (n < z - 1) {
+            for (int i = 0; i < result.dimensions[n]; i++) {
+                d[n] = i;
+                multiplyRecursive(multiplier, result, a, b, c, z, n + 1, d);
+            }
+        } else {
+            result.setShortValue(multiplicationSum(multiplier, a, b, c, d, 0, new int[c]), d);
+        }
     }
-    
+
+    private short multiplicationSum(Tensor multiplier, int a, int b, int c, int[] d, int n, int[] e) {
+        if (n < c - 1) {
+            short s = 0;
+            for (int i = 0; i < dimensions[n]; i++) {
+                e[n] = i;
+                s += multiplicationSum(multiplier, a, b, c, d, n, e);
+            }
+            return s;
+        } else {
+            int[] rd1 = new int[c + a];
+            System.arraycopy(e, 0, rd1, 0, c);
+            System.arraycopy(d, c, rd1, c, a);
+            int[] rd2 = new int[b + c];
+            System.arraycopy(d, 0, rd2, 0, b);
+            System.arraycopy(e, b, rd2, 0, c);
+            return PrimitiveUtils.toShort(getShortValue(rd1) * multiplier.getShortValue(rd2));
+        }
+    }
+
     @Override
-    public Tensor convolve(Tensor kernel) {
-        throw new RuntimeException("Object tensor doesn't have convolution function.");
+    protected void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d) {
+        if (k < dimensions.length - 1) {
+            for (int i = 0; i < dimensions[k]; i++) {
+                d[k] = i;
+                convolveRecursive(kernel, result, k + 1, d);
+            }
+        } else {
+            result.setShortValue(convolutionSum(kernel, d, 0, new int[dimensions.length]), d);
+        }
+    }
+
+    private short convolutionSum(Tensor kernel, int[] d, int k, int[] e) {
+        if (k < dimensions.length - 1) {
+            short s = 0;
+            for (int i = 0; i < kernel.dimensions[k]; i++) {
+                e[k] = i;
+                s += convolutionSum(kernel, d, k + 1, e);
+            }
+            return s;
+        } else {
+            int[] rd = new int[dimensions.length];
+            for (int i = 0; i < dimensions.length; i++) {
+                rd[i] = d[i] + e[i] - kernel.dimensions[i] / 2;
+                if(rd[i] < 0 || rd[i] > dimensions[i] -1){
+                    return 0;
+                }
+            }
+            return PrimitiveUtils.toShort(getShortValue(rd) * kernel.getShortValue(e));
+        }
     }
     
     @Override

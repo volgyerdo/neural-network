@@ -15,6 +15,8 @@
  */
 package volgyerdo.math.tensor;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
@@ -49,7 +51,7 @@ public abstract class Tensor {
     public static Tensor createObjectTensor(int... dimensions) {
         return new ObjectTensor(dimensions);
     }
-
+    
     abstract public Tensor convertToByteTensor();
 
     abstract public Tensor convertToShortTensor();
@@ -92,11 +94,43 @@ public abstract class Tensor {
 
     public abstract Tensor transpose();
 
-    public abstract Tensor multiply(Tensor tensor);
-    
-    public abstract Tensor convolve(Tensor kernel);
+    public Tensor multiply(Tensor multiplier) {
+        checkNull(multiplier);
+        checkClass(multiplier);
+        int m = dimensions.length;
+        int n = multiplier.dimensions.length;
+        int c = determineCommonPart(multiplier);
+        if(c == 0){
+            throw new IllegalArgumentException("Multiply with no common dimension part.");
+        }
+        int a = m - c;
+        int b = n - c;
+        int z = a + b;
+        int[] rd = new int[z];
+        System.arraycopy(multiplier.dimensions, 0, rd, 0, b);
+        System.arraycopy(dimensions, c, rd, b, a);
+        Tensor result = createSimilarTensor(rd);
+        multiplyRecursive(multiplier, result, a, b, c, z, 0, new int[z]);
+        return result;
+    }
 
-    protected int index(int... indices) {
+    protected abstract void multiplyRecursive(Tensor multiplier, Tensor result, int a, int b, int c, int z, int n, int[] d);
+
+    public Tensor convolve(Tensor kernel) {
+        checkNull(kernel);
+        checkClass(kernel);
+        try {
+            Tensor result = clone();
+            convolveRecursive(kernel, result, 0, new int[dimensions.length]);
+            return result;
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Cloning is not supported.");
+        }
+    }
+
+    protected abstract void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d);
+
+    protected final int index(int... indices) {
         checkDimensionCount(indices);
         if (indices.length == 0) {
             return indices[0];
@@ -108,31 +142,31 @@ public abstract class Tensor {
         return index;
     }
 
-    protected void checkNull(Tensor tensor) {
+    protected final void checkNull(Tensor tensor) {
         if (!tensor.getClass().equals(getClass())) {
             throw new IllegalArgumentException("Tensor is null.");
         }
     }
 
-    protected void checkClass(Tensor tensor) {
+    protected final void checkClass(Tensor tensor) {
         if (!tensor.getClass().equals(getClass())) {
             throw new IllegalArgumentException("Tensor classes does not match.");
         }
     }
 
-    protected void checkNewDimensions(int... dimensions) {
+    protected final void checkNewDimensions(int... dimensions) {
         if (dimensions.length == 0) {
             throw new IllegalArgumentException("Dimensions element count is zero.");
         }
     }
 
-    protected void checkDimensionCount(int... dimensions) {
+    protected final void checkDimensionCount(int... dimensions) {
         if (this.dimensions.length != dimensions.length) {
             throw new IllegalArgumentException("Tensor dimension element count does not equal.");
         }
     }
 
-    protected void checkDimensions(Tensor tensor) {
+    protected final void checkDimensions(Tensor tensor) {
         for (int i = 0; i < dimensions.length; i++) {
             if (tensor.dimensions[i] != dimensions[i]) {
                 throw new IllegalArgumentException("Tensor dimensions does not match.");
@@ -140,25 +174,16 @@ public abstract class Tensor {
         }
     }
 
-    protected void checkKernelDimensions(Tensor kernel) {
-        if (dimensions.length != kernel.dimensions.length
-                && dimensions.length * 2 != kernel.dimensions.length) {
-            throw new IllegalArgumentException("Tensor dimension count does not match.");
-        }
-        if (dimensions.length == kernel.dimensions.length) {
-            for (int i = 0; i < dimensions.length; i++) {
-                if (kernel.dimensions[i] > dimensions[i]) {
-                    throw new IllegalArgumentException("Tensor dimensions does not match.");
-                }
-            }
-        } else if (dimensions.length * 2 == kernel.dimensions.length) {
-            for (int i = 0; i < dimensions.length; i++) {
-                if (kernel.dimensions[i] != dimensions[i]
-                        || kernel.dimensions[dimensions.length + i] != dimensions[i]) {
-                    throw new IllegalArgumentException("Tensor dimensions does not match.");
-                }
+    protected final int determineCommonPart(Tensor multiplier) {
+        int common = 0;
+        int m = dimensions.length;
+        int n = multiplier.dimensions.length;
+        for (int i = 1; i <= Math.min(n, m); i++) {
+            if (Arrays.equals(multiplier.dimensions, n - i, i, dimensions, 0, i)) {
+                common = i;
             }
         }
+        return common;
     }
 
     @Override
@@ -194,6 +219,32 @@ public abstract class Tensor {
         return 0;
     }
 
+    public Tensor createSimilarTensor(int... dimensions){
+        if (this instanceof ByteTensor) {
+            return createByteTensor(dimensions);
+        } else if (this instanceof ShortTensor) {
+            return createShortTensor(dimensions);
+        } else if (this instanceof FloatTensor) {
+            return createFloatTensor(dimensions);
+        } else if (this instanceof FloatTensor) {
+            return createObjectTensor(dimensions);
+        }
+        return null;
+    }
+    
+    public Tensor createSimilarTensor(){
+        if (this instanceof ByteTensor) {
+            return createByteTensor(dimensions);
+        } else if (this instanceof ShortTensor) {
+            return createShortTensor(dimensions);
+        } else if (this instanceof FloatTensor) {
+            return createFloatTensor(dimensions);
+        } else if (this instanceof FloatTensor) {
+            return createObjectTensor(dimensions);
+        }
+        return null;
+    }
+    
     @Override
     public Tensor clone() throws CloneNotSupportedException {
         Tensor clone = null;

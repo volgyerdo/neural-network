@@ -25,12 +25,20 @@ public class PrimitiveUtils {
         return (byte)min(max(x, Byte.MIN_VALUE), Byte.MAX_VALUE);
     }
     
+    public static byte toByte(int x){
+        return (byte)min(max(x, Byte.MIN_VALUE), Byte.MAX_VALUE);
+    }
+    
     public static byte toByte(float x){
         return (byte)min(max(x, Byte.MIN_VALUE), Byte.MAX_VALUE);
     }
     
     public static byte toByte(double x){
         return (byte)min(max(x, Byte.MIN_VALUE), Byte.MAX_VALUE);
+    }
+    
+    public static short toShort(int x){
+        return (short)min(max(x, Short.MIN_VALUE), Short.MAX_VALUE);
     }
     
     public static short toShort(float x){
@@ -53,6 +61,10 @@ public class PrimitiveUtils {
         return a < b ? a : b;
     }
     
+    public static int min(int a, int b){
+        return a < b ? a : b;
+    }
+    
     public static float min(float a, float b){
         return a < b ? a : b;
     }
@@ -66,6 +78,10 @@ public class PrimitiveUtils {
     }
     
     public static short max(short a, short b){
+        return a > b ? a : b;
+    }
+    
+    public static int max(int a, int b){
         return a > b ? a : b;
     }
     
