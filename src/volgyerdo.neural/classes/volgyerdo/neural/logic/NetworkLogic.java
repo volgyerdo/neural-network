@@ -17,6 +17,7 @@ package volgyerdo.neural.logic;
 
 import volgyerdo.neural.structure.ConvolutionalNetwork;
 import volgyerdo.neural.structure.FullyConnectedNetwork;
+import volgyerdo.neural.structure.LayeredNetwork;
 import volgyerdo.neural.structure.Network;
 
 /**
@@ -38,6 +39,10 @@ public class NetworkLogic {
     
     public static void propagate(ConvolutionalNetwork network){
         
+    }
+    
+    public static void propagate(LayeredNetwork network){
+    
     }
     
     public static void backPropagate(Network network){
