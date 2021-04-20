@@ -482,4 +482,23 @@ public class ByteTensorTest {
         assertEquals("Transposed tensor", (byte) 78, transposed.getByteValue(2, 1));
     }
 
+    @Test
+    public void testMultiply() {
+        ByteTensor a = new ByteTensor(1);
+        a.setByteValue((byte) 5, 0);
+        ByteTensor b = new ByteTensor(1);
+        b.setByteValue((byte) -3, 0);
+        Tensor c = a.multiply(b);
+        assertEquals("1D multiplication", (byte) -15, c.getByteValue(0));
+        
+        a = new ByteTensor(2);
+        a.setByteValue((byte) 2, 0);
+        a.setByteValue((byte) 3, 1);
+        b = new ByteTensor(2);
+        b.setByteValue((byte) -5, 0);
+        b.setByteValue((byte) 4, 1);
+        c = a.multiply(b);
+        assertEquals("1D multiplication", (byte) -10, c.getByteValue(0));
+        assertEquals("1D multiplication", (byte) 12, c.getByteValue(1));
+    }
 }
