@@ -24,6 +24,7 @@ import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.LayeredNetwork;
 import volgyerdo.neural.structure.PartiallyConnectedNetwork;
 
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
@@ -36,35 +37,16 @@ public class NetworkFactory {
     }
     
     public static FullyConnectedNetwork createFullyConnectedNetwork(
-            Tensor.TYPE dataType,
-            int layercount,
-            int... inputdimensions
-    ){
-        
-        //hol adjuk meg a retegek szamat, bennuk levo neuronok szamat?
-        //feltétel: automatikusan sulytenzort tartalmazo Connection
-        //          ^ ez osszekoti az uj reteget az elozo reteggel
-        //          ha nincs reteg nem kell Connection
+            Tensor.TYPE dataType){
         //         sulytenzor dimenzioja = L(i) lenght + L(i+1) lenght
-        
         //network letrehozasa
-        FullyConnectedNetwork FCN = new FullyConnectedNetwork();
-        FCN.dataType = dataType;
-        FCN.inputDimensions = inputdimensions;
+        FullyConnectedNetwork fcn = new FullyConnectedNetwork();
+        fcn.dataType = dataType;
+        //retegek letrehozas (nem itt)
         
-        //retegek letrehozas
-        for (int i = 0; i < layercount; i++) {
-        FCN.layers.add(new Layer());
-        }
-        
-        //kapcsolat letrehozasa
-        for (int i = 0; i < layercount-1; i++) {
-        FCN.connections.add(new Connection());
-        FCN.connections.get(i).weights = Tensor.create(dataType,
-                                                        FCN.layers.get(i).dimensions.length 
-                                                      + FCN.layers.get(i+1).dimensions.length);
-        }
-       
+        //retegek hozzadasa a networkhoz
+                
+        //kapcsolat letrehozasa       
         return null;
     }
     
@@ -78,9 +60,13 @@ public class NetworkFactory {
         return null;
     }
     
-        
+       
+    
     public static void addLayer(LayeredNetwork network, Layer layer){
-        
+           
+        Layer newLayer = null;
+        network.layers.add(newLayer);
     }
         
+   
 }
