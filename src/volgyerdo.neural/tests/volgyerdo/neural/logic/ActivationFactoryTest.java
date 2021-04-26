@@ -28,15 +28,15 @@ import static org.junit.Assert.*;
  */
 public class ActivationFactoryTest {
 
-    private static final float MAXIMUM = Float.MAX_VALUE / 10f;
+    private static final float MAXIMUM = 1000000;
     private static final float START_STEP = 0.1f;
 
+    private static final double PROPORTIONAL_BORDER = 1;
+
     private static final double MAXIMUM_ERROR = 2;
-    private static final double MAXIMUM_AVERAGE_ERROR = 0.2;
+    private static final double MAXIMUM_AVERAGE_ERROR = 0.5;
 
     private static final DecimalFormat FORMATTER = new DecimalFormat("0.0000");
-
-    private static final double LEAKYRELUVALUE = 0.01; //between 0.01 to 0.1-0.2
 
     public ActivationFactoryTest() {
     }
@@ -62,128 +62,57 @@ public class ActivationFactoryTest {
     }
 
     @Test
-    public void testCreateTanH() {         
+    public void testCreateTanH() {
         Activation tanhParameters = ActivationFactory.createTanH();
         testActivationFunction("TanH", tanhParameters, (x) -> idealTanh(x));
     }
-    
-    private float idealTanh(float x){
+
+    private float idealTanh(float x) {
         return (float) Math.tanh(x);
     }
 
     @Test
-    public void testCreateReLu() {        
+    public void testCreateReLu() {
         Activation tanhParameters = ActivationFactory.createReLu();
         testActivationFunction("ReLu", tanhParameters, (x) -> idealReLu(x));
     }
-    
-    private float idealReLu(float x){
+
+    private float idealReLu(float x) {
         return (float) Math.max(0, x);
     }
-//
-//    @Test
-//    public void testCreateLeakyReLu() {
-//        System.out.println("LeakyReLu: ");
-//        Activation LeakyReLuParameters = ActivationFactory.createLeakyReLu();
-//        double averageError = 0;
-//        double maximumError = 0;
-//        int n = 0;
-//        for(float x = MINIMUM; x <= MAXIMUM; x += STEP){
-//            double error = Math.abs(idealLeakyReLu(x)-ActivationLogic.activate(x, LeakyReLuParameters));
-//            averageError += error;
-//            maximumError = Math.max(maximumError, error);              
-//            n++;  
-//            
-////            logResultBetween(x, -1, 1, error);
-//        }
-//        averageError /= n;
-//        errorLogger("LeakyReLu averageError: ", averageError);
-//    
-//        
-//        assertTrue("LeakyReLu average difference", averageError < MAXIMUM_AVERAGE_ERROR);
-//        assertTrue("LeakyReLu maximum difference", maximumError < MAXIMUM_ERROR);
-//        
-////        float minimum = -Float.MAX_VALUE;
-////        float maximum = Float.MAX_VALUE;
-////        assertEquals("LeakyReLu minimum value", ActivationLogic.activate(minimum, LeakyReLuParameters), idealLeakyReLu(minimum), MAXIMUM_ERROR);
-////        assertEquals("LeakyReLu maximum value", ActivationLogic.activate(maximum, LeakyReLuParameters), idealLeakyReLu(maximum), MAXIMUM_ERROR);
-//    }
-//    
-//    private float idealLeakyReLu(float x){
-//        return (float) Math.max(LEAKYRELUVALUE*x, x);
-//    }
-//
-//    @Test
-//    public void testCreateStep() {
-//        System.out.println("Step:");
-//        Activation StepParameters = ActivationFactory.createStep();
-//        double averageError = 0;
-//        double maximumError = 0;
-//        int n = 0;
-//        for(float x = MINIMUM; x <= MAXIMUM; x += STEP){
-//            double error = Math.abs(idealStep(x)-ActivationLogic.activate(x, StepParameters));
-//            averageError += error;
-//            maximumError = Math.max(maximumError, error);              
-//            n++;         
-////            logResultBetween(x, -1, 1, error);
-//        }
-//        averageError /= n;
-//        errorLogger("Step: ", averageError);
-//
-//        assertTrue("Step average difference", averageError < MAXIMUM_AVERAGE_ERROR);
-//        assertTrue("Step maximum difference", maximumError < MAXIMUM_ERROR);
-//        
-////        float minimum = -Float.MAX_VALUE;
-////        float maximum = Float.MAX_VALUE;
-////        assertEquals("Step minimum value", ActivationLogic.activate(minimum, StepParameters), idealStep(minimum), MAXIMUM_ERROR);
-////        assertEquals("Step maximum value", ActivationLogic.activate(maximum, StepParameters), idealStep(maximum), MAXIMUM_ERROR);
-//    }
-//    
-//    public float idealStep(float x){
-//        if(x>0) { 
-//            return 1; }
-//        else {
-//            return 0; }
-//    }
-//
-//    @Test
-//    public void testCreateLinear() {
-//        Activation LinearParameters = ActivationFactory.createLinear();
-//        double averageError = 0;
-//        double maximumError = 0;
-//        int n = 0;
-//        System.out.println("Linear:");
-//        for(float x = MINIMUM; x <= MAXIMUM; x += STEP){
-//            double error = Math.abs(idealLinear(x)-ActivationLogic.activate(x, LinearParameters));
-//            
-//            System.out.println(x + ";" +idealLinear(x) + ";" + ActivationLogic.activate(x, LinearParameters));
-//            
-//            averageError += error;
-//            maximumError = Math.max(maximumError, error);              
-//            n++;         
-//
-////            logResultBetween(x, -1, 1, error);
-//        }
-//        averageError /= n;
-//        errorLogger("Linear: ", averageError);
-//    
-//        
-//        assertTrue("Linear average difference", averageError < MAXIMUM_AVERAGE_ERROR);
-//        assertTrue("Linear maximum difference", maximumError < MAXIMUM_ERROR);
-//        
-////        float minimum = -Float.MAX_VALUE;
-////        float maximum = Float.MAX_VALUE;
-////        assertEquals("Linear minimum value", ActivationLogic.activate(minimum, LinearParameters), idealLinear(minimum), MAXIMUM_ERROR);
-////        assertEquals("Linear maximum value", ActivationLogic.activate(maximum, LinearParameters), idealLinear(maximum), MAXIMUM_ERROR);
-//    }
-//    
-//    public float idealLinear(float x){
-//        return x;
-//    }
 
+    @Test
+    public void testCreateLeakyReLu() {
+        Activation leakyReLuParameters = ActivationFactory.createLeakyReLu();
+        testActivationFunction("Leaky ReLu", leakyReLuParameters, (x) -> idealLeakyReLu(x));
+    }
 
-    public void testActivationFunction(String functionName, Activation parameters, IdealActivationFunction idealFunction) {
-        
+    private float idealLeakyReLu(float x) {
+        return (float) Math.max(0.01 * x, x);
+    }
+
+    @Test
+    public void testCreateStep() {
+        Activation stepParameters = ActivationFactory.createStep();
+        testActivationFunction("Step", stepParameters, (x) -> idealStep(x));
+    }
+
+    public float idealStep(float x) {
+        return x <= 0 ? 0 : 1;
+    }
+
+    @Test
+    public void testCreateLinear() {
+        Activation linearParameters = ActivationFactory.createLinear();
+        testActivationFunction("Linear", linearParameters, (x) -> idealLinear(x));
+    }
+
+    public float idealLinear(float x) {
+        return x;
+    }
+
+    private void testActivationFunction(String functionName, Activation parameters, IdealActivationFunction idealFunction) {
+
         float step = START_STEP;
 
         List<Float> positiveValues = new ArrayList<>();
@@ -199,34 +128,56 @@ public class ActivationFactoryTest {
         List<Float> inputValues = new ArrayList<>(negativeValues);
         inputValues.addAll(positiveValues);
 
-        double testedValue, idealValue, error;
+        double testedValue, idealValue, error, proportionalError, aggregatedError;
 
         double averageError = 0;
+        double avrProportionalError = 0;
         double maximumError = 0;
+        double maximumProportionalError = 0;
+        double aggregatedMaxError = 0;
+        double aggregatedAvrError = 0;
         int n = 0;
-        
+
         for (float x : inputValues) {
             testedValue = ActivationLogic.activate(x, parameters);
             idealValue = idealFunction.activate(x);
             error = Math.abs(idealValue - testedValue);
+            proportionalError = Math.abs(idealValue < PROPORTIONAL_BORDER ? 0 : testedValue / idealValue);
+            aggregatedError = Math.min(error, proportionalError);
             System.out.println(
                     functionName + ";"
                     + FORMATTER.format(x) + ";"
                     + FORMATTER.format(testedValue) + ";"
                     + FORMATTER.format(idealValue) + ";"
-                    + FORMATTER.format(error));
+                    + FORMATTER.format(idealValue - testedValue) + ";"
+                    + FORMATTER.format(proportionalError));
             averageError += error;
+            avrProportionalError += proportionalError;
+
+            aggregatedAvrError += aggregatedError;
+
             maximumError = Math.max(maximumError, error);
+            maximumProportionalError = Math.max(maximumProportionalError, proportionalError);
+
+            aggregatedMaxError = Math.max(aggregatedMaxError, aggregatedError);
+
             n++;
         }
 
         averageError /= n;
+        avrProportionalError /= n;
+        aggregatedAvrError /= n;
 
         System.out.println(functionName + " averageError: " + FORMATTER.format(averageError));
         System.out.println(functionName + " maximumError: " + FORMATTER.format(maximumError));
+        System.out.println(functionName + " averageProportioanlError: " + FORMATTER.format(avrProportionalError));
+        System.out.println(functionName + " maximumProportioanlError: " + FORMATTER.format(maximumProportionalError));
+        System.out.println(functionName + " averageAggregatedError: " + FORMATTER.format(aggregatedAvrError));
+        System.out.println(functionName + " maximumAggregatedError: " + FORMATTER.format(aggregatedMaxError));
 
-        assertTrue(functionName + " average difference", averageError < MAXIMUM_AVERAGE_ERROR);
-        assertTrue(functionName + " maximum difference", maximumError < MAXIMUM_ERROR);
+        assertTrue(functionName + " average error", aggregatedAvrError < MAXIMUM_AVERAGE_ERROR);
+        assertTrue(functionName + " maximum error", aggregatedMaxError < MAXIMUM_ERROR);
+
     }
 
     private interface IdealActivationFunction {

@@ -78,8 +78,8 @@ public class ActivationFactory {
         Activation activation = new Activation();
         activation.shiftX = 0f;
         activation.shiftY = 0f;
-        activation.stretchX = 100f;
-        activation.stretchY = 0.01f;
+        activation.stretchX = 10f;
+        activation.stretchY = 0.1f;
         activation.swish = 1f;
         activation.slope = 0f;        
         return activation;
@@ -89,10 +89,10 @@ public class ActivationFactory {
         Activation activation = new Activation();        
         activation.shiftX = 0f;
         activation.shiftY = 0f;
-        activation.stretchX = 100f;
-        activation.stretchY = 0.0077f;
+        activation.stretchX = 10f;
+        activation.stretchY = 0.0990215037f;
         activation.swish = 1f;
-        activation.slope = 0.3f;
+        activation.slope = 0.01f;
         return activation;
     }
     
@@ -114,7 +114,7 @@ public class ActivationFactory {
         activation.stretchX = 1f;
         activation.stretchY = 1f;
         activation.swish = 0f;
-        activation.slope = 0.99f; //eredeti: 1, valtoztatni
+        activation.slope = 1f;
         return activation;
     }
 
