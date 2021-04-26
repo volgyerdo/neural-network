@@ -26,6 +26,5 @@ public class Layer {
     public Tensor.TYPE dataType;
     public int[] dimensions;
     public Tensor states;
-    public Tensor activations;
     
 }

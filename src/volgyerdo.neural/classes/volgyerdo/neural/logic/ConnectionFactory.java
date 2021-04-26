@@ -15,10 +15,34 @@
  */
 package volgyerdo.neural.logic;
 
+import java.util.Objects;
+import volgyerdo.math.ArrayUtils;
+import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.structure.Connection;
+import volgyerdo.neural.structure.Layer;
+
 /**
  *
  * @author antal
  */
 public class ConnectionFactory {
+    
+    public static Connection createFullyConnectedNetworkConnection(Layer layer1, Layer layer2){
+        if(!Objects.equals(layer1.dataType, layer2.dataType)){
+            throw new IllegalArgumentException("Layers data type does not match.");
+        }
+        Connection connection = new Connection();
+        int[] weightsDimensions = new int[layer1.dimensions.length+layer2.dimensions.length];
+        System.arraycopy(layer1.dimensions, 0, weightsDimensions, 0, layer1.dimensions.length);
+        System.arraycopy(layer2.dimensions, layer1.dimensions.length, weightsDimensions, 0, layer2.dimensions.length);
+        connection.weights = Tensor.create(layer1.dataType, weightsDimensions);
+        return connection;
+    }
+    
+    public static Connection createConvolutionalNetworkConnection(Tensor.TYPE dataType, int[] kernelDimensions){
+        Connection connection = new Connection();
+        connection.weights = Tensor.create(dataType, kernelDimensions);
+        return connection;
+    }
     
 }

@@ -24,5 +24,6 @@ import volgyerdo.math.tensor.Tensor;
 public abstract class Network {
     
     public Tensor.TYPE dataType;
+    public Activation activation;
     
 }

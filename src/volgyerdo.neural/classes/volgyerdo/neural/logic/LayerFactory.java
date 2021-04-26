@@ -28,8 +28,8 @@ public class LayerFactory {
         Layer currentLayer = new Layer();
         currentLayer.dataType = dataType;
         currentLayer.dimensions = dimensions;
-        
-        return currentLayer; // vagy null
+        currentLayer.states = Tensor.create(dataType, dimensions);
+        return currentLayer; 
     }
     
 }
