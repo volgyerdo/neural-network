@@ -101,24 +101,37 @@ public abstract class Tensor {
 
     public abstract Tensor transpose();
 
-    public Tensor multiply(Tensor multiplier) {
+    public Tensor multiply(Tensor multiplier, int common) {
         checkNull(multiplier);
         checkClass(multiplier);
         int m = dimensions.length;
         int n = multiplier.dimensions.length;
-        int c = determineCommonPart(multiplier);
-        if (c == 0) {
+        int commonPart = determineCommonPart(multiplier);
+        if (commonPart == 0) {
             throw new IllegalArgumentException("Multiply with no common dimension part.");
         }
-        int a = m - c;
-        int b = n - c;
-        int z = a + b;
-        int[] rd = new int[z];
-        System.arraycopy(multiplier.dimensions, 0, rd, 0, b);
-        System.arraycopy(dimensions, c, rd, b, a);
-        Tensor result = createSimilar(rd);
-        multiplyRecursive(multiplier, result, a, b, c, z, 0, new int[z]);
-        return result;
+        if (commonPart < common) {
+            throw new IllegalArgumentException("Depth is larger than the common part.");
+        }
+        int a = m - common;
+        int b = n - common;
+        int difference;
+        if (a + b == 0) {
+            difference = a + b;
+            int[] rd = new int[common];
+            System.arraycopy(dimensions, 0, rd, 0, common);
+            Tensor result = createSimilar(rd);
+            multiplyRecursive(multiplier, result, a, b, common, difference, 0, new int[common]);
+            return result;
+        } else {
+            difference = a + b;
+            int[] rd = new int[difference];
+            System.arraycopy(multiplier.dimensions, 0, rd, 0, b);
+            System.arraycopy(dimensions, common, rd, b, a);
+            Tensor result = createSimilar(rd);
+            multiplyRecursive(multiplier, result, a, b, common, difference, 0, new int[difference]);
+            return result;
+        }
     }
 
     protected abstract void multiplyRecursive(Tensor multiplier, Tensor result, int a, int b, int c, int z, int n, int[] d);

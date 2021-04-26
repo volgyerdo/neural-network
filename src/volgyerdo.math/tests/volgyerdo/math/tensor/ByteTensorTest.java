@@ -488,7 +488,7 @@ public class ByteTensorTest {
         a.setByteValue((byte) 5, 0);
         ByteTensor b = new ByteTensor(1);
         b.setByteValue((byte) -3, 0);
-        Tensor c = a.multiply(b);
+        Tensor c = a.multiply(b, 1);
         assertEquals("1D multiplication", (byte) -15, c.getByteValue(0));
         
         a = new ByteTensor(2);
@@ -497,7 +497,7 @@ public class ByteTensorTest {
         b = new ByteTensor(2);
         b.setByteValue((byte) -5, 0);
         b.setByteValue((byte) 4, 1);
-        c = a.multiply(b);
+        c = a.multiply(b, 1);
         assertEquals("1D multiplication", (byte) -10, c.getByteValue(0));
         assertEquals("1D multiplication", (byte) 12, c.getByteValue(1));
     }

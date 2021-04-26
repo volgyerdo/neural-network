@@ -35,11 +35,16 @@ class ByteTensor extends Tensor {
     @Override
     public Tensor convertTo(TYPE type) {
         return switch (type) {
-            case BYTE -> convertToByteTensor();
-            case SHORT -> convertToShortTensor();
-            case FLOAT -> convertToFloatTensor();
-            case OBJECT -> convertToObjectTensor();
-            default -> null;
+            case BYTE ->
+                convertToByteTensor();
+            case SHORT ->
+                convertToShortTensor();
+            case FLOAT ->
+                convertToFloatTensor();
+            case OBJECT ->
+                convertToObjectTensor();
+            default ->
+                null;
         };
     }
 
@@ -234,33 +239,39 @@ class ByteTensor extends Tensor {
     }
 
     @Override
-    protected void multiplyRecursive(Tensor multiplier, Tensor result, int a, int b, int c, int z, int n, int[] d) {
-        if (n < z - 1) {
+    protected void multiplyRecursive(Tensor multiplier, Tensor result, int a, int b, int common, int difference, int n, int[] d) {
+        if (n < (difference == 0 ? common : difference)) {
             for (int i = 0; i < result.dimensions[n]; i++) {
-                d[n] = i;
-                multiplyRecursive(multiplier, result, a, b, c, z, n + 1, d);
+                int[] d1 = Arrays.copyOf(d, d.length);
+                d1[n] = i;
+                multiplyRecursive(multiplier, result, a, b, common, difference, n + 1, d1);
             }
         } else {
-            result.setByteValue(multiplicationSum(multiplier, a, b, c, d, 0, new int[c]), d);
+            result.setByteValue(multiplicationSum(multiplier, a, b, common, difference, d, 0, new int[difference == 0 ? common : difference]), d);
         }
     }
 
-    private byte multiplicationSum(Tensor multiplier, int a, int b, int c, int[] d, int n, int[] e) {
-        if (n < c - 1) {
+    private byte multiplicationSum(Tensor multiplier, int a, int b, int common, int difference, int[] d, int n, int[] e) {
+        if (n <  a + b) {
             byte s = 0;
             for (int i = 0; i < dimensions[n]; i++) {
-                e[n] = i;
-                s += multiplicationSum(multiplier, a, b, c, d, n, e);
+                int[] e1 = Arrays.copyOf(e, e.length);
+                e1[n] = i;
+                s += multiplicationSum(multiplier, a, b, common, difference, d, n + 1, e1);
             }
             return s;
         } else {
-            int[] rd1 = new int[c + a];
-            System.arraycopy(e, 0, rd1, 0, c);
-            System.arraycopy(d, c, rd1, c, a);
-            int[] rd2 = new int[b + c];
-            System.arraycopy(d, 0, rd2, 0, b);
-            System.arraycopy(e, b, rd2, 0, c);
-            return PrimitiveUtils.toByte(getByteValue(rd1) * multiplier.getByteValue(rd2));
+            if (a + b != 0) {
+                int[] rd1 = new int[common + a];
+                System.arraycopy(e, 0, rd1, 0, common);
+                System.arraycopy(d, common, rd1, common, a);
+                int[] rd2 = new int[b + common];
+                System.arraycopy(d, 0, rd2, 0, b);
+                System.arraycopy(e, b, rd2, 0, common);
+                return PrimitiveUtils.toByte(getByteValue(rd1) * multiplier.getByteValue(rd2));
+            } else {
+                return PrimitiveUtils.toByte(getByteValue(d) * multiplier.getByteValue(d));
+            }
         }
     }
 

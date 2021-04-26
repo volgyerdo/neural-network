@@ -68,8 +68,8 @@ public class ActivationFactory {
         activation.shiftX = 0f;
         activation.shiftY = -1f;
         activation.stretchX = 1f;
-        activation.stretchY = 1f;
-        activation.swish = 2f;
+        activation.stretchY = 2f;
+        activation.swish = 0f;
         activation.slope = 0f;
         return activation;
     }
