@@ -42,6 +42,14 @@ public class NetworkLogic {
             Layer inputLayer = network.layers.get(i);
             Layer outputLayer = network.layers.get(i+1);
             Connection connection = network.connections.get(i);
+            Tensor inputStates = inputLayer.states.convertTo(Tensor.TYPE.FLOAT);
+            Tensor weights = connection.weights.convertTo(Tensor.TYPE.FLOAT);
+            switch(connection.weights.type){
+                case BYTE:
+                   weights.divide(Byte.MAX_VALUE); 
+                case SHORT:
+                   weights.divide(Short.MAX_VALUE); 
+            }
             outputLayer.states = inputLayer.states.multiply(connection.weights, 1);
         } 
     }
