@@ -167,53 +167,130 @@ class ByteTensor extends Tensor {
     }
 
     @Override
-    public void add(byte scaler) {
+    public void add(byte x) {
         for (int i = 0; i < values.length; i++) {
-            values[i] += scaler;
+            values[i] += x;
         }
     }
 
     @Override
-    public void add(short scaler) {
+    public void add(short x) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = PrimitiveUtils.toByte((short) values[i] + scaler);
+            values[i] = PrimitiveUtils.toByte((short) values[i] + x);
         }
     }
 
     @Override
-    public void add(float scaler) {
+    public void add(float x) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = PrimitiveUtils.toByte((float) values[i] + scaler);
+            values[i] = PrimitiveUtils.toByte((float) values[i] + x);
         }
     }
 
     @Override
-    public Tensor add(Tensor tensor) {
+    public void add(Tensor tensor) {
         checkNull(tensor);
         checkClass(tensor);
         checkDimensionCount(tensor.dimensions);
         checkDimensions(tensor);
-        try {
-            ByteTensor clone = (ByteTensor) clone();
-            for (int i = 0; i < values.length; i++) {
-                clone.values[i] += ((ByteTensor) tensor).values[i];
-            }
-            return clone;
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
+        for (int i = 0; i < values.length; i++) {
+            values[i] += ((ByteTensor) tensor).values[i];
         }
     }
 
     @Override
-    public Tensor negate() {
-        try {
-            ByteTensor clone = (ByteTensor) clone();
-            for (int i = 0; i < values.length; i++) {
-                clone.values[i] = (byte) -clone.values[i];
-            }
-            return clone;
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
+    public void substract(byte x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] -= x;
+        }
+    }
+
+    @Override
+    public void substract(short x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((short) values[i] - x);
+        }
+    }
+
+    @Override
+    public void substract(float x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((float) values[i] - x);
+        }
+    }
+
+    @Override
+    public void multiply(byte x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] *= x;
+        }
+    }
+
+    @Override
+    public void multiply(short x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((short) values[i] * x);
+        }
+    }
+
+    @Override
+    public void multiply(float x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((float) values[i] * x);
+        }
+    }
+
+    @Override
+    public void divide(byte x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] /= x;
+        }
+    }
+
+    @Override
+    public void divide(short x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((short) values[i] / x);
+        }
+    }
+
+    @Override
+    public void divide(float x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((float) values[i] / x);
+        }
+    }
+
+    @Override
+    public void processByte(ByteProcessor processor){
+        for (int i = 0; i < values.length; i++) {
+            values[i] = processor.process(values[i]);
+        }
+    }
+    
+    @Override
+    public void processShort(ShortProcessor processor){
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((short)processor.process(values[i]));
+        }
+    }
+    
+    @Override
+    public void processFloat(FloatProcessor processor){
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte((float)processor.process(values[i]));
+        }
+    }
+    
+    @Override
+    public void processObject(ObjectProcessor processor){
+        throw new RuntimeException("Byte tensor doesn't have object processor function.");
+    }
+    
+    @Override
+    public void negate() {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = (byte)-values[i];
         }
     }
 
@@ -252,7 +329,7 @@ class ByteTensor extends Tensor {
     }
 
     private byte multiplicationSum(Tensor multiplier, int a, int b, int common, int difference, int[] d, int n, int[] e) {
-        if (n <  a + b) {
+        if (n < a + b) {
             byte s = 0;
             for (int i = 0; i < dimensions[n]; i++) {
                 int[] e1 = Arrays.copyOf(e, e.length);

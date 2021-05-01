@@ -15,13 +15,11 @@
  */
 package volgyerdo.neural.logic;
 
-import java.util.List;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Connection;
 import volgyerdo.neural.structure.ConvolutionalNetwork;
 import volgyerdo.neural.structure.FullyConnectedNetwork;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.LayeredNetwork;
 import volgyerdo.neural.structure.Network;
 
 /**
@@ -53,7 +51,7 @@ public class NetworkLogic {
             outputLayer.states = inputLayer.states.multiply(connection.weights, 1);
         } 
     }
-    
+
     public static void propagate(ConvolutionalNetwork network){
         for(int i = 0; i < network.layers.size() - 1; i++){
             Layer inputLayer = network.layers.get(i);

@@ -95,9 +95,35 @@ public abstract class Tensor {
 
     public abstract void add(float scaler);
 
-    protected abstract Tensor add(Tensor tensor);
+    public abstract void add(Tensor tensor);
+    
+    public abstract void substract(byte scaler);
 
-    public abstract Tensor negate();
+    public abstract void substract(short scaler);
+
+    public abstract void substract(float scaler);
+    
+    public abstract void multiply(byte scaler);
+
+    public abstract void multiply(short scaler);
+
+    public abstract void multiply(float scaler);
+    
+    public abstract void divide(byte scaler);
+
+    public abstract void divide(short scaler);
+
+    public abstract void divide(float scaler);
+
+    public abstract void processByte(ByteProcessor processor);
+    
+    public abstract void processShort(ShortProcessor processor);
+    
+    public abstract void processFloat(FloatProcessor processor);
+    
+    public abstract void processObject(ObjectProcessor processor);
+
+    public abstract void negate();
 
     public abstract Tensor transpose();
 
@@ -219,5 +245,25 @@ public abstract class Tensor {
         System.arraycopy(dimensions, 0, clone.dimensions, 0, dimensions.length);
         System.arraycopy(multipliers, 0, clone.multipliers, 0, multipliers.length);
         return clone;
+    }
+
+    public interface ByteProcessor {
+
+        public byte process(byte x);
+    }
+
+    public interface ShortProcessor {
+
+        public short process(short x);
+    }
+
+    public interface FloatProcessor {
+
+        public float process(float x);
+    }
+    
+    public interface ObjectProcessor {
+
+        public Object process(Object x);
     }
 }

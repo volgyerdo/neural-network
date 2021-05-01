@@ -17,6 +17,7 @@ package volgyerdo.math.tensor;
 
 import java.util.Arrays;
 import volgyerdo.math.ArrayUtils;
+import volgyerdo.math.PrimitiveUtils;
 
 /**
  *
@@ -161,27 +162,93 @@ class ObjectTensor extends Tensor {
     }
 
     @Override
-    public void add(byte scaler) {
+    public void add(byte x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
 
     @Override
-    public void add(short scaler) {
+    public void add(short x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
 
     @Override
-    public void add(float scaler) {
+    public void add(float x) {
+        throw new RuntimeException("Object tensor doesn't have add function.");
+    }
+
+    public void add(Tensor tensor) {
+        throw new RuntimeException("Object tensor doesn't have add function.");
+    }
+    
+    @Override
+    public void substract(byte x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
 
     @Override
-    protected Tensor add(Tensor tensor) {
+    public void substract(short x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
 
     @Override
-    public Tensor negate() {
+    public void substract(float x) {
+        throw new RuntimeException("Object tensor doesn't have add function.");
+    }
+    
+    @Override
+    public void multiply(byte x) {
+        throw new RuntimeException("Object tensor doesn't have add function.");
+    }
+
+    @Override
+    public void multiply(short x) {
+        throw new RuntimeException("Object tensor doesn't have add function.");
+    }
+
+    @Override
+    public void multiply(float x) {
+        throw new RuntimeException("Object tensor doesn't have add function.");
+    }
+    
+    @Override
+    public void divide(byte x) {
+        throw new RuntimeException("Object tensor doesn't have add function.");
+    }
+
+    @Override
+    public void divide(short x) {
+        throw new RuntimeException("Object tensor doesn't have add function.");
+    }
+
+    @Override
+    public void divide(float x) {
+        throw new RuntimeException("Object tensor doesn't have add function.");
+    }
+    
+    @Override
+    public void processByte(ByteProcessor processor){
+        throw new RuntimeException("Object tensor doesn't have byte process function.");
+    }
+    
+    @Override
+    public void processShort(ShortProcessor processor){
+        throw new RuntimeException("Object tensor doesn't have short process function.");
+    }
+    
+    @Override
+    public void processFloat(FloatProcessor processor){
+        throw new RuntimeException("Object tensor doesn't have float process function.");
+    }
+    
+    @Override
+    public void processObject(ObjectProcessor processor){
+        for (int i = 0; i < values.length; i++) {
+            values[i] = processor.process(values[i]);
+        }
+    }
+
+    @Override
+    public void negate() {
         throw new RuntimeException("Object tensor doesn't have negate function.");
     }
     

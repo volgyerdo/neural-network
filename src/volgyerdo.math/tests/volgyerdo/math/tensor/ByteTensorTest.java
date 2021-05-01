@@ -419,13 +419,13 @@ public class ByteTensorTest {
         t4.setByteValue((byte) -10, 0, 1);
         t4.setByteValue((byte) 7, 1, 1);
         t4.setByteValue((byte) -22, 2, 1);
-        Tensor sum = t1.add(t4);
-        assertEquals("Tensor sum", (byte) -32, sum.getByteValue(0, 0));
-        assertEquals("Tensor sum", (byte) -70, sum.getByteValue(1, 0));
-        assertEquals("Tensor sum", (byte) 16, sum.getByteValue(2, 0));
-        assertEquals("Tensor sum", (byte) 24, sum.getByteValue(0, 1));
-        assertEquals("Tensor sum", (byte) 9, sum.getByteValue(1, 1));
-        assertEquals("Tensor sum", (byte) 56, sum.getByteValue(2, 1));
+        t1.add(t4);
+        assertEquals("Tensor sum", (byte) -32, t1.getByteValue(0, 0));
+        assertEquals("Tensor sum", (byte) -70, t1.getByteValue(1, 0));
+        assertEquals("Tensor sum", (byte) 16, t1.getByteValue(2, 0));
+        assertEquals("Tensor sum", (byte) 24, t1.getByteValue(0, 1));
+        assertEquals("Tensor sum", (byte) 9, t1.getByteValue(1, 1));
+        assertEquals("Tensor sum", (byte) 56, t1.getByteValue(2, 1));
     }
 
     @Test
@@ -437,13 +437,13 @@ public class ByteTensorTest {
         t1.setByteValue((byte) -10, 0, 1);
         t1.setByteValue((byte) 7, 1, 1);
         t1.setByteValue((byte) -22, 2, 1);
-        Tensor negated = t1.negate();
-        assertEquals("Tensor negate", (byte) -2, negated.getByteValue(0, 0));
-        assertEquals("Tensor negate", (byte) 3, negated.getByteValue(1, 0));
-        assertEquals("Tensor negate", (byte) -10, negated.getByteValue(2, 0));
-        assertEquals("Tensor negate", (byte) 10, negated.getByteValue(0, 1));
-        assertEquals("Tensor negate", (byte) -7, negated.getByteValue(1, 1));
-        assertEquals("Tensor negate", (byte) 22, negated.getByteValue(2, 1));
+        t1.negate();
+        assertEquals("Tensor negate", (byte) -2, t1.getByteValue(0, 0));
+        assertEquals("Tensor negate", (byte) 3, t1.getByteValue(1, 0));
+        assertEquals("Tensor negate", (byte) -10, t1.getByteValue(2, 0));
+        assertEquals("Tensor negate", (byte) 10, t1.getByteValue(0, 1));
+        assertEquals("Tensor negate", (byte) -7, t1.getByteValue(1, 1));
+        assertEquals("Tensor negate", (byte) 22, t1.getByteValue(2, 1));
     }
 
     @Test

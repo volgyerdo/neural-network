@@ -419,13 +419,13 @@ public class FloatTensorTest {
         t4.setFloatValue((float) -10, 0, 1);
         t4.setFloatValue((float) 7, 1, 1);
         t4.setFloatValue((float) -22, 2, 1);
-        Tensor sum = t1.add(t4);
-        assertEquals("Tensor sum", (float) -32, sum.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor sum", (float) -70, sum.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor sum", (float) 16, sum.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor sum", (float) 24, sum.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor sum", (float) 9, sum.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor sum", (float) 56, sum.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        t1.add(t4);
+        assertEquals("Tensor sum", (float) -32, t1.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", (float) -70, t1.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", (float) 16, t1.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", (float) 24, t1.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", (float) 9, t1.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", (float) 56, t1.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
     }
 
     @Test
@@ -437,13 +437,13 @@ public class FloatTensorTest {
         t1.setFloatValue((float) -10, 0, 1);
         t1.setFloatValue((float) 7, 1, 1);
         t1.setFloatValue((float) -22.6444, 2, 1);
-        Tensor negated = t1.negate();
-        assertEquals("Tensor negate", (float) -2, negated.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor negate", (float) 3, negated.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor negate", (float) -10.456, negated.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor negate", (float) 10, negated.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor negate", (float) -7, negated.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor negate", (float) 22.6444, negated.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        t1.negate();
+        assertEquals("Tensor negate", (float) -2, t1.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor negate", (float) 3, t1.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor negate", (float) -10.456, t1.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor negate", (float) 10, t1.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor negate", (float) -7, t1.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor negate", (float) 22.6444, t1.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
     }
 
     @Test

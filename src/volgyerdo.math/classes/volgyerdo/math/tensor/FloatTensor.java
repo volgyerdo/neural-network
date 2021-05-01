@@ -31,44 +31,49 @@ class FloatTensor extends Tensor {
         super(TYPE.FLOAT, dimensions);
         values = new float[ArrayUtils.product(dimensions)];
     }
-    
+
     @Override
     public Tensor convertTo(TYPE type) {
         return switch (type) {
-            case BYTE -> convertToByteTensor();
-            case SHORT -> convertToShortTensor();
-            case FLOAT -> convertToFloatTensor();
-            case OBJECT -> convertToObjectTensor();
-            default -> null;
+            case BYTE ->
+                convertToByteTensor();
+            case SHORT ->
+                convertToShortTensor();
+            case FLOAT ->
+                convertToFloatTensor();
+            case OBJECT ->
+                convertToObjectTensor();
+            default ->
+                null;
         };
     }
-    
-    private Tensor convertToByteTensor(){
-        ByteTensor byteTensor = (ByteTensor)Tensor.create(TYPE.BYTE, dimensions);
+
+    private Tensor convertToByteTensor() {
+        ByteTensor byteTensor = (ByteTensor) Tensor.create(TYPE.BYTE, dimensions);
         for (int i = 0; i < values.length; i++) {
             byteTensor.values[i] = PrimitiveUtils.toByte(values[i]);
         }
         return byteTensor;
     }
-    
-    private Tensor convertToShortTensor(){
-        ShortTensor shortTensor = (ShortTensor)Tensor.create(TYPE.SHORT, dimensions);
+
+    private Tensor convertToShortTensor() {
+        ShortTensor shortTensor = (ShortTensor) Tensor.create(TYPE.SHORT, dimensions);
         for (int i = 0; i < values.length; i++) {
             shortTensor.values[i] = PrimitiveUtils.toShort(values[i]);
         }
         return shortTensor;
     }
-    
-    private Tensor convertToFloatTensor(){
+
+    private Tensor convertToFloatTensor() {
         try {
             return clone();
         } catch (CloneNotSupportedException ex) {
             return null;
         }
     }
-    
-    private Tensor convertToObjectTensor(){
-        ObjectTensor objectTensor = (ObjectTensor)Tensor.create(TYPE.OBJECT, dimensions);
+
+    private Tensor convertToObjectTensor() {
+        ObjectTensor objectTensor = (ObjectTensor) Tensor.create(TYPE.OBJECT, dimensions);
         for (int i = 0; i < values.length; i++) {
             objectTensor.values[i] = values[i];
         }
@@ -152,7 +157,7 @@ class FloatTensor extends Tensor {
 
     @Override
     public void randomize(float min, float max) {
-        if(max < min){
+        if (max < min) {
             throw new RuntimeException("Max < min in randomize parameters.");
         }
         double interval = max - min;
@@ -162,49 +167,114 @@ class FloatTensor extends Tensor {
     }
 
     @Override
-    public void add(byte scaler) {
-        add((float) scaler);
+    public void add(byte x) {
+        add((float) x);
     }
 
     @Override
-    public void add(short scaler) {
-        add((float) scaler);
+    public void add(short x) {
+        add((float) x);
     }
 
     @Override
-    public void add(float scaler) {
+    public void add(float x) {
         for (int i = 0; i < values.length; i++) {
-            values[i] += scaler;
+            values[i] += x;
         }
     }
 
     @Override
-    protected Tensor add(Tensor tensor) {
+    public void add(Tensor tensor) {
         checkNull(tensor);
         checkClass(tensor);
         checkDimensionCount(tensor.dimensions);
         checkDimensions(tensor);
-        try {
-            FloatTensor clone = (FloatTensor) clone();
-            for (int i = 0; i < values.length; i++) {
-                clone.values[i] += ((FloatTensor)tensor).values[i];
-            }
-            return clone;
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
+        for (int i = 0; i < values.length; i++) {
+            values[i] += ((FloatTensor) tensor).values[i];
         }
     }
 
     @Override
-    public Tensor negate() {
-        try {
-            FloatTensor clone = (FloatTensor)clone();
-            for (int i = 0; i < values.length; i++) {
-                clone.values[i] = (float)-clone.values[i];
-            }
-            return clone;
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
+    public void substract(byte x) {
+        substract((float) x);
+    }
+
+    @Override
+    public void substract(short x) {
+        substract((float) x);
+    }
+
+    @Override
+    public void substract(float x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] -= x;
+        }
+    }
+
+    @Override
+    public void multiply(byte x) {
+        multiply((float) x);
+    }
+
+    @Override
+    public void multiply(short x) {
+        multiply((float) x);
+    }
+
+    @Override
+    public void multiply(float x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] *= x;
+        }
+    }
+
+    @Override
+    public void divide(byte x) {
+        divide((float) x);
+    }
+
+    @Override
+    public void divide(short x) {
+        divide((float) x);
+    }
+
+    @Override
+    public void divide(float x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] /= x;
+        }
+    }
+    
+    @Override
+    public void processByte(ByteProcessor processor){
+        for (int i = 0; i < values.length; i++) {
+            values[i] = processor.process(PrimitiveUtils.toByte(values[i]));
+        }
+    }
+    
+    @Override
+    public void processShort(ShortProcessor processor){
+        for (int i = 0; i < values.length; i++) {
+            values[i] = processor.process(PrimitiveUtils.toShort(values[i]));
+        }
+    }
+    
+    @Override
+    public void processFloat(FloatProcessor processor){
+        for (int i = 0; i < values.length; i++) {
+            values[i] = processor.process(values[i]);
+        }
+    }
+    
+    @Override
+    public void processObject(ObjectProcessor processor){
+        throw new RuntimeException("Float tensor doesn't have object processor function.");
+    }
+
+    @Override
+    public void negate() {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = (float) -values[i];
         }
     }
 
@@ -284,16 +354,16 @@ class FloatTensor extends Tensor {
             int[] rd = new int[dimensions.length];
             for (int i = 0; i < dimensions.length; i++) {
                 rd[i] = d[i] + e[i] - kernel.dimensions[i] / 2;
-                if(rd[i] < 0 || rd[i] > dimensions[i] -1){
+                if (rd[i] < 0 || rd[i] > dimensions[i] - 1) {
                     return 0;
                 }
             }
             return getFloatValue(rd) * kernel.getFloatValue(e);
         }
     }
-    
+
     @Override
-    public Tensor clone() throws CloneNotSupportedException{
+    public Tensor clone() throws CloneNotSupportedException {
         FloatTensor clone = new FloatTensor(dimensions);
         System.arraycopy(values, 0, clone.values, 0, values.length);
         return clone;
