@@ -19,6 +19,9 @@ package volgyerdo.neural.structure;
  *
  * @author antal
  */
-public class ConvolutionalNetwork extends LayeredNetwork{
-    
+public class ConvolutionalConnection extends Connection{
+
+    public ConvolutionalConnection() {
+        this.type = type.CONVOLUTION;
+    }
 }

@@ -17,8 +17,11 @@ package volgyerdo.neural.logic;
 
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Connection;
-import volgyerdo.neural.structure.ConvolutionalNetwork;
-import volgyerdo.neural.structure.FullyConnectedNetwork;
+import volgyerdo.neural.structure.LayeredNetwork;
+import volgyerdo.neural.structure.GeneralNetwork;
+import volgyerdo.neural.structure.FullConnection;
+import volgyerdo.neural.structure.ConvolutionalConnection;
+import volgyerdo.neural.structure.PartialConnection;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 
@@ -34,8 +37,8 @@ public class NetworkLogic {
     public static void randomize(Network network){
         
     }
-    
-    public static void propagate(FullyConnectedNetwork network){
+    //teljesen kapcsolt prop.
+    public static void propagateFullconnected(LayeredNetwork network){
         for(int i = 0; i < network.layers.size() - 1; i++){
             Layer inputLayer = network.layers.get(i);
             Layer outputLayer = network.layers.get(i+1);
@@ -52,7 +55,8 @@ public class NetworkLogic {
         } 
     }
 
-    public static void propagate(ConvolutionalNetwork network){
+    //Konvolucios prop.
+    public static void propagateConvol(LayeredNetwork network){
         for(int i = 0; i < network.layers.size() - 1; i++){
             Layer inputLayer = network.layers.get(i);
             Layer outputLayer = network.layers.get(i+1);
@@ -61,11 +65,15 @@ public class NetworkLogic {
         } 
     }
     
-    public static void backPropagate(FullyConnectedNetwork network, Tensor target){
+    public static void backPropagate(ConvolutionalConnection connection, LayeredNetwork network, Tensor target){
         
     }
     
-    public static void backPropagate(ConvolutionalNetwork network, Tensor target){
+    public static void backPropagate(FullConnection connection, LayeredNetwork network, Tensor target){
+        
+    }
+    
+    public static void backPropagate(PartialConnection connection, LayeredNetwork network, Tensor target){
         
     }
 }
