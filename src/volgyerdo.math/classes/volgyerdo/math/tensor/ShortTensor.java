@@ -308,33 +308,23 @@ class ShortTensor extends Tensor {
     }
 
     @Override
-    protected void multiplyRecursive(Tensor multiplier, Tensor result, int a, int b, int c, int z, int n, int[] d) {
-        if (n < z - 1) {
-            for (int i = 0; i < result.dimensions[n]; i++) {
-                d[n] = i;
-                multiplyRecursive(multiplier, result, a, b, c, z, n + 1, d);
+    protected void sumProductRecursive(Tensor multiplier, Tensor target,
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices) {
+        if (n < commonDimensions.length) {
+            for (int i = 0; i < commonDimensions[n]; i++) {
+                indices[n] = i;
+                sumProductRecursive(multiplier, target, commonDimensions,
+                        multiplierDimensions, outputDimensions, depth, pos, n + 1, indices);
             }
         } else {
-            result.setShortValue(multiplicationSum(multiplier, a, b, c, d, 0, new int[c]), d);
-        }
-    }
-
-    private short multiplicationSum(Tensor multiplier, int a, int b, int c, int[] d, int n, int[] e) {
-        if (n < c - 1) {
-            short s = 0;
-            for (int i = 0; i < dimensions[n]; i++) {
-                e[n] = i;
-                s += multiplicationSum(multiplier, a, b, c, d, n, e);
-            }
-            return s;
-        } else {
-            int[] rd1 = new int[c + a];
-            System.arraycopy(e, 0, rd1, 0, c);
-            System.arraycopy(d, c, rd1, c, a);
-            int[] rd2 = new int[b + c];
-            System.arraycopy(d, 0, rd2, 0, b);
-            System.arraycopy(e, b, rd2, 0, c);
-            return PrimitiveUtils.toShort(getShortValue(rd1) * multiplier.getShortValue(rd2));
+            int[] rd1 = new int[dimensions.length];
+            System.arraycopy(pos, 0, rd1, 0, dimensions.length - depth);
+            System.arraycopy(indices, 0, rd1, dimensions.length - depth, depth);
+            int[] rd2 = new int[multiplierDimensions.length];
+            System.arraycopy(indices, 0, rd2, 0, depth);
+            System.arraycopy(pos, dimensions.length - depth, rd2, depth, multiplier.dimensions.length - depth);
+            float value = target.getShortValue(pos);
+            target.setShortValue(PrimitiveUtils.toShort(value + getShortValue(rd1) * multiplier.getShortValue(rd2)), pos);
         }
     }
 
@@ -375,5 +365,18 @@ class ShortTensor extends Tensor {
         ShortTensor clone = new ShortTensor(dimensions);
         System.arraycopy(values, 0, clone.values, 0, values.length);
         return clone;
+    }
+    
+    @Override
+    public void toStringRecursive(StringBuilder sb, int n, int[] indices) {
+        if (n < indices.length) {
+            for(int i = 0; i< dimensions[n]; i++){
+                indices[n] = i;
+                toStringRecursive(sb, n+1, indices);
+            }
+            sb.append("\n");
+        } else {
+            sb.append("[").append(getShortValue(indices)).append("]");
+        }
     }
 }

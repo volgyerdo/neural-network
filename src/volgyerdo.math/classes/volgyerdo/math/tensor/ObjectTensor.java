@@ -278,8 +278,9 @@ class ObjectTensor extends Tensor {
     }
 
     @Override
-    protected void multiplyRecursive(Tensor multiplier, Tensor result, int a, int b, int c, int z, int n, int[] d) {
-        throw new RuntimeException("Object tensor doesn't have convolution function.");
+    protected void sumProductRecursive(Tensor multiplier, Tensor target,
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices){
+        
     }
     
     @Override
@@ -292,5 +293,18 @@ class ObjectTensor extends Tensor {
         ObjectTensor clone = new ObjectTensor(dimensions);
         System.arraycopy(values, 0, clone.values, 0, values.length);
         return clone;
+    }
+    
+    @Override
+    public void toStringRecursive(StringBuilder sb, int n, int[] indices) {
+        if (n < indices.length) {
+            for(int i = 0; i< dimensions[n]; i++){
+                indices[n] = i;
+                toStringRecursive(sb, n+1, indices);
+            }
+            sb.append("\n");
+        } else {
+            sb.append("[").append(String.valueOf(getObjectValue(indices))).append("]");
+        }
     }
 }

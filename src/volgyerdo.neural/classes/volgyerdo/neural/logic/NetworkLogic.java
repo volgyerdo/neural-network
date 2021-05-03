@@ -48,7 +48,7 @@ public class NetworkLogic {
                 case SHORT:
                    weights.divide(Short.MAX_VALUE); 
             }
-            outputLayer.states = inputLayer.states.multiply(connection.weights, 1);
+            inputLayer.states.multiply(connection.weights, 1);
         } 
     }
 

@@ -15,8 +15,6 @@
  */
 package volgyerdo.math.tensor;
 
-import java.util.Arrays;
-
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
@@ -96,19 +94,19 @@ public abstract class Tensor {
     public abstract void add(float scaler);
 
     public abstract void add(Tensor tensor);
-    
+
     public abstract void substract(byte scaler);
 
     public abstract void substract(short scaler);
 
     public abstract void substract(float scaler);
-    
+
     public abstract void multiply(byte scaler);
 
     public abstract void multiply(short scaler);
 
     public abstract void multiply(float scaler);
-    
+
     public abstract void divide(byte scaler);
 
     public abstract void divide(short scaler);
@@ -116,51 +114,64 @@ public abstract class Tensor {
     public abstract void divide(float scaler);
 
     public abstract void processByte(ByteProcessor processor);
-    
+
     public abstract void processShort(ShortProcessor processor);
-    
+
     public abstract void processFloat(FloatProcessor processor);
-    
+
     public abstract void processObject(ObjectProcessor processor);
 
     public abstract void negate();
 
     public abstract Tensor transpose();
 
-    public Tensor multiply(Tensor multiplier, int common) {
+    public Tensor multiply(Tensor multiplier, int depth) {
         checkNull(multiplier);
         checkClass(multiplier);
-        int m = dimensions.length;
-        int n = multiplier.dimensions.length;
-        int commonPart = determineCommonPart(multiplier);
-        if (commonPart == 0) {
-            throw new IllegalArgumentException("Multiply with no common dimension part.");
+        int[] sourceDimensions = dimensions;
+        int[] multiplierDimensions = multiplier.dimensions;
+        int sourceDimensionLength = sourceDimensions.length;
+        int multiplierDimensionLength = multiplierDimensions.length;
+        int outputDimensionLength = sourceDimensionLength + multiplierDimensionLength - 2 * depth;
+        if (depth > Math.min(sourceDimensionLength, multiplierDimensionLength)) {
+            throw new IllegalArgumentException("Dimensions length smaller than depth.");
         }
-        if (commonPart < common) {
-            throw new IllegalArgumentException("Depth is larger than the common part.");
+        for (int i = 0; i < depth; i++) {
+            if (sourceDimensions[sourceDimensionLength - depth + i] != multiplierDimensions[i]) {
+                throw new IllegalArgumentException("Dimensions does not match in depth.");
+            }
         }
-        int a = m - common;
-        int b = n - common;
-        int difference;
-        if (a + b == 0) {
-            difference = a + b;
-            int[] rd = new int[common];
-            System.arraycopy(dimensions, 0, rd, 0, common);
-            Tensor result = createSimilar(rd);
-            multiplyRecursive(multiplier, result, a, b, common, difference, 0, new int[common]);
-            return result;
-        } else {
-            difference = a + b;
-            int[] rd = new int[difference];
-            System.arraycopy(multiplier.dimensions, 0, rd, 0, b);
-            System.arraycopy(dimensions, common, rd, b, a);
-            Tensor result = createSimilar(rd);
-            multiplyRecursive(multiplier, result, a, b, common, difference, 0, new int[difference]);
-            return result;
+        int[] commonDimensions = new int[depth];
+        System.arraycopy(multiplierDimensions, 0, commonDimensions, 0, depth);
+        int[] outputDimensions = new int[outputDimensionLength];
+        System.arraycopy(sourceDimensions, 0, outputDimensions, 0, sourceDimensionLength - depth);
+        System.arraycopy(multiplierDimensions, depth, outputDimensions, sourceDimensionLength - depth, multiplierDimensionLength - depth);
+        if (outputDimensionLength == 0) {
+            outputDimensions = new int[]{1};
+            outputDimensionLength = 1;
         }
+        Tensor target = Tensor.create(type, outputDimensions);
+        multiplyRecursive(multiplier, target, commonDimensions, multiplierDimensions, 
+                outputDimensions, depth, 0, new int[outputDimensionLength]);
+        return target;
     }
 
-    protected abstract void multiplyRecursive(Tensor multiplier, Tensor result, int a, int b, int c, int z, int n, int[] d);
+    private void multiplyRecursive(Tensor multiplier, Tensor target,
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int n, int[] indices) {
+        if (n < indices.length) {
+            for (int i = 0; i < outputDimensions[n]; i++) {
+                indices[n] = i;
+                multiplyRecursive(multiplier, target, commonDimensions,
+                        multiplierDimensions, outputDimensions, depth, n + 1, indices);
+            }
+        } else {
+            sumProductRecursive(multiplier, target, commonDimensions,
+                        multiplierDimensions, outputDimensions, depth, indices, 0, new int[commonDimensions.length]);
+        }
+    }
+    
+    protected abstract void sumProductRecursive(Tensor multiplier, Tensor target,
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices);
 
     public Tensor convolve(Tensor kernel) {
         checkNull(kernel);
@@ -220,18 +231,6 @@ public abstract class Tensor {
         }
     }
 
-    protected final int determineCommonPart(Tensor multiplier) {
-        int common = 0;
-        int m = dimensions.length;
-        int n = multiplier.dimensions.length;
-        for (int i = 1; i <= Math.min(n, m); i++) {
-            if (Arrays.equals(multiplier.dimensions, n - i, i, dimensions, 0, i)) {
-                common = i;
-            }
-        }
-        return common;
-    }
-
     @Override
     public Tensor clone() throws CloneNotSupportedException {
         Tensor clone = null;
@@ -246,6 +245,15 @@ public abstract class Tensor {
         System.arraycopy(multipliers, 0, clone.multipliers, 0, multipliers.length);
         return clone;
     }
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        toStringRecursive(sb, 0, new int[dimensions.length]);
+        return sb.toString();
+    }
+    
+    public abstract void toStringRecursive(StringBuilder sb, int n, int[] indices);
 
     public interface ByteProcessor {
 
@@ -261,7 +269,7 @@ public abstract class Tensor {
 
         public float process(float x);
     }
-    
+
     public interface ObjectProcessor {
 
         public Object process(Object x);

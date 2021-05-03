@@ -262,35 +262,35 @@ class ByteTensor extends Tensor {
     }
 
     @Override
-    public void processByte(ByteProcessor processor){
+    public void processByte(ByteProcessor processor) {
         for (int i = 0; i < values.length; i++) {
             values[i] = processor.process(values[i]);
         }
     }
-    
+
     @Override
-    public void processShort(ShortProcessor processor){
+    public void processShort(ShortProcessor processor) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = PrimitiveUtils.toByte((short)processor.process(values[i]));
+            values[i] = PrimitiveUtils.toByte((short) processor.process(values[i]));
         }
     }
-    
+
     @Override
-    public void processFloat(FloatProcessor processor){
+    public void processFloat(FloatProcessor processor) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = PrimitiveUtils.toByte((float)processor.process(values[i]));
+            values[i] = PrimitiveUtils.toByte((float) processor.process(values[i]));
         }
     }
-    
+
     @Override
-    public void processObject(ObjectProcessor processor){
+    public void processObject(ObjectProcessor processor) {
         throw new RuntimeException("Byte tensor doesn't have object processor function.");
     }
-    
+
     @Override
     public void negate() {
         for (int i = 0; i < values.length; i++) {
-            values[i] = (byte)-values[i];
+            values[i] = (byte) -values[i];
         }
     }
 
@@ -316,39 +316,23 @@ class ByteTensor extends Tensor {
     }
 
     @Override
-    protected void multiplyRecursive(Tensor multiplier, Tensor result, int a, int b, int common, int difference, int n, int[] d) {
-        if (n < (difference == 0 ? common : difference)) {
-            for (int i = 0; i < result.dimensions[n]; i++) {
-                int[] d1 = Arrays.copyOf(d, d.length);
-                d1[n] = i;
-                multiplyRecursive(multiplier, result, a, b, common, difference, n + 1, d1);
+    protected void sumProductRecursive(Tensor multiplier, Tensor target,
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices) {
+        if (n < commonDimensions.length) {
+            for (int i = 0; i < commonDimensions[n]; i++) {
+                indices[n] = i;
+                sumProductRecursive(multiplier, target, commonDimensions,
+                        multiplierDimensions, outputDimensions, depth, pos, n + 1, indices);
             }
         } else {
-            result.setByteValue(multiplicationSum(multiplier, a, b, common, difference, d, 0, new int[difference == 0 ? common : difference]), d);
-        }
-    }
-
-    private byte multiplicationSum(Tensor multiplier, int a, int b, int common, int difference, int[] d, int n, int[] e) {
-        if (n < a + b) {
-            byte s = 0;
-            for (int i = 0; i < dimensions[n]; i++) {
-                int[] e1 = Arrays.copyOf(e, e.length);
-                e1[n] = i;
-                s += multiplicationSum(multiplier, a, b, common, difference, d, n + 1, e1);
-            }
-            return s;
-        } else {
-            if (a + b != 0) {
-                int[] rd1 = new int[common + a];
-                System.arraycopy(e, 0, rd1, 0, common);
-                System.arraycopy(d, common, rd1, common, a);
-                int[] rd2 = new int[b + common];
-                System.arraycopy(d, 0, rd2, 0, b);
-                System.arraycopy(e, b, rd2, 0, common);
-                return PrimitiveUtils.toByte(getByteValue(rd1) * multiplier.getByteValue(rd2));
-            } else {
-                return PrimitiveUtils.toByte(getByteValue(d) * multiplier.getByteValue(d));
-            }
+            int[] rd1 = new int[dimensions.length];
+            System.arraycopy(pos, 0, rd1, 0, dimensions.length - depth);
+            System.arraycopy(indices, 0, rd1, dimensions.length - depth, depth);
+            int[] rd2 = new int[multiplierDimensions.length];
+            System.arraycopy(indices, 0, rd2, 0, depth);
+            System.arraycopy(pos, dimensions.length - depth, rd2, depth, multiplier.dimensions.length - depth);
+            byte value = target.getByteValue(pos);
+            target.setByteValue(PrimitiveUtils.toByte(value + getByteValue(rd1) * multiplier.getByteValue(rd2)), pos);
         }
     }
 
@@ -389,5 +373,18 @@ class ByteTensor extends Tensor {
         ByteTensor clone = new ByteTensor(dimensions);
         System.arraycopy(values, 0, clone.values, 0, values.length);
         return clone;
+    }
+
+    @Override
+    public void toStringRecursive(StringBuilder sb, int n, int[] indices) {
+        if (n < indices.length) {
+            for (int i = 0; i < dimensions[n]; i++) {
+                indices[n] = i;
+                toStringRecursive(sb, n + 1, indices);
+            }
+            sb.append("\n");
+        } else {
+            sb.append("[").append(getByteValue(indices)).append("]");
+        }
     }
 }
