@@ -23,5 +23,5 @@ import volgyerdo.math.tensor.Tensor;
  */
 public class Connection {
     public Tensor weights;
-
+    public ConnectionType type;
 }

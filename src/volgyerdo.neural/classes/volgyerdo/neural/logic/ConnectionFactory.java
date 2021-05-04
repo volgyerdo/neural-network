@@ -18,7 +18,9 @@ package volgyerdo.neural.logic;
 import java.util.Objects;
 import volgyerdo.math.ArrayUtils;
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.structure.Connection;
+import volgyerdo.neural.structure.FullConnection;
+import volgyerdo.neural.structure.ConvolutionalConnection;
+import volgyerdo.neural.structure.PartialConnection;
 import volgyerdo.neural.structure.Layer;
 
 /**
@@ -27,11 +29,11 @@ import volgyerdo.neural.structure.Layer;
  */
 public class ConnectionFactory {
     
-    public static Connection createFullyConnectedNetworkConnection(Layer layer1, Layer layer2){
+    public static FullConnection createFullyConnectedNetworkConnection(Layer layer1, Layer layer2){
         if(!Objects.equals(layer1.dataType, layer2.dataType)){
             throw new IllegalArgumentException("Layers data type does not match.");
         }
-        Connection connection = new Connection();
+        FullConnection connection = new FullConnection();
         int[] weightsDimensions = new int[layer1.dimensions.length+layer2.dimensions.length];
         System.arraycopy(layer1.dimensions, 0, weightsDimensions, 0, layer1.dimensions.length);
         System.arraycopy(layer2.dimensions, layer1.dimensions.length, weightsDimensions, 0, layer2.dimensions.length);
@@ -39,10 +41,17 @@ public class ConnectionFactory {
         return connection;
     }
     
-    public static Connection createConvolutionalNetworkConnection(Tensor.TYPE dataType, int[] kernelDimensions){
-        Connection connection = new Connection();
+    public static ConvolutionalConnection createConvolutionalNetworkConnection(Tensor.TYPE dataType, int[] kernelDimensions){
+        ConvolutionalConnection connection = new ConvolutionalConnection();
         connection.weights = Tensor.create(dataType, kernelDimensions);
         return connection;
     }
-    
+   
+    public static PartialConnection createPartiallyConnectedNetworkConnection(Layer  layer1, Layer layer2){
+        if(!Objects.equals(layer1.dataType, layer2.dataType)){
+            throw new IllegalArgumentException("Layers data type does not match.");
+        }
+        PartialConnection connection = new PartialConnection();
+        return connection;
+    }
 }
