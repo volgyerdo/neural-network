@@ -34,11 +34,30 @@ public class NetworkLogic {
     private NetworkLogic() {
     }
     
-    public static void randomize(Network network){
+    public static void randomize(LayeredNetwork network){
         
+        //Az elso layernek nincs sulya, ezert lehetne i=1
+        for (int i = 0; i < network.layers.size(); i++) {
+            
+            if(network.layers.get(i).dataType == network.layers.get(i).dataType.BYTE){
+            network.layers.get(i).states.randomize(Byte.MIN_VALUE, Byte.MAX_VALUE);
+            }
+        
+            if(network.layers.get(i).dataType == network.layers.get(i).dataType.SHORT){
+            network.layers.get(i).states.randomize(Short.MIN_VALUE, Short.MAX_VALUE);
+            }
+            else{
+            network.layers.get(i).states.randomize(-1, 1);
+            }
+        }
     }
     //teljesen kapcsolt prop.
     public static void propagateFullconnected(LayeredNetwork network){
+        
+        //suly normalizalas
+        
+        
+        //propagation
         for(int i = 0; i < network.layers.size() - 1; i++){
             Layer inputLayer = network.layers.get(i);
             Layer outputLayer = network.layers.get(i+1);
@@ -57,6 +76,10 @@ public class NetworkLogic {
 
     //Konvolucios prop.
     public static void propagateConvol(LayeredNetwork network){
+        
+        //suly normalizalas
+        
+        //prop
         for(int i = 0; i < network.layers.size() - 1; i++){
             Layer inputLayer = network.layers.get(i);
             Layer outputLayer = network.layers.get(i+1);

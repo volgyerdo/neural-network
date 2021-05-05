@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package volgyerdo.neural.logic;
+import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Connection;
 import volgyerdo.neural.structure.ConvolutionalConnection;
@@ -26,6 +27,18 @@ public class ConnectionLogic {
     
     //Ha nem mukodik a connection valtozoval, kulon propagate minden fajtahoz
     public void propagate(Layer inputlayer, Layer outputlayer, Connection connection){
+        //suly normalizalas
+//        if(connection.weights.type == connection.weights.type.BYTE)
+//        {
+//            connection.weights = connection.weights.divide(Byte.MAX_VALUE);
+//        }
+//        
+//        if(connection.weights.type == connection.weights.type.SHORT)
+//        {
+//            connection.weights = connection.weights.divide(Short.MAX_VALUE);
+//        }
+        //propagalas
+        
         if(connection.type == ConnectionType.CONVOLUTION){
         outputlayer.states = inputlayer.states.convolve(connection.weights);
         } else {
