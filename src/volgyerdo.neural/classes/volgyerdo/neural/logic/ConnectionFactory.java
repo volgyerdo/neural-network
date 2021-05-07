@@ -16,11 +16,8 @@
 package volgyerdo.neural.logic;
 
 import java.util.Objects;
-import volgyerdo.math.ArrayUtils;
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.structure.FullConnection;
-import volgyerdo.neural.structure.ConvolutionalConnection;
-import volgyerdo.neural.structure.PartialConnection;
+import volgyerdo.neural.structure.LayerConnection;
 import volgyerdo.neural.structure.Layer;
 
 /**
@@ -28,30 +25,22 @@ import volgyerdo.neural.structure.Layer;
  * @author antal
  */
 public class ConnectionFactory {
-    
-    public static FullConnection createFullyConnectedNetworkConnection(Layer layer1, Layer layer2){
-        if(!Objects.equals(layer1.dataType, layer2.dataType)){
+
+    public static LayerConnection createFullyConnectedConnection(Layer layer1, Layer layer2) {
+        if (!Objects.equals(layer1.dataType, layer2.dataType)) {
             throw new IllegalArgumentException("Layers data type does not match.");
         }
-        FullConnection connection = new FullConnection();
-        int[] weightsDimensions = new int[layer1.dimensions.length+layer2.dimensions.length];
+        LayerConnection connection = new LayerConnection();
+        int[] weightsDimensions = new int[layer1.dimensions.length + layer2.dimensions.length];
         System.arraycopy(layer1.dimensions, 0, weightsDimensions, 0, layer1.dimensions.length);
         System.arraycopy(layer2.dimensions, layer1.dimensions.length, weightsDimensions, 0, layer2.dimensions.length);
         connection.weights = Tensor.create(layer1.dataType, weightsDimensions);
         return connection;
     }
-    
-    public static ConvolutionalConnection createConvolutionalNetworkConnection(Tensor.TYPE dataType, int[] kernelDimensions){
-        ConvolutionalConnection connection = new ConvolutionalConnection();
+
+    public static LayerConnection createConvolutionalConnection(Tensor.TYPE dataType, int[] kernelDimensions) {
+        LayerConnection connection = new LayerConnection();
         connection.weights = Tensor.create(dataType, kernelDimensions);
-        return connection;
-    }
-   
-    public static PartialConnection createPartiallyConnectedNetworkConnection(Layer  layer1, Layer layer2){
-        if(!Objects.equals(layer1.dataType, layer2.dataType)){
-            throw new IllegalArgumentException("Layers data type does not match.");
-        }
-        PartialConnection connection = new PartialConnection();
         return connection;
     }
 }

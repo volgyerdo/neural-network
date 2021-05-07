@@ -14,35 +14,34 @@
  * limitations under the License.
  */
 package volgyerdo.neural.logic;
+
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.Connection;
-import volgyerdo.neural.structure.ConvolutionalConnection;
+import volgyerdo.neural.structure.LayerConnection;
 import volgyerdo.neural.structure.ConnectionType;
+
 /**
  *
  * @author antal
  */
 public class ConnectionLogic {
-    
-    //Ha nem mukodik a connection valtozoval, kulon propagate minden fajtahoz
-    public void propagate(Layer inputlayer, Layer outputlayer, Connection connection){
-        //suly normalizalas
-//        if(connection.weights.type == connection.weights.type.BYTE)
-//        {
-//            connection.weights = connection.weights.divide(Byte.MAX_VALUE);
-//        }
-//        
-//        if(connection.weights.type == connection.weights.type.SHORT)
-//        {
-//            connection.weights = connection.weights.divide(Short.MAX_VALUE);
-//        }
-        //propagalas
-        
-        if(connection.type == ConnectionType.CONVOLUTION){
-        outputlayer.states = inputlayer.states.convolve(connection.weights);
-        } else {
-        outputlayer.states = inputlayer.states.multiply(connection.weights, 1);
+
+    public static void propagate(Layer inputLayer, Layer outputLayer, LayerConnection connection) {
+        Tensor weights = connection.weights.convertTo(Tensor.TYPE.FLOAT);
+        switch (connection.weights.type) {
+            case BYTE:
+                weights.divide(Byte.MAX_VALUE);
+            case SHORT:
+                weights.divide(Short.MAX_VALUE);
         }
-    }    
+        if (connection.type == ConnectionType.CONVOLUTION) {
+            outputLayer.states = inputLayer.states.convolve(weights);
+        } else {
+            outputLayer.states = inputLayer.states.multiply(weights, inputLayer.dimensions.length);
+        }
+    }
+    
+    public static void backPropagate(Layer inputLayer, Layer outputLayer, LayerConnection connection) {
+        
+    }
 }

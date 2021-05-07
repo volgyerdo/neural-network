@@ -15,12 +15,13 @@
  */
 package volgyerdo.neural.structure;
 
+import volgyerdo.math.tensor.Tensor;
+
 /**
  *
  * @author antal
  */
-public class FullConnection extends Connection{
-
-   
-    
+public class LayerConnection {
+    public Tensor weights;
+    public ConnectionType type;
 }

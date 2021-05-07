@@ -21,6 +21,6 @@ package volgyerdo.neural.structure;
  */
 public enum ConnectionType {
     
-    FULL_CONNECTION, PARTIAL_CONNECTION, CONVOLUTION;
+    FULL_CONNECTION, CONVOLUTION;
 
 }

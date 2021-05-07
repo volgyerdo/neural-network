@@ -19,6 +19,6 @@ package volgyerdo.neural.structure;
  *
  * @author antal
  */
-public class GeneralNetwork extends Network{
+public abstract class GeneralNetwork extends Network{
     
 }

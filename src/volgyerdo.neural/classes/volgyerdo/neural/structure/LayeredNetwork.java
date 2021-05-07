@@ -21,11 +21,9 @@ import java.util.List;
  *
  * @author antal
  */
-public abstract class LayeredNetwork extends Network{
+public class LayeredNetwork extends Network{
     
-    public int[] inputDimensions;
-    public int[] outputDimensions;
     public List<Layer> layers;
-    public List<Connection> connections;
+    public List<LayerConnection> connections;
     
 }

@@ -16,14 +16,9 @@
 package volgyerdo.neural.logic;
 
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.structure.Connection;
+import volgyerdo.neural.structure.LayerConnection;
 import volgyerdo.neural.structure.LayeredNetwork;
-import volgyerdo.neural.structure.GeneralNetwork;
-import volgyerdo.neural.structure.FullConnection;
-import volgyerdo.neural.structure.ConvolutionalConnection;
-import volgyerdo.neural.structure.PartialConnection;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.Network;
 
 /**
  *
@@ -33,70 +28,31 @@ public class NetworkLogic {
 
     private NetworkLogic() {
     }
-    
-    public static void randomize(LayeredNetwork network){
-        
-        //Az elso layernek nincs sulya, ezert lehetne i=1
-        for (int i = 0; i < network.layers.size(); i++) {
-            
-            if(network.layers.get(i).dataType == network.layers.get(i).dataType.BYTE){
-            network.layers.get(i).states.randomize(Byte.MIN_VALUE, Byte.MAX_VALUE);
-            }
-        
-            if(network.layers.get(i).dataType == network.layers.get(i).dataType.SHORT){
-            network.layers.get(i).states.randomize(Short.MIN_VALUE, Short.MAX_VALUE);
-            }
-            else{
-            network.layers.get(i).states.randomize(-1, 1);
+
+    public static void randomize(LayeredNetwork network) {
+        for (LayerConnection connection : network.connections) {
+            switch (connection.weights.type) {
+                case BYTE:
+                    connection.weights.randomize(Byte.MIN_VALUE, Byte.MAX_VALUE);
+                case SHORT:
+                    connection.weights.randomize(Short.MIN_VALUE, Short.MAX_VALUE);
+                case FLOAT:
+                    connection.weights.randomize(-1, 1);
             }
         }
     }
-    //teljesen kapcsolt prop.
-    public static void propagateFullconnected(LayeredNetwork network){
-        
-        //suly normalizalas
-        
-        
-        //propagation
-        for(int i = 0; i < network.layers.size() - 1; i++){
+
+    public static void propagate(LayeredNetwork network) {
+        for (int i = 0; i < network.layers.size() - 1; i++) {
             Layer inputLayer = network.layers.get(i);
-            Layer outputLayer = network.layers.get(i+1);
-            Connection connection = network.connections.get(i);
-            Tensor inputStates = inputLayer.states.convertTo(Tensor.TYPE.FLOAT);
-            Tensor weights = connection.weights.convertTo(Tensor.TYPE.FLOAT);
-            switch(connection.weights.type){
-                case BYTE:
-                   weights.divide(Byte.MAX_VALUE); 
-                case SHORT:
-                   weights.divide(Short.MAX_VALUE); 
-            }
-            inputLayer.states.multiply(connection.weights, 1);
-        } 
+            Layer outputLayer = network.layers.get(i + 1);
+            LayerConnection connection = network.connections.get(i);
+            ConnectionLogic.propagate(inputLayer, outputLayer, connection);
+        }
     }
 
-    //Konvolucios prop.
-    public static void propagateConvol(LayeredNetwork network){
-        
-        //suly normalizalas
-        
-        //prop
-        for(int i = 0; i < network.layers.size() - 1; i++){
-            Layer inputLayer = network.layers.get(i);
-            Layer outputLayer = network.layers.get(i+1);
-            Connection connection = network.connections.get(i);
-            outputLayer.states = inputLayer.states.convolve(connection.weights);
-        } 
+    public static void backPropagate(LayerConnection connection, LayeredNetwork network, Tensor target) {
+
     }
-    
-    public static void backPropagate(ConvolutionalConnection connection, LayeredNetwork network, Tensor target){
-        
-    }
-    
-    public static void backPropagate(FullConnection connection, LayeredNetwork network, Tensor target){
-        
-    }
-    
-    public static void backPropagate(PartialConnection connection, LayeredNetwork network, Tensor target){
-        
-    }
+
 }
