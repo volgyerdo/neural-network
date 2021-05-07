@@ -276,6 +276,11 @@ class ObjectTensor extends Tensor {
             }
         }
     }
+    
+    @Override
+    public void product(Tensor tensor) {
+        throw new RuntimeException("Object tensor doesn't have product function.");
+    }
 
     @Override
     protected void sumProductRecursive(Tensor multiplier, Tensor target,

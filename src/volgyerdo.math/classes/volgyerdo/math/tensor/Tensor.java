@@ -124,6 +124,8 @@ public abstract class Tensor {
     public abstract void negate();
 
     public abstract Tensor transpose();
+    
+    public abstract void product(Tensor multiplier);
 
     public Tensor multiply(Tensor multiplier, int depth) {
         checkNull(multiplier);

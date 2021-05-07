@@ -298,6 +298,17 @@ class FloatTensor extends Tensor {
             }
         }
     }
+    
+    @Override
+    public void product(Tensor multiplier) {
+        checkNull(multiplier);
+        checkClass(multiplier);
+        checkDimensionCount(multiplier.dimensions);
+        checkDimensions(multiplier);
+        for(int i = 0; i< values.length; i++){
+            values[i] = values[i] * ((FloatTensor)multiplier).values[i];
+        }
+    }
 
     @Override
     protected void sumProductRecursive(Tensor multiplier, Tensor target,

@@ -314,6 +314,17 @@ class ByteTensor extends Tensor {
             }
         }
     }
+    
+    @Override
+    public void product(Tensor multiplier) {
+        checkNull(multiplier);
+        checkClass(multiplier);
+        checkDimensionCount(multiplier.dimensions);
+        checkDimensions(multiplier);
+        for(int i = 0; i< values.length; i++){
+            values[i] = PrimitiveUtils.toByte(values[i] * ((ByteTensor)multiplier).values[i]);
+        }
+    }
 
     @Override
     protected void sumProductRecursive(Tensor multiplier, Tensor target,

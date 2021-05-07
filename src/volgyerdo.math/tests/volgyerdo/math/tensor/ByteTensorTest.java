@@ -513,6 +513,24 @@ public class ByteTensorTest {
         System.out.println(c.toString());
         System.out.println("---------------");
         assertEquals("1D-1D multiplication", (byte) 2, c.getByteValue(0));
+        
+        a = new ByteTensor(2);
+        a.setByteValue((byte) 2, 0);
+        a.setByteValue((byte) 3, 1);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new ByteTensor(2);
+        b.setByteValue((byte) -5, 0);
+        b.setByteValue((byte) 4, 1);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 0);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D-1D multiplication", (byte) -10, c.getByteValue(0, 0));
+        assertEquals("1D-1D multiplication", (byte) 8, c.getByteValue(0, 1));
+        assertEquals("1D-1D multiplication", (byte) -15, c.getByteValue(1, 0));
+        assertEquals("1D-1D multiplication", (byte) 12, c.getByteValue(1, 1));
 
         a = new ByteTensor(2, 3);
         a.setByteValue((byte) 2, 0, 0);
