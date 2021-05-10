@@ -55,4 +55,12 @@ public class NetworkLogic {
 
     }
 
+    public static Tensor getInputDimensions(LayeredNetwork network) {
+        return network.layers.get(0).states;
+    }
+
+    public static Tensor getOutputDimensions(LayeredNetwork network) {
+        return network.layers.get(network.layers.size()).states;
+    }
+
 }

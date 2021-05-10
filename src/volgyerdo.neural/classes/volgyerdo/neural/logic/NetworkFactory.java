@@ -20,42 +20,64 @@ import volgyerdo.neural.structure.ConnectionType;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.LayeredNetwork;
 
-
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
 public class NetworkFactory {
-    
+
     public static LayeredNetwork createLayeredNetwork(
-            Tensor.TYPE dataType){
+            Tensor.TYPE dataType) {
         LayeredNetwork layeredNetwork = new LayeredNetwork();
         layeredNetwork.dataType = dataType;
         return null;
     }
-    
+
     public static LayeredNetwork createLayeredNetwork(
-            Tensor.TYPE dataType, int[] dimensions, int layerCount, ConnectionType connectionType){
-        
+            Tensor.TYPE dataType,
+            int[] dimensions,
+            int layerCount,
+            ConnectionType connectionType) {
+        LayeredNetwork layeredNetwork = new LayeredNetwork();
+
+        switch (connectionType) {
+            case FULL_CONNECTION:
+                for (int i = 0; i < layerCount; i++) {
+                    Layer layer = new Layer();
+                    addFullyConnectedLayer(layeredNetwork, layer);
+                    layeredNetwork.layers.get(i).dataType = dataType;
+                    layeredNetwork.layers.get(i).dimensions = dimensions;
+                }
+
+            case CONVOLUTION:
+                for (int i = 0; i < layerCount; i++) {
+                    Layer layer = new Layer();
+                    addConvolutionalLayer(layeredNetwork, layer, dimensions /*kernel dimension*/);
+                    layeredNetwork.layers.get(i).dataType = dataType;
+                    layeredNetwork.layers.get(i).dimensions = dimensions;
+                }
+                
+        }
+        return layeredNetwork;
     }
 
-    public static void addFullyConnectedLayer(LayeredNetwork network, Layer layer){
-        if(network.layers.size() > 0){
-            Layer previousLayer = network.layers.get(network.layers.size()-1);
+    public static void addFullyConnectedLayer(LayeredNetwork network, Layer layer) {
+        if (network.layers.size() > 0) {
+            Layer previousLayer = network.layers.get(network.layers.size() - 1);
             network.connections.add(
                     ConnectionFactory.createFullyConnectedConnection(
                             previousLayer, layer));
         }
         network.layers.add(layer);
     }
-        
-    public static void addConvolutionalLayer(LayeredNetwork network, Layer layer, int[] kernelDimensions){
-        if(network.layers.size() > 0){
+
+    public static void addConvolutionalLayer(LayeredNetwork network, Layer layer, int[] kernelDimensions) {
+        if (network.layers.size() > 0) {
             network.connections.add(
                     ConnectionFactory.createConvolutionalConnection(
                             network.dataType, kernelDimensions));
         }
         network.layers.add(layer);
     }
-   
+
 }
