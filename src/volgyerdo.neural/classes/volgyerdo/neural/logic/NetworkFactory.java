@@ -43,7 +43,7 @@ public class NetworkFactory {
         switch (connectionType) {
             case FULL_CONNECTION:
                 for (int i = 0; i < layerCount; i++) {
-                    Layer layer = new Layer();
+                    Layer layer = new Layer();   //createLayer
                     addFullyConnectedLayer(layeredNetwork, layer);
                     layeredNetwork.layers.get(i).dataType = dataType;
                     layeredNetwork.layers.get(i).dimensions = dimensions;
@@ -51,8 +51,8 @@ public class NetworkFactory {
 
             case CONVOLUTION:
                 for (int i = 0; i < layerCount; i++) {
-                    Layer layer = new Layer();
-                    addConvolutionalLayer(layeredNetwork, layer, dimensions /*kernel dimension*/);
+                    Layer layer = new Layer();   //createLayer
+                    addConvolutionalLayer(layeredNetwork, layer, dimensions);
                     layeredNetwork.layers.get(i).dataType = dataType;
                     layeredNetwork.layers.get(i).dimensions = dimensions;
                 }

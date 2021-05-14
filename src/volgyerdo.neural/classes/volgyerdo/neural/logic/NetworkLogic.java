@@ -22,6 +22,7 @@ import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.logic.ActivationLogic;
 import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.structure.Activation;
+import volgyerdo.neural.structure.ConnectionType;
 
 /**
  *
@@ -50,38 +51,41 @@ public class NetworkLogic {
             Layer inputLayer = network.layers.get(i);
             Layer outputLayer = network.layers.get(i + 1);
             LayerConnection connection = network.connections.get(i);
-            ConnectionLogic.propagate(inputLayer, outputLayer, connection);
+
+            Tensor weights = connection.weights.convertTo(Tensor.TYPE.FLOAT);
+            switch (connection.weights.type) {
+                case BYTE:
+                    weights.divide(Byte.MAX_VALUE);
+                case SHORT:
+                    weights.divide(Short.MAX_VALUE);
+            }
+            if (connection.type == ConnectionType.CONVOLUTION) {
+                outputLayer.states = inputLayer.states.convolve(weights);
+            } else {
+                outputLayer.states = inputLayer.states.multiply(weights, inputLayer.dimensions.length);
+            }
         }
     }
 
     //ez valoszinu a ConnectionLogic backProp metodustorzse
     public static void backPropagate(LayerConnection connection, LayeredNetwork network,
             Tensor target) {
+        
+        //for ciklusba
         float l_rate = (float) 0.01;
 
-        
         Tensor input = network.layers.get(0).states;
         Tensor hidden = input.multiply(connection.weights, 0);
         //bias hozzadasa
         //hidden.sigmoid()
-        for (int i = 0; i < hidden.dimensions.length; i++) {
-            Activation activation = ActivationFactory.createSigmoid();
-            float x = ActivationLogic.activate(hidden.getFloatValue(i), activation);
-            hidden.setFloatValue(x, i);
-        }
-        
+
         Tensor output = hidden.multiply(connection.weights, 0);
         //output add bias
         //output.sigmoid
-        for (int i = 0; i < output.dimensions.length; i++) {
-            Activation activation = ActivationFactory.createSigmoid();
-            float x = ActivationLogic.activate(output.getFloatValue(i), activation);
-            output.setFloatValue(x, i);
-        }
-        
+
         //error = target - output
         Tensor error = target.substract(output);
-        
+
         //tensor gradient = output . deactivate sigmoid
         Tensor gradient = null;
         for (int i = 0; i < output.dimensions.length; i++) {
@@ -91,7 +95,7 @@ public class NetworkLogic {
         }
         gradient.multiply(error, 0);
         gradient.multiply(l_rate);
-        
+
         Tensor hidden_T = hidden.transpose();
         Tensor who_delta = gradient.multiply(hidden_T, 0);
 
@@ -102,7 +106,7 @@ public class NetworkLogic {
         //
         Tensor who_T = weights_ho.transpose();
         Tensor hidden_errors = who_T.multiply(error, 0);
-        
+
         //matrix h_gradient = hidden. deactivate sigmoid
         Tensor h_gradient = null;
         for (int i = 0; i < hidden.dimensions.length; i++) {
@@ -112,10 +116,10 @@ public class NetworkLogic {
         }
         h_gradient.multiply(hidden_errors, 0);
         h_gradient.multiply(l_rate);
-        
+
         Tensor i_T = input.transpose();
         Tensor wih_delta = h_gradient.multiply(i_T, 0);
-        
+
         //weights_ih.add(wih_delta)
         Tensor weights_ih = connection.weights;
         weights_ih.add(wih_delta);
