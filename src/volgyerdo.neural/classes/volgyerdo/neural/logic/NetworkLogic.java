@@ -71,59 +71,64 @@ public class NetworkLogic {
     public static void backPropagate(LayerConnection connection, LayeredNetwork network,
             Tensor target) {
         
-        //for ciklusba
-        float l_rate = (float) 0.01;
-
-        Tensor input = network.layers.get(0).states;
-        Tensor hidden = input.multiply(connection.weights, 0);
-        //bias hozzadasa
-        //hidden.sigmoid()
-
-        Tensor output = hidden.multiply(connection.weights, 0);
-        //output add bias
-        //output.sigmoid
-
-        //error = target - output
-        Tensor error = target.substract(output);
-
-        //tensor gradient = output . deactivate sigmoid
-        Tensor gradient = null;
-        for (int i = 0; i < output.dimensions.length; i++) {
-            Activation activation = ActivationFactory.createSigmoid();
-            float x = ActivationLogic.deactivate(output.getFloatValue(i), activation);
-            gradient.setFloatValue(x, i);
+        try {
+            //for ciklusba
+            float l_rate = (float) 0.01;
+            
+            Tensor input = network.layers.get(0).states;
+            Tensor hidden = input.multiply(connection.weights, 0);
+            //bias hozzadasa
+            //hidden.sigmoid()
+            
+            Tensor output = hidden.multiply(connection.weights, 0);
+            //output add bias
+            //output.sigmoid
+            
+            //error = target - output
+            Tensor error = target.clone();
+            error.substract(output);
+            
+            //tensor gradient = output . deactivate sigmoid
+            Tensor gradient = null;
+            for (int i = 0; i < output.dimensions.length; i++) {
+                Activation activation = ActivationFactory.createSigmoid();
+                float x = ActivationLogic.deactivate(output.getFloatValue(i), activation);
+                gradient.setFloatValue(x, i);
+            }
+            gradient.multiply(error, 0);
+            gradient.multiply(l_rate);
+            
+            Tensor hidden_T = hidden.transpose();
+            Tensor who_delta = gradient.multiply(hidden_T, 0);
+            
+            //weights_ho.add(who_delta)
+            Tensor weights_ho = connection.weights;
+            weights_ho.add(who_delta);
+            //bias_o.add(gradient)
+            //
+            Tensor who_T = weights_ho.transpose();
+            Tensor hidden_errors = who_T.multiply(error, 0);
+            
+            //matrix h_gradient = hidden. deactivate sigmoid
+            Tensor h_gradient = null;
+            for (int i = 0; i < hidden.dimensions.length; i++) {
+                Activation activation = ActivationFactory.createSigmoid();
+                float x = ActivationLogic.deactivate(hidden.getFloatValue(i), activation);
+                gradient.setFloatValue(x, i);
+            }
+            h_gradient.multiply(hidden_errors, 0);
+            h_gradient.multiply(l_rate);
+            
+            Tensor i_T = input.transpose();
+            Tensor wih_delta = h_gradient.multiply(i_T, 0);
+            
+            //weights_ih.add(wih_delta)
+            Tensor weights_ih = connection.weights;
+            weights_ih.add(wih_delta);
+            //bias_h.add(h_gradient)
+        } catch (CloneNotSupportedException ex) {
+            ex.printStackTrace();
         }
-        gradient.multiply(error, 0);
-        gradient.multiply(l_rate);
-
-        Tensor hidden_T = hidden.transpose();
-        Tensor who_delta = gradient.multiply(hidden_T, 0);
-
-        //weights_ho.add(who_delta)
-        Tensor weights_ho = connection.weights;
-        weights_ho.add(who_delta);
-        //bias_o.add(gradient)
-        //
-        Tensor who_T = weights_ho.transpose();
-        Tensor hidden_errors = who_T.multiply(error, 0);
-
-        //matrix h_gradient = hidden. deactivate sigmoid
-        Tensor h_gradient = null;
-        for (int i = 0; i < hidden.dimensions.length; i++) {
-            Activation activation = ActivationFactory.createSigmoid();
-            float x = ActivationLogic.deactivate(hidden.getFloatValue(i), activation);
-            gradient.setFloatValue(x, i);
-        }
-        h_gradient.multiply(hidden_errors, 0);
-        h_gradient.multiply(l_rate);
-
-        Tensor i_T = input.transpose();
-        Tensor wih_delta = h_gradient.multiply(i_T, 0);
-
-        //weights_ih.add(wih_delta)
-        Tensor weights_ih = connection.weights;
-        weights_ih.add(wih_delta);
-        //bias_h.add(h_gradient)
     }
 
     public static Tensor getInputDimensions(LayeredNetwork network) {

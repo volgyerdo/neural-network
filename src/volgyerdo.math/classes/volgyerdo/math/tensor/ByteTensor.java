@@ -218,6 +218,17 @@ class ByteTensor extends Tensor {
             values[i] = PrimitiveUtils.toByte((float) values[i] - x);
         }
     }
+    
+    @Override
+    public void substract(Tensor tensor) {
+        checkNull(tensor);
+        checkClass(tensor);
+        checkDimensionCount(tensor.dimensions);
+        checkDimensions(tensor);
+        for (int i = 0; i < values.length; i++) {
+            values[i] -= ((ByteTensor) tensor).values[i];
+        }
+    }
 
     @Override
     public void multiply(byte x) {

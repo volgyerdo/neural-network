@@ -100,6 +100,8 @@ public abstract class Tensor {
     public abstract void substract(short scaler);
 
     public abstract void substract(float scaler);
+    
+    public abstract void substract(Tensor tensor);
 
     public abstract void multiply(byte scaler);
 
