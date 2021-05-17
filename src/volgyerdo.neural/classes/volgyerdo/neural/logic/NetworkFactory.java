@@ -19,6 +19,7 @@ import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConnectionType;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.LayeredNetwork;
+import volgyerdo.neural.logic.LayerFactory;
 
 /**
  *
@@ -43,7 +44,9 @@ public class NetworkFactory {
         switch (connectionType) {
             case FULL_CONNECTION:
                 for (int i = 0; i < layerCount; i++) {
-                    Layer layer = new Layer();   //createLayer
+                    //createLayer
+                    Layer layer;
+                    layer = LayerFactory.createLayer(dataType, dimensions);
                     addFullyConnectedLayer(layeredNetwork, layer);
                     layeredNetwork.layers.get(i).dataType = dataType;
                     layeredNetwork.layers.get(i).dimensions = dimensions;
@@ -51,7 +54,8 @@ public class NetworkFactory {
 
             case CONVOLUTION:
                 for (int i = 0; i < layerCount; i++) {
-                    Layer layer = new Layer();   //createLayer
+                    Layer layer;
+                    layer = LayerFactory.createLayer(dataType, dimensions);
                     addConvolutionalLayer(layeredNetwork, layer, dimensions);
                     layeredNetwork.layers.get(i).dataType = dataType;
                     layeredNetwork.layers.get(i).dimensions = dimensions;

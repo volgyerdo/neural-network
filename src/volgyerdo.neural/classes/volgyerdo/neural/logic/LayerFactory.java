@@ -24,7 +24,7 @@ import volgyerdo.neural.structure.Layer;
  */
 public class LayerFactory {
     
-    public Layer createLayer(Tensor.TYPE dataType, int... dimensions){
+    public static Layer createLayer(Tensor.TYPE dataType, int... dimensions){
         Layer currentLayer = new Layer();
         currentLayer.dataType = dataType;
         currentLayer.dimensions = dimensions;
