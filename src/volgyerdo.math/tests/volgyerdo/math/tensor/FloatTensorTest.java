@@ -25,7 +25,7 @@ import volgyerdo.math.PrimitiveUtils;
  */
 public class FloatTensorTest {
 
-    private static final double FLOATING_VALUE_ACCURACY = 0.0001;
+    private static final double FLOATING_VALUE_ACCURACY = 0.01;
 
     public FloatTensorTest() {
     }
@@ -214,7 +214,7 @@ public class FloatTensorTest {
         t5.setFloatValue(99.4533f, 2, 1);
         assertTrue("Multidimensional tensors equals", t3.equals(t5));
     }
-    
+
     @Test
     public void testRandomizeByte() {
         FloatTensor t = new FloatTensor(3, 5, 4);
@@ -224,7 +224,7 @@ public class FloatTensorTest {
         } catch (Exception e) {
             assertTrue("Bad random bounds.", e instanceof RuntimeException);
         }
-        t.randomize((byte)-55, (byte)100);
+        t.randomize((byte) -55, (byte) 100);
         float min = Float.MAX_VALUE, max = -Float.MAX_VALUE;
         for (byte i = 0; i < 3 * 2 * 4; i++) {
             if (t.values[i] < min) {
@@ -236,9 +236,9 @@ public class FloatTensorTest {
         }
         assertTrue("Randomized float value in bounds (" + min + "," + max + ")",
                 min >= -55 - FLOATING_VALUE_ACCURACY
-                && max <= 100 + FLOATING_VALUE_ACCURACY && min < max); 
+                && max <= 100 + FLOATING_VALUE_ACCURACY && min < max);
     }
-    
+
     @Test
     public void testRandomizeShort() {
         FloatTensor t = new FloatTensor(3, 5, 4);
@@ -248,7 +248,7 @@ public class FloatTensorTest {
         } catch (Exception e) {
             assertTrue("Bad random bounds.", e instanceof RuntimeException);
         }
-        t.randomize((short)-555, (short)3200);
+        t.randomize((short) -555, (short) 3200);
         float min = Float.MAX_VALUE, max = -Float.MAX_VALUE;
         for (byte i = 0; i < 3 * 2 * 4; i++) {
             if (t.values[i] < min) {
@@ -260,7 +260,7 @@ public class FloatTensorTest {
         }
         assertTrue("Randomized float value in bounds (" + min + "," + max + ")",
                 min >= -555 - FLOATING_VALUE_ACCURACY
-                && max <= 3200 + FLOATING_VALUE_ACCURACY && min < max); 
+                && max <= 3200 + FLOATING_VALUE_ACCURACY && min < max);
     }
 
     @Test
@@ -284,7 +284,7 @@ public class FloatTensorTest {
         }
         assertTrue("Randomized float value in bounds (" + min + "," + max + ")",
                 min >= -10000.78f - FLOATING_VALUE_ACCURACY
-                && max <= 43.6788f + FLOATING_VALUE_ACCURACY && min < max); 
+                && max <= 43.6788f + FLOATING_VALUE_ACCURACY && min < max);
     }
 
     @Test
@@ -411,21 +411,162 @@ public class FloatTensorTest {
         t1.setFloatValue((float) 6, 2, 0);
         t1.setFloatValue((float) 34, 0, 1);
         t1.setFloatValue((float) 2, 1, 1);
-        t1.setFloatValue((float) 78, 2, 1);
+        t1.setFloatValue((float) 43256.23, 2, 1);
         FloatTensor t4 = new FloatTensor(3, 2);
         t4.setFloatValue((float) 2.1111, 0, 0);
         t4.setFloatValue((float) -3, 1, 0);
         t4.setFloatValue((float) 10, 2, 0);
         t4.setFloatValue((float) -10, 0, 1);
         t4.setFloatValue((float) 7, 1, 1);
-        t4.setFloatValue((float) -22, 2, 1);
+        t4.setFloatValue((float) -34233.16, 2, 1);
         t1.add(t4);
         assertEquals("Tensor sum", (float) -32, t1.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
         assertEquals("Tensor sum", (float) -70, t1.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
         assertEquals("Tensor sum", (float) 16, t1.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
         assertEquals("Tensor sum", (float) 24, t1.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
         assertEquals("Tensor sum", (float) 9, t1.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
-        assertEquals("Tensor sum", (float) 56, t1.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", (float) 9023.07, t1.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+    }
+
+    @Test
+    public void testSubstractByte() {
+        FloatTensor t = new FloatTensor(3, 2);
+        t.setFloatValue(-1, 0, 0);
+        t.setFloatValue(0, 1, 0);
+        t.setFloatValue(10, 2, 0);
+        t.setFloatValue(15, 0, 1);
+        t.setFloatValue(20, 1, 1);
+        t.setFloatValue(99, 2, 1);
+        t.substract((byte) 0);
+        assertEquals("Add 0 value", -1, t.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 0, t.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 10, t.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 15, t.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 20, t.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 99, t.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        t.substract((byte) 2);
+        assertEquals("Add 10 value", -3, t.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", -2, t.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 8, t.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 13, t.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 18, t.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 97, t.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        t.substract((byte) -5);
+        assertEquals("Add 10 value", 2, t.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 3, t.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 13, t.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 18, t.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 23, t.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 102, t.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+    }
+
+    @Test
+    public void testSubstarctShort() {
+        FloatTensor t = new FloatTensor(3, 2);
+        t.setFloatValue(-1, 0, 0);
+        t.setFloatValue(0, 1, 0);
+        t.setFloatValue(10, 2, 0);
+        t.setFloatValue(15, 0, 1);
+        t.setFloatValue(20, 1, 1);
+        t.setFloatValue(99, 2, 1);
+        t.substract((short) 0);
+        assertEquals("Add 0 value", -1, t.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 0, t.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 10, t.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 15, t.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 20, t.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 99, t.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        t.substract((short) 2);
+        assertEquals("Add 10 value", -3, t.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", -2, t.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 8, t.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 13, t.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 18, t.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 97, t.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        t.substract((short) -5);
+        assertEquals("Add 10 value", 2, t.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 3, t.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 13, t.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 18, t.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 23, t.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 102, t.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+    }
+
+    @Test
+    public void testSubstractFloat() {
+        FloatTensor t = new FloatTensor(3, 2);
+        t.setFloatValue(-1, 0, 0);
+        t.setFloatValue(0, 1, 0);
+        t.setFloatValue(10, 2, 0);
+        t.setFloatValue(15, 0, 1);
+        t.setFloatValue(20, 1, 1);
+        t.setFloatValue(99, 2, 1);
+        t.substract((float) 0);
+        assertEquals("Add 0 value", -1, t.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 0, t.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 10, t.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 15, t.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 20, t.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 0 value", 99, t.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        t.substract((float) 2);
+        assertEquals("Add 10 value", -3, t.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", -2, t.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 8, t.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 13, t.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 18, t.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 97, t.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        t.substract((float) -5);
+        assertEquals("Add 10 value", 2, t.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 3, t.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 13, t.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 18, t.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 23, t.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Add 10 value", 102, t.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+    }
+
+    @Test
+    public void testSubstarctTensor() {
+        FloatTensor t1 = new FloatTensor(3, 2);
+        try {
+            t1.substract(null);
+            fail("Add null tensor");
+        } catch (Exception e) {
+            assertTrue("Add null tensor.", e instanceof RuntimeException);
+        }
+        ShortTensor t2 = new ShortTensor(3, 2);
+        try {
+            t1.substract(t2);
+            fail("Add different type of tensor");
+        } catch (Exception e) {
+            assertTrue("Add different type of tensor.", e instanceof RuntimeException);
+        }
+        FloatTensor t3 = new FloatTensor(3, 2, 5);
+        try {
+            t1.substract(t3);
+            fail("Add different size of tensor");
+        } catch (Exception e) {
+            assertTrue("Add different size of tensor.", e instanceof RuntimeException);
+        }
+        t1.setFloatValue(-34, 0, 0);
+        t1.setFloatValue(-67, 1, 0);
+        t1.setFloatValue(6, 2, 0);
+        t1.setFloatValue(34, 0, 1);
+        t1.setFloatValue(2, 1, 1);
+        t1.setFloatValue((float) 43256.23, 2, 1);
+        FloatTensor t4 = new FloatTensor(3, 2);
+        t4.setFloatValue(2, 0, 0);
+        t4.setFloatValue(-3, 1, 0);
+        t4.setFloatValue(10, 2, 0);
+        t4.setFloatValue(-10, 0, 1);
+        t4.setFloatValue(7, 1, 1);
+        t4.setFloatValue((float) -34233.16, 2, 1);
+        t1.substract(t4);
+        assertEquals("Tensor sum", -36, t1.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", -64, t1.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", -4, t1.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", 44, t1.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", -5, t1.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", 77489.39, t1.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
     }
 
     @Test
@@ -480,6 +621,186 @@ public class FloatTensorTest {
         assertEquals("Transposed tensor", (float) 34, transposed.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
         assertEquals("Transposed tensor", (float) 2.2334, transposed.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
         assertEquals("Transposed tensor", (float) 78, transposed.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+    }
+
+    @Test
+    public void testHadamardProduct() {
+        FloatTensor t1 = new FloatTensor(3, 2);
+        try {
+            t1.substract(null);
+            fail("Multiply null tensor");
+        } catch (Exception e) {
+            assertTrue("Multiply null tensor.", e instanceof RuntimeException);
+        }
+        ByteTensor t2 = new ByteTensor(3, 2);
+        try {
+            t1.substract(t2);
+            fail("Multiply different type of tensor");
+        } catch (Exception e) {
+            assertTrue("Multiply different type of tensor.", e instanceof RuntimeException);
+        }
+        FloatTensor t3 = new FloatTensor(3, 2, 5);
+        try {
+            t1.substract(t3);
+            fail("Multiply different size of tensor");
+        } catch (Exception e) {
+            assertTrue("Multiply different size of tensor.", e instanceof RuntimeException);
+        }
+        t1.setFloatValue(-34, 0, 0);
+        t1.setFloatValue(-6, 1, 0);
+        t1.setFloatValue(6, 2, 0);
+        t1.setFloatValue(3, 0, 1);
+        t1.setFloatValue(2, 1, 1);
+        t1.setFloatValue((float)345.34, 2, 1);
+        FloatTensor t4 = new FloatTensor(3, 2);
+        t4.setFloatValue(2, 0, 0);
+        t4.setFloatValue(-3, 1, 0);
+        t4.setFloatValue(10, 2, 0);
+        t4.setFloatValue(-10, 0, 1);
+        t4.setFloatValue(7, 1, 1);
+        t4.setFloatValue((float)-292.12, 2, 1);
+        t1.hadamardProduct(t4);
+        assertEquals("Tensor sum", -68, t1.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", 18, t1.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", 60, t1.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", -30, t1.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", 14, t1.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("Tensor sum", -100880.7208, t1.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+    }
+    
+    @Test
+    public void testMultiply() {
+        Tensor a, b, c;
+
+        a = new FloatTensor(1);
+        a.setFloatValue(5, 0);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new FloatTensor(1);
+        b.setFloatValue(-3, 0);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D-1D multiplication", -15, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+
+        a = new FloatTensor(2);
+        a.setFloatValue(2, 0);
+        a.setFloatValue(3, 1);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new FloatTensor(2);
+        b.setFloatValue(-5, 0);
+        b.setFloatValue(4, 1);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D-1D multiplication", 2, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+
+        a = new FloatTensor(2);
+        a.setFloatValue(2, 0);
+        a.setFloatValue(3, 1);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new FloatTensor(2);
+        b.setFloatValue(-5, 0);
+        b.setFloatValue(4, 1);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 0);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D-1D multiplication", -10, c.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D-1D multiplication", 8, c.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D-1D multiplication", -15, c.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D-1D multiplication", 12, c.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+
+        a = new FloatTensor(2, 3);
+        a.setFloatValue(2, 0, 0);
+        a.setFloatValue(-3, 0, 1);
+        a.setFloatValue(9, 0, 2);
+        a.setFloatValue(-1, 1, 0);
+        a.setFloatValue(0, 1, 1);
+        a.setFloatValue(6, 1, 2);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new FloatTensor(3, 4);
+        b.setFloatValue(2, 0, 0);
+        b.setFloatValue(-3, 0, 1);
+        b.setFloatValue(9, 0, 2);
+        b.setFloatValue(5, 0, 3);
+        b.setFloatValue(-1, 1, 0);
+        b.setFloatValue(0, 1, 1);
+        b.setFloatValue(6, 1, 2);
+        b.setFloatValue((byte) -2, 1, 3);
+        b.setFloatValue(7, 2, 0);
+        b.setFloatValue(2, 2, 1);
+        b.setFloatValue(1, 2, 2);
+        b.setFloatValue(8, 2, 3);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("2D-2D multiplication (0,0)", 70, c.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-2D multiplication (1,0)", 40, c.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-2D multiplication (0,1)", 12, c.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-2D multiplication (1,1)", 15, c.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-2D multiplication (0,2)", 9, c.getFloatValue(0, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-2D multiplication (1,2)", -3, c.getFloatValue(1, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-2D multiplication (0,3)", 88, c.getFloatValue(0, 3), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-2D multiplication (1,3)", 43, c.getFloatValue(1, 3), FLOATING_VALUE_ACCURACY);
+
+        a = new FloatTensor(2, 1);
+        a.setFloatValue(2, 0, 0);
+        a.setFloatValue(-1, 1, 0);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new FloatTensor(2, 1, 3, 4);
+        b.setFloatValue(4, 0, 0, 0, 0);
+        b.setFloatValue(2, 0, 0, 0, 1);
+        b.setFloatValue(1, 0, 0, 0, 2);
+        b.setFloatValue(3, 0, 0, 0, 3);
+        b.setFloatValue(5, 0, 0, 1, 0);
+        b.setFloatValue(2, 0, 0, 1, 1);
+        b.setFloatValue(1, 0, 0, 1, 2);
+        b.setFloatValue(2, 0, 0, 1, 3);
+        b.setFloatValue(1, 0, 0, 2, 0);
+        b.setFloatValue(5, 0, 0, 2, 1);
+        b.setFloatValue(4, 0, 0, 2, 2);
+        b.setFloatValue(1, 0, 0, 2, 3);
+        b.setFloatValue(3, 1, 0, 0, 0);
+        b.setFloatValue(0, 1, 0, 0, 1);
+        b.setFloatValue(5, 1, 0, 0, 2);
+        b.setFloatValue(2, 1, 0, 0, 3);
+        b.setFloatValue(1, 1, 0, 1, 0);
+        b.setFloatValue(4, 1, 0, 1, 1);
+        b.setFloatValue(0, 1, 0, 1, 2);
+        b.setFloatValue(3, 1, 0, 1, 3);
+        b.setFloatValue(2, 1, 0, 2, 0);
+        b.setFloatValue(5, 1, 0, 2, 1);
+        b.setFloatValue(0, 1, 0, 2, 2);
+        b.setFloatValue(1, 1, 0, 2, 3);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 2);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("2D-4D multiplication (0,0)", 5, c.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (1,0)", 9, c.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (2,0)", 0, c.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (0,1)", 4, c.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (1,1)", 0, c.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (2,1)", 5, c.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (0,2)", -3, c.getFloatValue(0, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (1,2)", 2, c.getFloatValue(1, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (2,2)", 8, c.getFloatValue(2, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (0,3)", 4, c.getFloatValue(0, 3), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (1,3)", 1, c.getFloatValue(1, 3), FLOATING_VALUE_ACCURACY);
+        assertEquals("2D-4D multiplication (2,3)", 1, c.getFloatValue(2, 3), FLOATING_VALUE_ACCURACY);
     }
 
 }

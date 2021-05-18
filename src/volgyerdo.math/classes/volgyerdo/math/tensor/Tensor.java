@@ -127,7 +127,7 @@ public abstract class Tensor {
 
     public abstract Tensor transpose();
     
-    public abstract void product(Tensor multiplier);
+    public abstract void hadamardProduct(Tensor multiplier);
 
     public Tensor multiply(Tensor multiplier, int depth) {
         checkNull(multiplier);
@@ -204,7 +204,7 @@ public abstract class Tensor {
     }
 
     protected final void checkNull(Tensor tensor) {
-        if (!tensor.getClass().equals(getClass())) {
+        if (tensor == null) {
             throw new IllegalArgumentException("Tensor is null.");
         }
     }

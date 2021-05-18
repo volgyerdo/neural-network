@@ -70,10 +70,10 @@ public class NetworkLogic {
     public static void backPropagate(LayerConnection connection, LayeredNetwork network,
             Tensor target) {
 
-        try {
+//        try {
             double l_rate = 0.01; //fuggvenyparameternek kellene lennie
             Tensor ActualOutput = network.layers.get(network.layers.size()).states;
-            Tensor ErrorTensor = target.substract(ActualOutput);
+//            Tensor ErrorTensor = target.substract(ActualOutput);
 
             for (int i = 0; i < network.layers.size(); i++) {
 
@@ -83,9 +83,9 @@ public class NetworkLogic {
                 //i.reteg uj sulytenyezoi
                 //i.reteg uj erositesi tenyezoi
             }
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-        }
+//        } catch (CloneNotSupportedException ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     public static Tensor getInputDimensions(LayeredNetwork network) {

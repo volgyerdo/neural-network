@@ -319,7 +319,7 @@ class ShortTensor extends Tensor {
     }
     
     @Override
-    public void product(Tensor multiplier) {
+    public void hadamardProduct(Tensor multiplier) {
         checkNull(multiplier);
         checkClass(multiplier);
         checkDimensionCount(multiplier.dimensions);

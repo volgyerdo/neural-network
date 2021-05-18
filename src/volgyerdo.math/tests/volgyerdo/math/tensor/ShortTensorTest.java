@@ -46,7 +46,7 @@ public class ShortTensorTest {
             for (byte j = 0; j < 5; j++) {
                 for (byte k = 0; k < 6; k++) {
                     assertEquals("Byte value match (" + i + "," + j + "," + k + ")",
-                            (short)values[i][j][k], t.values[i + 4 * j + 4 * 5 * k]);
+                            (short) values[i][j][k], t.values[i + 4 * j + 4 * 5 * k]);
                 }
             }
         }
@@ -409,21 +409,162 @@ public class ShortTensorTest {
         t1.setShortValue((short) 6, 2, 0);
         t1.setShortValue((short) 34, 0, 1);
         t1.setShortValue((short) 2, 1, 1);
-        t1.setShortValue((short) 78, 2, 1);
+        t1.setShortValue((short) 286324, 2, 1);
         ShortTensor t4 = new ShortTensor(3, 2);
         t4.setShortValue((short) 2, 0, 0);
         t4.setShortValue((short) -3, 1, 0);
         t4.setShortValue((short) 10, 2, 0);
         t4.setShortValue((short) -10, 0, 1);
         t4.setShortValue((short) 7, 1, 1);
-        t4.setShortValue((short) -22, 2, 1);
+        t4.setShortValue((short) 54356, 2, 1);
         t1.add(t4);
-        assertEquals("Tensor sum", (byte) -32, t1.getShortValue(0, 0));
-        assertEquals("Tensor sum", (byte) -70, t1.getShortValue(1, 0));
-        assertEquals("Tensor sum", (byte) 16, t1.getShortValue(2, 0));
-        assertEquals("Tensor sum", (byte) 24, t1.getShortValue(0, 1));
-        assertEquals("Tensor sum", (byte) 9, t1.getShortValue(1, 1));
-        assertEquals("Tensor sum", (byte) 56, t1.getShortValue(2, 1));
+        assertEquals("Tensor sum", (short) -32, t1.getShortValue(0, 0));
+        assertEquals("Tensor sum", (short) -70, t1.getShortValue(1, 0));
+        assertEquals("Tensor sum", (short) 16, t1.getShortValue(2, 0));
+        assertEquals("Tensor sum", (short) 24, t1.getShortValue(0, 1));
+        assertEquals("Tensor sum", (short) 9, t1.getShortValue(1, 1));
+        assertEquals("Tensor sum", (short) 340680, t1.getShortValue(2, 1));
+    }
+
+    @Test
+    public void testSubstractByte() {
+        ShortTensor t = new ShortTensor(3, 2);
+        t.setShortValue((short) -1, 0, 0);
+        t.setShortValue((short) 0, 1, 0);
+        t.setShortValue((short) 10, 2, 0);
+        t.setShortValue((short) 15, 0, 1);
+        t.setShortValue((short) 20, 1, 1);
+        t.setShortValue((short) 99, 2, 1);
+        t.substract((short) 0);
+        assertEquals("Add 0 value", (short) -1, t.getShortValue(0, 0));
+        assertEquals("Add 0 value", (short) 0, t.getShortValue(1, 0));
+        assertEquals("Add 0 value", (short) 10, t.getShortValue(2, 0));
+        assertEquals("Add 0 value", (short) 15, t.getShortValue(0, 1));
+        assertEquals("Add 0 value", (short) 20, t.getShortValue(1, 1));
+        assertEquals("Add 0 value", (short) 99, t.getShortValue(2, 1));
+        t.substract((short) 2);
+        assertEquals("Add 10 value", (short) -3, t.getShortValue(0, 0));
+        assertEquals("Add 10 value", (short) -2, t.getShortValue(1, 0));
+        assertEquals("Add 10 value", (short) 8, t.getShortValue(2, 0));
+        assertEquals("Add 10 value", (short) 13, t.getShortValue(0, 1));
+        assertEquals("Add 10 value", (short) 18, t.getShortValue(1, 1));
+        assertEquals("Add 10 value", (short) 97, t.getShortValue(2, 1));
+        t.substract((short) -5);
+        assertEquals("Add 10 value", (short) 2, t.getShortValue(0, 0));
+        assertEquals("Add 10 value", (short) 3, t.getShortValue(1, 0));
+        assertEquals("Add 10 value", (short) 13, t.getShortValue(2, 0));
+        assertEquals("Add 10 value", (short) 18, t.getShortValue(0, 1));
+        assertEquals("Add 10 value", (short) 23, t.getShortValue(1, 1));
+        assertEquals("Add 10 value", (short) 102, t.getShortValue(2, 1));
+    }
+
+    @Test
+    public void testSubstarctShort() {
+        ShortTensor t = new ShortTensor(3, 2);
+        t.setShortValue((short) -1, 0, 0);
+        t.setShortValue((short) 0, 1, 0);
+        t.setShortValue((short) 10, 2, 0);
+        t.setShortValue((short) 15, 0, 1);
+        t.setShortValue((short) 20, 1, 1);
+        t.setShortValue((short) 99, 2, 1);
+        t.substract((short) 0);
+        assertEquals("Add 0 value", (short) -1, t.getShortValue(0, 0));
+        assertEquals("Add 0 value", (short) 0, t.getShortValue(1, 0));
+        assertEquals("Add 0 value", (short) 10, t.getShortValue(2, 0));
+        assertEquals("Add 0 value", (short) 15, t.getShortValue(0, 1));
+        assertEquals("Add 0 value", (short) 20, t.getShortValue(1, 1));
+        assertEquals("Add 0 value", (short) 99, t.getShortValue(2, 1));
+        t.substract((short) 2);
+        assertEquals("Add 10 value", (short) -3, t.getShortValue(0, 0));
+        assertEquals("Add 10 value", (short) -2, t.getShortValue(1, 0));
+        assertEquals("Add 10 value", (short) 8, t.getShortValue(2, 0));
+        assertEquals("Add 10 value", (short) 13, t.getShortValue(0, 1));
+        assertEquals("Add 10 value", (short) 18, t.getShortValue(1, 1));
+        assertEquals("Add 10 value", (short) 97, t.getShortValue(2, 1));
+        t.substract((short) -5);
+        assertEquals("Add 10 value", (short) 2, t.getShortValue(0, 0));
+        assertEquals("Add 10 value", (short) 3, t.getShortValue(1, 0));
+        assertEquals("Add 10 value", (short) 13, t.getShortValue(2, 0));
+        assertEquals("Add 10 value", (short) 18, t.getShortValue(0, 1));
+        assertEquals("Add 10 value", (short) 23, t.getShortValue(1, 1));
+        assertEquals("Add 10 value", (short) 102, t.getShortValue(2, 1));
+    }
+
+    @Test
+    public void testSubstractFloat() {
+        ShortTensor t = new ShortTensor(3, 2);
+        t.setShortValue((short) -1, 0, 0);
+        t.setShortValue((short) 0, 1, 0);
+        t.setShortValue((short) 10, 2, 0);
+        t.setShortValue((short) 15, 0, 1);
+        t.setShortValue((short) 20, 1, 1);
+        t.setShortValue((short) 99, 2, 1);
+        t.substract((float) 0);
+        assertEquals("Add 0 value", (short) -1, t.getShortValue(0, 0));
+        assertEquals("Add 0 value", (short) 0, t.getShortValue(1, 0));
+        assertEquals("Add 0 value", (short) 10, t.getShortValue(2, 0));
+        assertEquals("Add 0 value", (short) 15, t.getShortValue(0, 1));
+        assertEquals("Add 0 value", (short) 20, t.getShortValue(1, 1));
+        assertEquals("Add 0 value", (short) 99, t.getShortValue(2, 1));
+        t.substract((float) 2);
+        assertEquals("Add 10 value", (short) -3, t.getShortValue(0, 0));
+        assertEquals("Add 10 value", (short) -2, t.getShortValue(1, 0));
+        assertEquals("Add 10 value", (short) 8, t.getShortValue(2, 0));
+        assertEquals("Add 10 value", (short) 13, t.getShortValue(0, 1));
+        assertEquals("Add 10 value", (short) 18, t.getShortValue(1, 1));
+        assertEquals("Add 10 value", (short) 97, t.getShortValue(2, 1));
+        t.substract((float) -5);
+        assertEquals("Add 10 value", (short) 2, t.getShortValue(0, 0));
+        assertEquals("Add 10 value", (short) 3, t.getShortValue(1, 0));
+        assertEquals("Add 10 value", (short) 13, t.getShortValue(2, 0));
+        assertEquals("Add 10 value", (short) 18, t.getShortValue(0, 1));
+        assertEquals("Add 10 value", (short) 23, t.getShortValue(1, 1));
+        assertEquals("Add 10 value", (short) 102, t.getShortValue(2, 1));
+    }
+
+    @Test
+    public void testSubstarctTensor() {
+        ShortTensor t1 = new ShortTensor(3, 2);
+        try {
+            t1.substract(null);
+            fail("Add null tensor");
+        } catch (Exception e) {
+            assertTrue("Add null tensor.", e instanceof RuntimeException);
+        }
+        ByteTensor t2 = new ByteTensor(3, 2);
+        try {
+            t1.substract(t2);
+            fail("Add different type of tensor");
+        } catch (Exception e) {
+            assertTrue("Add different type of tensor.", e instanceof RuntimeException);
+        }
+        ShortTensor t3 = new ShortTensor(3, 2, 5);
+        try {
+            t1.substract(t3);
+            fail("Add different size of tensor");
+        } catch (Exception e) {
+            assertTrue("Add different size of tensor.", e instanceof RuntimeException);
+        }
+        t1.setShortValue((short) -34, 0, 0);
+        t1.setShortValue((short) -67, 1, 0);
+        t1.setShortValue((short) 6, 2, 0);
+        t1.setShortValue((short) 34, 0, 1);
+        t1.setShortValue((short) 2, 1, 1);
+        t1.setShortValue((short) 286324, 2, 1);
+        ShortTensor t4 = new ShortTensor(3, 2);
+        t4.setShortValue((short) 2, 0, 0);
+        t4.setShortValue((short) -3, 1, 0);
+        t4.setShortValue((short) 10, 2, 0);
+        t4.setShortValue((short) -10, 0, 1);
+        t4.setShortValue((short) 7, 1, 1);
+        t4.setShortValue((short) 54356, 2, 1);
+        t1.substract(t4);
+        assertEquals("Tensor sum", (short) -36, t1.getShortValue(0, 0));
+        assertEquals("Tensor sum", (short) -64, t1.getShortValue(1, 0));
+        assertEquals("Tensor sum", (short) -4, t1.getShortValue(2, 0));
+        assertEquals("Tensor sum", (short) 44, t1.getShortValue(0, 1));
+        assertEquals("Tensor sum", (short) -5, t1.getShortValue(1, 1));
+        assertEquals("Tensor sum", (short) 231968, t1.getShortValue(2, 1));
     }
 
     @Test
@@ -478,6 +619,186 @@ public class ShortTensorTest {
         assertEquals("Transposed tensor", (byte) 34, transposed.getShortValue(0, 1));
         assertEquals("Transposed tensor", (byte) 2, transposed.getShortValue(1, 1));
         assertEquals("Transposed tensor", (byte) 78, transposed.getShortValue(2, 1));
+    }
+
+    @Test
+    public void testHadamardProduct() {
+        ShortTensor t1 = new ShortTensor(3, 2);
+        try {
+            t1.substract(null);
+            fail("Multiply null tensor");
+        } catch (Exception e) {
+            assertTrue("Multiply null tensor.", e instanceof RuntimeException);
+        }
+        ByteTensor t2 = new ByteTensor(3, 2);
+        try {
+            t1.substract(t2);
+            fail("Multiply different type of tensor");
+        } catch (Exception e) {
+            assertTrue("Multiply different type of tensor.", e instanceof RuntimeException);
+        }
+        ShortTensor t3 = new ShortTensor(3, 2, 5);
+        try {
+            t1.substract(t3);
+            fail("Multiply different size of tensor");
+        } catch (Exception e) {
+            assertTrue("Multiply different size of tensor.", e instanceof RuntimeException);
+        }
+        t1.setShortValue((short) -34, 0, 0);
+        t1.setShortValue((short) -6, 1, 0);
+        t1.setShortValue((short) 6, 2, 0);
+        t1.setShortValue((short) 3, 0, 1);
+        t1.setShortValue((short) 2, 1, 1);
+        t1.setShortValue((short) 345, 2, 1);
+        ShortTensor t4 = new ShortTensor(3, 2);
+        t4.setShortValue((short) 2, 0, 0);
+        t4.setShortValue((short) -3, 1, 0);
+        t4.setShortValue((short) 10, 2, 0);
+        t4.setShortValue((short) -10, 0, 1);
+        t4.setShortValue((short) 7, 1, 1);
+        t4.setShortValue((short) -22, 2, 1);
+        t1.hadamardProduct(t4);
+        assertEquals("Tensor sum", (short) -68, t1.getShortValue(0, 0));
+        assertEquals("Tensor sum", (short) 18, t1.getShortValue(1, 0));
+        assertEquals("Tensor sum", (short) 60, t1.getShortValue(2, 0));
+        assertEquals("Tensor sum", (short) -30, t1.getShortValue(0, 1));
+        assertEquals("Tensor sum", (short) 14, t1.getShortValue(1, 1));
+        assertEquals("Tensor sum", (short) -7590, t1.getShortValue(2, 1));
+    }
+
+    @Test
+    public void testMultiply() {
+        Tensor a, b, c;
+
+        a = new ShortTensor(1);
+        a.setShortValue((short) 5, 0);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new ShortTensor(1);
+        b.setShortValue((short) -3, 0);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D-1D multiplication", (short) -15, c.getShortValue(0));
+
+        a = new ShortTensor(2);
+        a.setShortValue((short) 2, 0);
+        a.setShortValue((short) 3, 1);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new ShortTensor(2);
+        b.setShortValue((short) -5, 0);
+        b.setShortValue((short) 4, 1);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D-1D multiplication", (short) 2, c.getShortValue(0));
+
+        a = new ShortTensor(2);
+        a.setShortValue((short) 2, 0);
+        a.setShortValue((short) 3, 1);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new ShortTensor(2);
+        b.setShortValue((short) -5, 0);
+        b.setShortValue((short) 4, 1);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 0);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D-1D multiplication", (short) -10, c.getShortValue(0, 0));
+        assertEquals("1D-1D multiplication", (short) 8, c.getShortValue(0, 1));
+        assertEquals("1D-1D multiplication", (short) -15, c.getShortValue(1, 0));
+        assertEquals("1D-1D multiplication", (short) 12, c.getShortValue(1, 1));
+
+        a = new ShortTensor(2, 3);
+        a.setShortValue((short) 2, 0, 0);
+        a.setShortValue((short) -3, 0, 1);
+        a.setShortValue((short) 9, 0, 2);
+        a.setShortValue((short) -1, 1, 0);
+        a.setShortValue((short) 0, 1, 1);
+        a.setShortValue((short) 6, 1, 2);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new ShortTensor(3, 4);
+        b.setShortValue((short) 2, 0, 0);
+        b.setShortValue((short) -3, 0, 1);
+        b.setShortValue((short) 9, 0, 2);
+        b.setShortValue((short) 5, 0, 3);
+        b.setShortValue((short) -1, 1, 0);
+        b.setShortValue((short) 0, 1, 1);
+        b.setShortValue((short) 6, 1, 2);
+        b.setShortValue((short) -2, 1, 3);
+        b.setShortValue((short) 7, 2, 0);
+        b.setShortValue((short) 2, 2, 1);
+        b.setShortValue((short) 1, 2, 2);
+        b.setShortValue((short) 8, 2, 3);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("2D-2D multiplication (0,0)", (short) 70, c.getShortValue(0, 0));
+        assertEquals("2D-2D multiplication (1,0)", (short) 40, c.getShortValue(1, 0));
+        assertEquals("2D-2D multiplication (0,1)", (short) 12, c.getShortValue(0, 1));
+        assertEquals("2D-2D multiplication (1,1)", (short) 15, c.getShortValue(1, 1));
+        assertEquals("2D-2D multiplication (0,2)", (short) 9, c.getShortValue(0, 2));
+        assertEquals("2D-2D multiplication (1,2)", (short) -3, c.getShortValue(1, 2));
+        assertEquals("2D-2D multiplication (0,3)", (short) 88, c.getShortValue(0, 3));
+        assertEquals("2D-2D multiplication (1,3)", (short) 43, c.getShortValue(1, 3));
+
+        a = new ShortTensor(2, 1);
+        a.setShortValue((short) 2, 0, 0);
+        a.setShortValue((short) -1, 1, 0);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        b = new ShortTensor(2, 1, 3, 4);
+        b.setShortValue((short) 4, 0, 0, 0, 0);
+        b.setShortValue((short) 2, 0, 0, 0, 1);
+        b.setShortValue((short) 1, 0, 0, 0, 2);
+        b.setShortValue((short) 3, 0, 0, 0, 3);
+        b.setShortValue((short) 5, 0, 0, 1, 0);
+        b.setShortValue((short) 2, 0, 0, 1, 1);
+        b.setShortValue((short) 1, 0, 0, 1, 2);
+        b.setShortValue((short) 2, 0, 0, 1, 3);
+        b.setShortValue((short) 1, 0, 0, 2, 0);
+        b.setShortValue((short) 5, 0, 0, 2, 1);
+        b.setShortValue((short) 4, 0, 0, 2, 2);
+        b.setShortValue((short) 1, 0, 0, 2, 3);
+        b.setShortValue((short) 3, 1, 0, 0, 0);
+        b.setShortValue((short) 0, 1, 0, 0, 1);
+        b.setShortValue((short) 5, 1, 0, 0, 2);
+        b.setShortValue((short) 2, 1, 0, 0, 3);
+        b.setShortValue((short) 1, 1, 0, 1, 0);
+        b.setShortValue((short) 4, 1, 0, 1, 1);
+        b.setShortValue((short) 0, 1, 0, 1, 2);
+        b.setShortValue((short) 3, 1, 0, 1, 3);
+        b.setShortValue((short) 2, 1, 0, 2, 0);
+        b.setShortValue((short) 5, 1, 0, 2, 1);
+        b.setShortValue((short) 0, 1, 0, 2, 2);
+        b.setShortValue((short) 1, 1, 0, 2, 3);
+        System.out.println(b.toString());
+        System.out.println("=\n");
+        c = a.multiply(b, 2);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("2D-4D multiplication (0,0)", (short) 5, c.getShortValue(0, 0));
+        assertEquals("2D-4D multiplication (1,0)", (short) 9, c.getShortValue(1, 0));
+        assertEquals("2D-4D multiplication (2,0)", (short) 0, c.getShortValue(2, 0));
+        assertEquals("2D-4D multiplication (0,1)", (short) 4, c.getShortValue(0, 1));
+        assertEquals("2D-4D multiplication (1,1)", (short) 0, c.getShortValue(1, 1));
+        assertEquals("2D-4D multiplication (2,1)", (short) 5, c.getShortValue(2, 1));
+        assertEquals("2D-4D multiplication (0,2)", (short) -3, c.getShortValue(0, 2));
+        assertEquals("2D-4D multiplication (1,2)", (short) 2, c.getShortValue(1, 2));
+        assertEquals("2D-4D multiplication (2,2)", (short) 8, c.getShortValue(2, 2));
+        assertEquals("2D-4D multiplication (0,3)", (short) 4, c.getShortValue(0, 3));
+        assertEquals("2D-4D multiplication (1,3)", (short) 1, c.getShortValue(1, 3));
+        assertEquals("2D-4D multiplication (2,3)", (short) 1, c.getShortValue(2, 3));
     }
 
 }

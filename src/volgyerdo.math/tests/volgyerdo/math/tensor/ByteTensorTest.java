@@ -427,6 +427,147 @@ public class ByteTensorTest {
         assertEquals("Tensor sum", (byte) 9, t1.getByteValue(1, 1));
         assertEquals("Tensor sum", (byte) 56, t1.getByteValue(2, 1));
     }
+    
+    @Test
+    public void testSubstractByte() {
+        ByteTensor t = new ByteTensor(3, 2);
+        t.setByteValue((byte) -1, 0, 0);
+        t.setByteValue((byte) 0, 1, 0);
+        t.setByteValue((byte) 10, 2, 0);
+        t.setByteValue((byte) 15, 0, 1);
+        t.setByteValue((byte) 20, 1, 1);
+        t.setByteValue((byte) 99, 2, 1);
+        t.substract((byte) 0);
+        assertEquals("Add 0 value", (byte) -1, t.getByteValue(0, 0));
+        assertEquals("Add 0 value", (byte) 0, t.getByteValue(1, 0));
+        assertEquals("Add 0 value", (byte) 10, t.getByteValue(2, 0));
+        assertEquals("Add 0 value", (byte) 15, t.getByteValue(0, 1));
+        assertEquals("Add 0 value", (byte) 20, t.getByteValue(1, 1));
+        assertEquals("Add 0 value", (byte) 99, t.getByteValue(2, 1));
+        t.substract((byte) 2);
+        assertEquals("Add 10 value", (byte) -3, t.getByteValue(0, 0));
+        assertEquals("Add 10 value", (byte) -2, t.getByteValue(1, 0));
+        assertEquals("Add 10 value", (byte) 8, t.getByteValue(2, 0));
+        assertEquals("Add 10 value", (byte) 13, t.getByteValue(0, 1));
+        assertEquals("Add 10 value", (byte) 18, t.getByteValue(1, 1));
+        assertEquals("Add 10 value", (byte) 97, t.getByteValue(2, 1));
+        t.substract((byte) -5);
+        assertEquals("Add 10 value", (byte) 2, t.getByteValue(0, 0));
+        assertEquals("Add 10 value", (byte) 3, t.getByteValue(1, 0));
+        assertEquals("Add 10 value", (byte) 13, t.getByteValue(2, 0));
+        assertEquals("Add 10 value", (byte) 18, t.getByteValue(0, 1));
+        assertEquals("Add 10 value", (byte) 23, t.getByteValue(1, 1));
+        assertEquals("Add 10 value", (byte) 102, t.getByteValue(2, 1));
+    }
+
+    @Test
+    public void testSubstarctShort() {
+        ByteTensor t = new ByteTensor(3, 2);
+        t.setByteValue((byte) -1, 0, 0);
+        t.setByteValue((byte) 0, 1, 0);
+        t.setByteValue((byte) 10, 2, 0);
+        t.setByteValue((byte) 15, 0, 1);
+        t.setByteValue((byte) 20, 1, 1);
+        t.setByteValue((byte) 99, 2, 1);
+        t.substract((short) 0);
+        assertEquals("Add 0 value", (byte) -1, t.getByteValue(0, 0));
+        assertEquals("Add 0 value", (byte) 0, t.getByteValue(1, 0));
+        assertEquals("Add 0 value", (byte) 10, t.getByteValue(2, 0));
+        assertEquals("Add 0 value", (byte) 15, t.getByteValue(0, 1));
+        assertEquals("Add 0 value", (byte) 20, t.getByteValue(1, 1));
+        assertEquals("Add 0 value", (byte) 99, t.getByteValue(2, 1));
+        t.substract((short) 2);
+        assertEquals("Add 10 value", (byte) -3, t.getByteValue(0, 0));
+        assertEquals("Add 10 value", (byte) -2, t.getByteValue(1, 0));
+        assertEquals("Add 10 value", (byte) 8, t.getByteValue(2, 0));
+        assertEquals("Add 10 value", (byte) 13, t.getByteValue(0, 1));
+        assertEquals("Add 10 value", (byte) 18, t.getByteValue(1, 1));
+        assertEquals("Add 10 value", (byte) 97, t.getByteValue(2, 1));
+        t.substract((short) -5);
+        assertEquals("Add 10 value", (byte) 2, t.getByteValue(0, 0));
+        assertEquals("Add 10 value", (byte) 3, t.getByteValue(1, 0));
+        assertEquals("Add 10 value", (byte) 13, t.getByteValue(2, 0));
+        assertEquals("Add 10 value", (byte) 18, t.getByteValue(0, 1));
+        assertEquals("Add 10 value", (byte) 23, t.getByteValue(1, 1));
+        assertEquals("Add 10 value", (byte) 102, t.getByteValue(2, 1));
+    }
+
+    @Test
+    public void testSubstractFloat() {
+        ByteTensor t = new ByteTensor(3, 2);
+        t.setByteValue((byte) -1, 0, 0);
+        t.setByteValue((byte) 0, 1, 0);
+        t.setByteValue((byte) 10, 2, 0);
+        t.setByteValue((byte) 15, 0, 1);
+        t.setByteValue((byte) 20, 1, 1);
+        t.setByteValue((byte) 99, 2, 1);
+        t.substract((float) 0);
+        assertEquals("Add 0 value", (byte) -1, t.getByteValue(0, 0));
+        assertEquals("Add 0 value", (byte) 0, t.getByteValue(1, 0));
+        assertEquals("Add 0 value", (byte) 10, t.getByteValue(2, 0));
+        assertEquals("Add 0 value", (byte) 15, t.getByteValue(0, 1));
+        assertEquals("Add 0 value", (byte) 20, t.getByteValue(1, 1));
+        assertEquals("Add 0 value", (byte) 99, t.getByteValue(2, 1));
+        t.substract((float) 2);
+        assertEquals("Add 10 value", (byte) -3, t.getByteValue(0, 0));
+        assertEquals("Add 10 value", (byte) -2, t.getByteValue(1, 0));
+        assertEquals("Add 10 value", (byte) 8, t.getByteValue(2, 0));
+        assertEquals("Add 10 value", (byte) 13, t.getByteValue(0, 1));
+        assertEquals("Add 10 value", (byte) 18, t.getByteValue(1, 1));
+        assertEquals("Add 10 value", (byte) 97, t.getByteValue(2, 1));
+        t.substract((float) -5);
+        assertEquals("Add 10 value", (byte) 2, t.getByteValue(0, 0));
+        assertEquals("Add 10 value", (byte) 3, t.getByteValue(1, 0));
+        assertEquals("Add 10 value", (byte) 13, t.getByteValue(2, 0));
+        assertEquals("Add 10 value", (byte) 18, t.getByteValue(0, 1));
+        assertEquals("Add 10 value", (byte) 23, t.getByteValue(1, 1));
+        assertEquals("Add 10 value", (byte) 102, t.getByteValue(2, 1));
+    }
+
+    @Test
+    public void testSubstarctTensor() {
+        ByteTensor t1 = new ByteTensor(3, 2);
+        try {
+            t1.substract(null);
+            fail("Add null tensor");
+        } catch (Exception e) {
+            assertTrue("Add null tensor.", e instanceof RuntimeException);
+        }
+        ShortTensor t2 = new ShortTensor(3, 2);
+        try {
+            t1.substract(t2);
+            fail("Add different type of tensor");
+        } catch (Exception e) {
+            assertTrue("Add different type of tensor.", e instanceof RuntimeException);
+        }
+        ByteTensor t3 = new ByteTensor(3, 2, 5);
+        try {
+            t1.substract(t3);
+            fail("Add different size of tensor");
+        } catch (Exception e) {
+            assertTrue("Add different size of tensor.", e instanceof RuntimeException);
+        }
+        t1.setByteValue((byte) -34, 0, 0);
+        t1.setByteValue((byte) -67, 1, 0);
+        t1.setByteValue((byte) 6, 2, 0);
+        t1.setByteValue((byte) 34, 0, 1);
+        t1.setByteValue((byte) 2, 1, 1);
+        t1.setByteValue((byte) 78, 2, 1);
+        ByteTensor t4 = new ByteTensor(3, 2);
+        t4.setByteValue((byte) 2, 0, 0);
+        t4.setByteValue((byte) -3, 1, 0);
+        t4.setByteValue((byte) 10, 2, 0);
+        t4.setByteValue((byte) -10, 0, 1);
+        t4.setByteValue((byte) 7, 1, 1);
+        t4.setByteValue((byte) -22, 2, 1);
+        t1.substract(t4);
+        assertEquals("Tensor sum", (byte) -36, t1.getByteValue(0, 0));
+        assertEquals("Tensor sum", (byte) -64, t1.getByteValue(1, 0));
+        assertEquals("Tensor sum", (byte) -4, t1.getByteValue(2, 0));
+        assertEquals("Tensor sum", (byte) 44, t1.getByteValue(0, 1));
+        assertEquals("Tensor sum", (byte) -5, t1.getByteValue(1, 1));
+        assertEquals("Tensor sum", (byte) 100, t1.getByteValue(2, 1));
+    }
 
     @Test
     public void testNegateTensor() {
@@ -482,6 +623,51 @@ public class ByteTensorTest {
         assertEquals("Transposed tensor", (byte) 78, transposed.getByteValue(2, 1));
     }
 
+    @Test
+    public void testHadamardProduct() {
+        ByteTensor t1 = new ByteTensor(3, 2);
+        try {
+            t1.substract(null);
+            fail("Multiply null tensor");
+        } catch (Exception e) {
+            assertTrue("Multiply null tensor.", e instanceof RuntimeException);
+        }
+        ShortTensor t2 = new ShortTensor(3, 2);
+        try {
+            t1.substract(t2);
+            fail("Multiply different type of tensor");
+        } catch (Exception e) {
+            assertTrue("Multiply different type of tensor.", e instanceof RuntimeException);
+        }
+        ByteTensor t3 = new ByteTensor(3, 2, 5);
+        try {
+            t1.substract(t3);
+            fail("Multiply different size of tensor");
+        } catch (Exception e) {
+            assertTrue("Multiply different size of tensor.", e instanceof RuntimeException);
+        }
+        t1.setByteValue((byte) -34, 0, 0);
+        t1.setByteValue((byte) -6, 1, 0);
+        t1.setByteValue((byte) 6, 2, 0);
+        t1.setByteValue((byte) 3, 0, 1);
+        t1.setByteValue((byte) 2, 1, 1);
+        t1.setByteValue((byte) 3, 2, 1);
+        ByteTensor t4 = new ByteTensor(3, 2);
+        t4.setByteValue((byte) 2, 0, 0);
+        t4.setByteValue((byte) -3, 1, 0);
+        t4.setByteValue((byte) 10, 2, 0);
+        t4.setByteValue((byte) -10, 0, 1);
+        t4.setByteValue((byte) 7, 1, 1);
+        t4.setByteValue((byte) -22, 2, 1);
+        t1.hadamardProduct(t4);
+        assertEquals("Tensor sum", (byte) -68, t1.getByteValue(0, 0));
+        assertEquals("Tensor sum", (byte) 18, t1.getByteValue(1, 0));
+        assertEquals("Tensor sum", (byte) 60, t1.getByteValue(2, 0));
+        assertEquals("Tensor sum", (byte) -30, t1.getByteValue(0, 1));
+        assertEquals("Tensor sum", (byte) 14, t1.getByteValue(1, 1));
+        assertEquals("Tensor sum", (byte) -66, t1.getByteValue(2, 1));
+    }
+    
     @Test
     public void testMultiply() {
         Tensor a, b, c;
@@ -616,4 +802,6 @@ public class ByteTensorTest {
         assertEquals("2D-4D multiplication (1,3)", (byte) 1, c.getByteValue(1, 3));
         assertEquals("2D-4D multiplication (2,3)", (byte) 1, c.getByteValue(2, 3));
     }
+    
+    
 }

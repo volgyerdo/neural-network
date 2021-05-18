@@ -283,7 +283,7 @@ class ObjectTensor extends Tensor {
     }
     
     @Override
-    public void product(Tensor tensor) {
+    public void hadamardProduct(Tensor tensor) {
         throw new RuntimeException("Object tensor doesn't have product function.");
     }
 
