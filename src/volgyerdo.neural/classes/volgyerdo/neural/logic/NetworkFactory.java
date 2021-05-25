@@ -44,7 +44,6 @@ public class NetworkFactory {
         switch (connectionType) {
             case FULL_CONNECTION:
                 for (int i = 0; i < layerCount; i++) {
-                    //createLayer
                     Layer layer;
                     layer = LayerFactory.createLayer(dataType, dimensions);
                     addFullyConnectedLayer(layeredNetwork, layer);

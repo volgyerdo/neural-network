@@ -71,17 +71,45 @@ public class NetworkLogic {
             Tensor target) {
 
 //        try {
-            double l_rate = 0.01; //fuggvenyparameternek kellene lennie
-            Tensor ActualOutput = network.layers.get(network.layers.size()).states;
-//            Tensor ErrorTensor = target.substract(ActualOutput);
+        float l_rate = (float) 0.01; //metodusparameternek kellene lennie
+        Tensor ActualOutput = network.layers.get(network.layers.size()).states;
+        Tensor ErrorTensor = target.substract(ActualOutput);
 
-            for (int i = 0; i < network.layers.size(); i++) {
+        Tensor lastLayerDelta = null;
+        Activation parameters = network.activation;
+        Tensor LastLayerDerivate = null;
+        Tensor Delta[] = null;
+        Tensor WDelta[] = null;
+        Tensor newBias[] = null;
+        Tensor Bias[] = null; //meg a halozatunkban nem szamoltunk biassal
 
-                //utolso reteg deltaja
-                //i.reteg deltaja
-                //i.reteg sulyvaltoztatsa
-                //i.reteg uj sulytenyezoi
-                //i.reteg uj erositesi tenyezoi
+        for (int i = network.layers.size() - 1; i > 0; i--) {
+
+            //utolso és i. reteg deltaja
+            if (i == network.layers.size() - 1) {
+                for (int j = 0; j < ActualOutput.dimensions.length; j++) {
+                    LastLayerDerivate.dimensions[j] = ActivationLogic.deactivate(ActualOutput.dimensions[j], parameters);
+                }
+                lastLayerDelta = ErrorTensor.hadamardProduct(LastLayerDerivate);
+                Delta[network.layers.size() - 1] = lastLayerDelta;
+            } else {
+
+                for (int j = 0; j < network.layers.get(i).dimensions.length; j++) {
+                    Delta[i] = Delta[i + 1].multiply(network.connections.get(i + 1).weights, 2);
+                    Delta[i] = Delta[i].hadamardProduct(ActivationLogic.deactivate(network.layers.get(i).states.dimensions[j], parameters));
+
+                }
+            }
+
+            //i.reteg sulyvalrozas
+            WDelta[i] = Delta[i].multiply(network.layers.get(i - 1).states, 0);
+
+            //i.reteg uj suly
+            network.connections.get(i).weights = network.connections.get(i).weights.add(WDelta[i].multiply(l_rate));
+
+            //i.reteg uj erositesi tenyezoi
+            newBias[i] = Bias[i].add(WDelta[i].multiply(l_rate));
+
             }
 //        } catch (CloneNotSupportedException ex) {
 //            ex.printStackTrace();
