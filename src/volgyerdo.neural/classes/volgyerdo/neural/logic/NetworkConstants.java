@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Volgyerdo Nonprofit Kft.
+ * Copyright 2021 antal.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.neural.structure;
-
-import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.logic.NetworkConstants;
+package volgyerdo.neural.logic;
 
 /**
  *
- * @author Pocze Zsolt
+ * @author antal
  */
-public abstract class Network {
+public class NetworkConstants {
     
-    public Tensor.TYPE dataType;
-    public Activation activation;
-    public float learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
+    public static final float DEFAULT_LEARNING_RATE = 0.01f;
 }

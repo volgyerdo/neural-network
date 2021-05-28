@@ -32,8 +32,8 @@ public class ConnectionFactory {
         }
         LayerConnection connection = new LayerConnection();
         int[] weightsDimensions = new int[layer1.dimensions.length + layer2.dimensions.length];
-        System.arraycopy(layer1.dimensions, 0, weightsDimensions, 0, layer1.dimensions.length);
-        System.arraycopy(layer2.dimensions, layer1.dimensions.length, weightsDimensions, 0, layer2.dimensions.length);
+        System.arraycopy(layer2.dimensions, 0, weightsDimensions, 0, layer2.dimensions.length);
+        System.arraycopy(layer1.dimensions, layer2.dimensions.length, weightsDimensions, 0, layer1.dimensions.length);
         connection.weights = Tensor.create(layer1.dataType, weightsDimensions);
         return connection;
     }
