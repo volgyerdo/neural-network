@@ -19,9 +19,6 @@ import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.LayerConnection;
 import volgyerdo.neural.structure.LayeredNetwork;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.logic.ActivationLogic;
-import volgyerdo.neural.logic.ActivationFactory;
-import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.ConnectionType;
 
 /**
@@ -62,8 +59,7 @@ public class NetworkLogic {
         }
     }
 
-    public static void backPropagate(LayerConnection connection, LayeredNetwork network,
-            Tensor target) {
+    public static void backPropagate(LayeredNetwork network, Tensor target) {
 
         Tensor actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size()-1).states);
         Tensor errorTensor = NetworkUtils.converToNormalFloat(target);
@@ -107,14 +103,6 @@ public class NetworkLogic {
             network.connections.get(i-1).weights = 
                 NetworkUtils.convertToType(actualW, network.connections.get(i-1).weights.type);
             }
-    }
-
-    public static Tensor getInputDimensions(LayeredNetwork network) {
-        return network.layers.get(0).states;
-    }
-
-    public static Tensor getOutputDimensions(LayeredNetwork network) {
-        return network.layers.get(network.layers.size()-1).states;
     }
 }
 

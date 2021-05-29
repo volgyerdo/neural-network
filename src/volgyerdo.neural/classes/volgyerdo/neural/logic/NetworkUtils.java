@@ -17,12 +17,30 @@ package volgyerdo.neural.logic;
 
 import java.security.InvalidParameterException;
 import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.structure.Layer;
+import volgyerdo.neural.structure.LayeredNetwork;
 
 /**
  *
  * @author antal
  */
 public class NetworkUtils {
+
+    public static Tensor getInputDimensions(LayeredNetwork network) {
+        return getInputLayer(network).states;
+    }
+
+    public static Tensor getOutputDimensions(LayeredNetwork network) {
+        return getOutputLayer(network).states;
+    }
+
+    public static Layer getInputLayer(LayeredNetwork network) {
+        return network.layers.get(0);
+    }
+
+    public static Layer getOutputLayer(LayeredNetwork network) {
+        return network.layers.get(network.layers.size() - 1);
+    }
 
     static Tensor converToNormalFloat(Tensor input) {
         Tensor output = input.convertTo(Tensor.TYPE.FLOAT);

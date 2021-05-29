@@ -15,6 +15,7 @@
  */
 package volgyerdo.neural.logic;
 
+import java.util.ArrayList;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConnectionType;
 import volgyerdo.neural.structure.Layer;
@@ -31,7 +32,9 @@ public class NetworkFactory {
             Tensor.TYPE dataType) {
         LayeredNetwork layeredNetwork = new LayeredNetwork();
         layeredNetwork.dataType = dataType;
-        return null;
+        layeredNetwork.layers = new ArrayList<>();
+        layeredNetwork.connections = new ArrayList<>();
+        return layeredNetwork;
     }
 
     public static LayeredNetwork createLayeredNetwork(
@@ -39,7 +42,7 @@ public class NetworkFactory {
             int[] dimensions,
             int layerCount,
             ConnectionType connectionType) {
-        LayeredNetwork layeredNetwork = new LayeredNetwork();
+        LayeredNetwork layeredNetwork = createLayeredNetwork(dataType);
 
         switch (connectionType) {
             case FULL_CONNECTION:
