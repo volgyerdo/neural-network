@@ -51,6 +51,7 @@ public class NetworkUtils {
         } catch (CloneNotSupportedException ex) {
 
         }
+        return null;
     }
 
     private NetworkUtils() {
