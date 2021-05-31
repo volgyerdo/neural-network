@@ -24,4 +24,5 @@ import volgyerdo.math.tensor.Tensor;
 public class LayerConnection {
     public Tensor weights;
     public ConnectionType type;
+    public Tensor bias;
 }
