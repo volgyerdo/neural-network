@@ -17,6 +17,7 @@ package volgyerdo.neural.logic;
 
 import java.util.Objects;
 import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.structure.ConnectionType;
 import volgyerdo.neural.structure.LayerConnection;
 import volgyerdo.neural.structure.Layer;
 
@@ -31,6 +32,7 @@ public class ConnectionFactory {
             throw new IllegalArgumentException("Layers data type does not match.");
         }
         LayerConnection connection = new LayerConnection();
+        connection.type = ConnectionType.FULL_CONNECTION;
         int[] weightsDimensions = new int[layer1.dimensions.length + layer2.dimensions.length];
         System.arraycopy(layer2.dimensions, 0, weightsDimensions, 0, layer2.dimensions.length);
         System.arraycopy(layer1.dimensions, 0, weightsDimensions, layer2.dimensions.length, layer1.dimensions.length);
@@ -41,6 +43,7 @@ public class ConnectionFactory {
 
     public static LayerConnection createConvolutionalConnection(Tensor.TYPE dataType, int[] kernelDimensions) {
         LayerConnection connection = new LayerConnection();
+        connection.type = ConnectionType.CONVOLUTION;
         connection.weights = Tensor.create(dataType, kernelDimensions);
         connection.bias = initDefaultBias(dataType, kernelDimensions.length);
         return connection;
