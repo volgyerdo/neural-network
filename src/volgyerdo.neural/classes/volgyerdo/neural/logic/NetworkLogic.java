@@ -35,10 +35,13 @@ public class NetworkLogic {
             switch (connection.weights.type) {
                 case BYTE:
                     connection.weights.randomize(Byte.MIN_VALUE, Byte.MAX_VALUE);
+                    break;
                 case SHORT:
                     connection.weights.randomize(Short.MIN_VALUE, Short.MAX_VALUE);
+                    break;
                 case FLOAT:
                     connection.weights.randomize(-1, 1);
+                    break;
             }
         }
     }
@@ -48,24 +51,24 @@ public class NetworkLogic {
             Layer inputLayer = network.layers.get(i);
             Layer outputLayer = network.layers.get(i + 1);
             LayerConnection connection = network.connections.get(i);
-            
+
             Tensor weights = NetworkUtils.converToNormalFloat(connection.weights);
-            Tensor bias = connection.bias;
-            
-                        
+            Tensor bias = NetworkUtils.converToNormalFloat(connection.bias);
+
             if (connection.type == ConnectionType.CONVOLUTION) {
                 outputLayer.states = inputLayer.states.convolve(weights);
-                outputLayer.states.add(bias);
             } else {
-                outputLayer.states = weights.multiply(inputLayer.states,inputLayer.dimensions.length);
-                outputLayer.states.add(bias);
+                outputLayer.states = weights.multiply(inputLayer.states, inputLayer.dimensions.length);
+
             }
+            outputLayer.states.add(bias);
+            outputLayer.states.processFloat((x) -> ActivationLogic.activate(x, network.activation));
         }
     }
 
     public static void backPropagate(LayeredNetwork network, Tensor target) {
 
-        Tensor actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size()-1).states);
+        Tensor actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size() - 1).states);
         Tensor errorTensor = NetworkUtils.converToNormalFloat(target);
         errorTensor.substract(actualOutput);
 
@@ -76,45 +79,43 @@ public class NetworkLogic {
         Tensor processedOutput;
         LayerConnection actualConnection;
         Tensor newBias;
-        
+
         processedOutput = actualOutput;
-        processedOutput.processFloat((x)-> ActivationLogic.deactivate(x, network.activation));
+        processedOutput.processFloat((x) -> ActivationLogic.deactivate(x, network.activation));
         delta = processedOutput;
         delta.hadamardProduct(errorTensor);
-        
-        previousOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size()-2).states);
+
+        previousOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size() - 2).states);
         deltaW = delta.multiply(previousOutput, 0);
         deltaW.multiply(network.learningRate);
-        
-        actualConnection = network.connections.get(network.connections.size()-1);
+
+        actualConnection = network.connections.get(network.connections.size() - 1);
         actualW = NetworkUtils.converToNormalFloat(actualConnection.weights);
         actualW.add(deltaW);
-        actualConnection.weights = 
-                NetworkUtils.convertToType(actualW, actualConnection.weights.type);
-        
-        for (int i = network.layers.size() - 1; i > 0; i--) {
+        actualConnection.weights
+                = NetworkUtils.convertToType(actualW, actualConnection.weights.type);
+
+        for (int i = network.layers.size() - 2; i > 0; i--) {
             actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(i).states);
-            delta = delta.multiply(actualW, network.layers.get(i+1).states.dimensions.length);
+            delta = delta.multiply(actualW, network.layers.get(i + 1).states.dimensions.length);
             processedOutput = actualOutput;
-            processedOutput.processFloat((x)-> ActivationLogic.deactivate(x, network.activation));
+            processedOutput.processFloat((x) -> ActivationLogic.deactivate(x, network.activation));
             delta.hadamardProduct(actualOutput);
-            
-            previousOutput = NetworkUtils.converToNormalFloat(network.layers.get(i-1).states);
+
+            previousOutput = NetworkUtils.converToNormalFloat(network.layers.get(i - 1).states);
             deltaW = delta.multiply(previousOutput, 0);
             deltaW.multiply(network.learningRate);
-            
-            actualConnection = network.connections.get(i-1);
+
+            actualConnection = network.connections.get(i - 1);
             actualW = NetworkUtils.converToNormalFloat(actualConnection.weights);
             actualW.add(deltaW);
-            actualConnection.weights = 
-                NetworkUtils.convertToType(actualW, actualConnection.weights.type);
-            
-            newBias = actualConnection.bias;
+            actualConnection.weights
+                    = NetworkUtils.convertToType(actualW, actualConnection.weights.type);
+
+            newBias = NetworkUtils.converToNormalFloat(actualConnection.bias);
             delta.multiply(network.learningRate);
             newBias.add(delta);
-            actualConnection.bias = newBias;
+            actualConnection.bias = NetworkUtils.convertToType(newBias, actualConnection.bias.type);
         }
     }
 }
-
-

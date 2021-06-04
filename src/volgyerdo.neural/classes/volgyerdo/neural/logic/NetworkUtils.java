@@ -47,8 +47,10 @@ public class NetworkUtils {
         switch (input.type) {
             case BYTE:
                 output.divide(Byte.MAX_VALUE);
+                break;
             case SHORT:
                 output.divide(Short.MAX_VALUE);
+                break;
         }
         return output;
     }
@@ -62,8 +64,10 @@ public class NetworkUtils {
             switch (type) {
                 case BYTE:
                     convertedInput.multiply(Byte.MAX_VALUE);
+                    break;
                 case SHORT:
                     convertedInput.multiply(Short.MAX_VALUE);
+                    break;
             }
             return convertedInput.convertTo(type);
         } catch (CloneNotSupportedException ex) {

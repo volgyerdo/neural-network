@@ -36,26 +36,17 @@ public class ConnectionFactory {
         int[] weightsDimensions = new int[layer1.dimensions.length + layer2.dimensions.length];
         System.arraycopy(layer2.dimensions, 0, weightsDimensions, 0, layer2.dimensions.length);
         System.arraycopy(layer1.dimensions, 0, weightsDimensions, layer2.dimensions.length, layer1.dimensions.length);
-        connection.weights = Tensor.create(layer1.dataType, weightsDimensions);
-        connection.bias = initDefaultBias(layer2.dataType, layer2.dimensions.length);
+        connection.weights = Tensor.create(layer2.dataType, weightsDimensions);
+        connection.bias = Tensor.create(layer2.dataType, layer2.dimensions);
         return connection;
     }
 
-    public static LayerConnection createConvolutionalConnection(Tensor.TYPE dataType, int[] kernelDimensions) {
+    public static LayerConnection createConvolutionalConnection(Tensor.TYPE dataType, int[] kernelDimensions, Layer layer2) {
         LayerConnection connection = new LayerConnection();
         connection.type = ConnectionType.CONVOLUTION;
         connection.weights = Tensor.create(dataType, kernelDimensions);
-        connection.bias = initDefaultBias(dataType, kernelDimensions.length);
+        connection.bias = Tensor.create(dataType, layer2.dimensions);
         return connection;
-    }
-
-    public static Tensor initDefaultBias(Tensor.TYPE t, int dlength) {
-        Tensor dbias = Tensor.create(t, dlength);
-        NetworkUtils.convertToType(dbias, Tensor.TYPE.FLOAT);
-        for (int i = 0; i < dlength; i++) {
-            dbias.setFloatValue(1f, i);
-        }
-        return NetworkUtils.convertToType(dbias, t);
     }
 
 }

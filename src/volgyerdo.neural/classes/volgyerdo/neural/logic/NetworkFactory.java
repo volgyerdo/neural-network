@@ -34,6 +34,7 @@ public class NetworkFactory {
         layeredNetwork.dataType = dataType;
         layeredNetwork.layers = new ArrayList<>();
         layeredNetwork.connections = new ArrayList<>();
+        layeredNetwork.activation = ActivationFactory.createSigmoid();
         return layeredNetwork;
     }
 
@@ -53,6 +54,7 @@ public class NetworkFactory {
                     layeredNetwork.layers.get(i).dataType = dataType;
                     layeredNetwork.layers.get(i).dimensions = dimensions;
                 }
+                break;
 
             case CONVOLUTION:
                 for (int i = 0; i < layerCount; i++) {
@@ -62,6 +64,7 @@ public class NetworkFactory {
                     layeredNetwork.layers.get(i).dataType = dataType;
                     layeredNetwork.layers.get(i).dimensions = dimensions;
                 }
+                break;
                 
         }
         return layeredNetwork;
@@ -81,7 +84,7 @@ public class NetworkFactory {
         if (network.layers.size() > 0) {
             network.connections.add(
                     ConnectionFactory.createConvolutionalConnection(
-                            network.dataType, kernelDimensions));
+                            network.dataType, kernelDimensions, layer));
         }
         network.layers.add(layer);
     }

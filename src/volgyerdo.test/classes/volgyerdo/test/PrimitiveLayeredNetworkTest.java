@@ -15,9 +15,11 @@
  */
 package volgyerdo.test;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
@@ -32,13 +34,14 @@ import volgyerdo.neural.structure.LayeredNetwork;
 public class PrimitiveLayeredNetworkTest {
 
     public static void main(String[] args) {
-        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 2, ConnectionType.FULL_CONNECTION);
+        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 5, ConnectionType.FULL_CONNECTION);
+        network.activation = ActivationFactory.createTanH();
         NetworkLogic.randomize(network);
         List<Pair> pairs = new ArrayList<>();
-        pairs.add(new Pair(new float[]{0f, 0f}, new float[]{0f, 0f}));
-        pairs.add(new Pair(new float[]{1f, 0f}, new float[]{1f, 1f}));
-        pairs.add(new Pair(new float[]{0f, 1f}, new float[]{1f, 1f}));
-        pairs.add(new Pair(new float[]{1f, 1f}, new float[]{0f, 0f}));
+        pairs.add(new Pair(new float[]{0f, 1f}, new float[]{0.6f, -0.5f}));
+        pairs.add(new Pair(new float[]{1f, 0f}, new float[]{0.4f, 0.1f}));
+//        pairs.add(new Pair(new float[]{0f, 1f}, new float[]{0.2f, -0.2f}));
+//        pairs.add(new Pair(new float[]{1f, 1f}, new float[]{-0.7f, 0.3f}));
         System.out.println("\nBefore training:\n");
         Layer inputLayer = NetworkUtils.getInputLayer(network);
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
@@ -52,7 +55,7 @@ public class PrimitiveLayeredNetworkTest {
             System.out.println(outputLayer.states.getFloatValue(1));
         }
         Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 2);
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
             for (Pair pair : pairs) {
                 inputLayer.states.setFloatValue(pair.input[0], 0);
                 inputLayer.states.setFloatValue(pair.input[1], 1);
@@ -63,14 +66,18 @@ public class PrimitiveLayeredNetworkTest {
             }
         }
         System.out.println("\nAfter training:\n");
+        
+        DecimalFormat format = new DecimalFormat("0.000");
         for (Pair pair : pairs) {
             inputLayer.states.setFloatValue(pair.input[0], 0);
             inputLayer.states.setFloatValue(pair.input[1], 1);
 
             NetworkLogic.propagate(network);
 
-            System.out.println(outputLayer.states.getFloatValue(0));
-            System.out.println(outputLayer.states.getFloatValue(1));
+            System.out.println(pair.output[0] + " -> " + format.format(outputLayer.states.getFloatValue(0)) + " (" + 
+                    (format.format(outputLayer.states.getFloatValue(0) - pair.output[0] ))+ ")");
+            System.out.println(pair.output[1] + " -> " + format.format(outputLayer.states.getFloatValue(1)) + " (" + 
+                    (format.format(outputLayer.states.getFloatValue(1) - pair.output[1] ))+ ")");
         }
     }
 
