@@ -31,7 +31,7 @@ import volgyerdo.neural.structure.LayeredNetwork;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class PrimitiveLayeredNetworkTest {
+public class SimpleLayeredNetworkTest {
 
     public static void main(String[] args) {
         LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 5, ConnectionType.FULL_CONNECTION);
