@@ -54,21 +54,30 @@ public class NetworkLogic {
 
             Tensor weights = NetworkUtils.converToNormalFloat(connection.weights);
             Tensor bias = NetworkUtils.converToNormalFloat(connection.bias);
-
+            //states konvertálás
+            Tensor instates = NetworkUtils.converToNormalFloat(inputLayer.states);
+            Tensor outstates = NetworkUtils.converToNormalFloat(outputLayer.states);
+            
             if (connection.type == ConnectionType.CONVOLUTION) {
-                outputLayer.states = inputLayer.states.convolve(weights);
+                outstates = instates.convolve(weights);
             } else {
-                outputLayer.states = weights.multiply(inputLayer.states, inputLayer.dimensions.length);
+                outstates = weights.multiply(instates, inputLayer.dimensions.length);
 
             }
-            outputLayer.states.add(bias);
-            outputLayer.states.processFloat((x) -> ActivationLogic.activate(x, network.activation));
+            
+            outstates.add(bias);
+            outstates.processFloat((x) -> ActivationLogic.activate(x, network.activation));
+            
+            //visszakonv.
+            inputLayer.states = NetworkUtils.converToNormalFloat(instates);
+            outputLayer.states = NetworkUtils.converToNormalFloat(outstates);
         }
     }
 
     public static void backPropagate(LayeredNetwork network, Tensor target) {
 
         Tensor actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size() - 1).states);
+
         Tensor errorTensor = NetworkUtils.converToNormalFloat(target);
         errorTensor.substract(actualOutput);
 
