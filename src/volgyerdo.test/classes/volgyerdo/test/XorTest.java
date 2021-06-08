@@ -15,15 +15,17 @@
  */
 package volgyerdo.test;
 
+import static java.lang.Float.NaN;
+import java.security.InvalidParameterException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.logic.ActivationFactory;
+import volgyerdo.neural.logic.LayerFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
-import volgyerdo.neural.structure.ConnectionType;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.LayeredNetwork;
 
@@ -34,8 +36,20 @@ import volgyerdo.neural.structure.LayeredNetwork;
 public class XorTest {
 
     public static void main(String[] args) {
-        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 13, ConnectionType.FULL_CONNECTION);
-        network.activation = ActivationFactory.createSigmoid();
+        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT);
+
+        Layer inputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 2);
+        NetworkFactory.addFullyConnectedLayer(network, inputLayer);
+
+        for (int i = 0; i < 1; i++) {
+            Layer hiddenLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 10);
+            NetworkFactory.addFullyConnectedLayer(network, hiddenLayer);
+        }
+
+        Layer outputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 1);
+        NetworkFactory.addFullyConnectedLayer(network, outputLayer);
+
+        network.activation = ActivationFactory.createReLu();
         NetworkLogic.randomize(network);
         List<Pair> pairs = new ArrayList<>();
         pairs.add(new Pair(new float[]{0f, 0f}, new float[]{0f}));
@@ -43,8 +57,8 @@ public class XorTest {
         pairs.add(new Pair(new float[]{0f, 1f}, new float[]{1f}));
         pairs.add(new Pair(new float[]{1f, 1f}, new float[]{0f}));
         System.out.println("\nBefore training:\n");
-        Layer inputLayer = NetworkUtils.getInputLayer(network);
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
+        inputLayer = NetworkUtils.getInputLayer(network);
+        outputLayer = NetworkUtils.getOutputLayer(network);
 
         for (Pair pair : pairs) {
             inputLayer.states.setFloatValue(pair.input[0], 0);
@@ -53,16 +67,16 @@ public class XorTest {
             NetworkLogic.propagate(network);
 
             System.out.println(outputLayer.states.getFloatValue(0));
-            System.out.println(outputLayer.states.getFloatValue(1));
         }
-        Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 2);
+        Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 1);
         for (int i = 0; i < 10000; i++) {
             for (Pair pair : pairs) {
                 inputLayer.states.setFloatValue(pair.input[0], 0);
+                inputLayer.states.setFloatValue(pair.input[1], 1);
+
                 NetworkLogic.propagate(network);
 
                 target.setFloatValue(pair.output[0], 0);
-                target.setFloatValue(pair.output[0], 1);
 
                 NetworkLogic.backPropagate(network, target);
             }
@@ -70,14 +84,25 @@ public class XorTest {
         System.out.println("\nAfter training:\n");
 
         DecimalFormat format = new DecimalFormat("0.000");
+
         for (Pair pair : pairs) {
             inputLayer.states.setFloatValue(pair.input[0], 0);
             inputLayer.states.setFloatValue(pair.input[1], 1);
 
             NetworkLogic.propagate(network);
 
-            System.out.println(pair.input[0] + " + " + pair.input[1] + " = " + outputLayer.states.getFloatValue(0) + ", " + outputLayer.states.getFloatValue(1));
- 
+            //debug
+            for (int i = 0; i < network.layers.size(); i++) {
+                for (int j = 0; j < network.layers.get(i).dimensions.length; j++) {
+                    if (network.layers.get(i).states.getFloatValue(j) == NaN) {
+                        throw new InvalidParameterException(i + 1 + ". layer, " + j + 1 + ". state is Not a number");
+                    }
+                }
+            }
+
+            format.format(outputLayer.states.getFloatValue(0));
+            System.out.println(pair.input[0] + " + " + pair.input[1] + " = "
+                    + format.format(outputLayer.states.getFloatValue(0)) + "(" + pair.output[0] + ")");
         }
     }
 
