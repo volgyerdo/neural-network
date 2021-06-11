@@ -31,31 +31,36 @@ class ObjectTensor extends Tensor {
         super(TYPE.OBJECT, dimensions);
         values = new Object[ArrayUtils.product(dimensions)];
     }
-    
+
     @Override
     public Tensor convertTo(TYPE type) {
         return switch (type) {
-            case BYTE -> convertToByteTensor();
-            case SHORT -> convertToShortTensor();
-            case FLOAT -> convertToFloatTensor();
-            case OBJECT -> convertToObjectTensor();
-            default -> null;
+            case BYTE ->
+                convertToByteTensor();
+            case SHORT ->
+                convertToShortTensor();
+            case FLOAT ->
+                convertToFloatTensor();
+            case OBJECT ->
+                convertToObjectTensor();
+            default ->
+                null;
         };
     }
-    
-    private Tensor convertToByteTensor(){
+
+    private Tensor convertToByteTensor() {
         throw new RuntimeException("Object tensor cannot be converted to byte tensor.");
     }
-    
-    private Tensor convertToShortTensor(){
+
+    private Tensor convertToShortTensor() {
         throw new RuntimeException("Object tensor cannot be converted to short tensor.");
     }
-    
-    private Tensor convertToFloatTensor(){
+
+    private Tensor convertToFloatTensor() {
         throw new RuntimeException("Object tensor cannot be converted to float tensor.");
     }
-    
-    private Tensor convertToObjectTensor(){
+
+    private Tensor convertToObjectTensor() {
         try {
             return clone();
         } catch (CloneNotSupportedException ex) {
@@ -162,6 +167,21 @@ class ObjectTensor extends Tensor {
     }
 
     @Override
+    public void fill(byte x) {
+        throw new RuntimeException("Object tensor can not be filled.");
+    }
+
+    @Override
+    public void fill(short x) {
+        throw new RuntimeException("Object tensor can not be filled.");
+    }
+
+    @Override
+    public void fill(float x) {
+        throw new RuntimeException("Object tensor can not be filled.");
+    }
+
+    @Override
     public void add(byte x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
@@ -180,7 +200,7 @@ class ObjectTensor extends Tensor {
     public void add(Tensor tensor) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
-    
+
     @Override
     public void substract(byte x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
@@ -195,11 +215,11 @@ class ObjectTensor extends Tensor {
     public void substract(float x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
-    
+
     public void substract(Tensor tensor) {
         throw new RuntimeException("Object tensor doesn't have substract function.");
     }
-    
+
     @Override
     public void multiply(byte x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
@@ -214,7 +234,7 @@ class ObjectTensor extends Tensor {
     public void multiply(float x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
-    
+
     @Override
     public void divide(byte x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
@@ -229,24 +249,24 @@ class ObjectTensor extends Tensor {
     public void divide(float x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
-    
+
     @Override
-    public void processByte(ByteProcessor processor){
+    public void processByte(ByteProcessor processor) {
         throw new RuntimeException("Object tensor doesn't have byte process function.");
     }
-    
+
     @Override
-    public void processShort(ShortProcessor processor){
+    public void processShort(ShortProcessor processor) {
         throw new RuntimeException("Object tensor doesn't have short process function.");
     }
-    
+
     @Override
-    public void processFloat(FloatProcessor processor){
+    public void processFloat(FloatProcessor processor) {
         throw new RuntimeException("Object tensor doesn't have float process function.");
     }
-    
+
     @Override
-    public void processObject(ObjectProcessor processor){
+    public void processObject(ObjectProcessor processor) {
         for (int i = 0; i < values.length; i++) {
             values[i] = processor.process(values[i]);
         }
@@ -256,7 +276,7 @@ class ObjectTensor extends Tensor {
     public void negate() {
         throw new RuntimeException("Object tensor doesn't have negate function.");
     }
-    
+
     @Override
     public Tensor transpose() {
         try {
@@ -281,7 +301,7 @@ class ObjectTensor extends Tensor {
             }
         }
     }
-    
+
     @Override
     public void hadamardProduct(Tensor tensor) {
         throw new RuntimeException("Object tensor doesn't have product function.");
@@ -289,32 +309,33 @@ class ObjectTensor extends Tensor {
 
     @Override
     protected void sumProductRecursive(Tensor multiplier, Tensor target,
-            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices){
-        
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices) {
+
     }
-    
+
     @Override
     protected void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d) {
         throw new RuntimeException("Object tensor doesn't have convolution function.");
     }
 
     @Override
-    public Tensor clone() throws CloneNotSupportedException{
+    public Tensor clone() throws CloneNotSupportedException {
         ObjectTensor clone = new ObjectTensor(dimensions);
         System.arraycopy(values, 0, clone.values, 0, values.length);
         return clone;
     }
-    
+
     @Override
     public void toStringRecursive(StringBuilder sb, int n, int[] indices) {
         if (n < indices.length) {
-            for(int i = 0; i< dimensions[n]; i++){
+            for (int i = 0; i < dimensions[n]; i++) {
                 indices[n] = i;
-                toStringRecursive(sb, n+1, indices);
+                toStringRecursive(sb, n + 1, indices);
             }
             sb.append("\n");
         } else {
             sb.append("[").append(String.valueOf(getObjectValue(indices))).append("]");
         }
     }
+
 }

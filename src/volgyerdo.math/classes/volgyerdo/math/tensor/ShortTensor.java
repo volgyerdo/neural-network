@@ -165,6 +165,27 @@ class ShortTensor extends Tensor {
     public void randomize(float min, float max) {
         randomize(PrimitiveUtils.toShort(min), PrimitiveUtils.toShort(max));
     }
+    
+    @Override
+    public void fill(byte x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = x;
+        }
+    }
+
+    @Override
+    public void fill(short x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = x;
+        }
+    }
+
+    @Override
+    public void fill(float x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toShort(x);
+        }
+    }
 
     @Override
     public void add(byte x) {

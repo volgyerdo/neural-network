@@ -31,12 +31,12 @@ import volgyerdo.neural.structure.LayeredNetwork;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class SimpleLayeredNetworkTest {
+public class SimpleLayeredTest1 {
 
     public static void main(String[] args) {
         LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 5, ConnectionType.FULL_CONNECTION);
-        network.activation = ActivationFactory.createTanH();
-        NetworkLogic.randomize(network);
+        network.activation = ActivationFactory.createSigmoid();
+//        NetworkLogic.randomizeWeights(network);
         List<Pair> pairs = new ArrayList<>();
         pairs.add(new Pair(new float[]{0f, 1f}, new float[]{0.6f, -0.5f}));
         pairs.add(new Pair(new float[]{1f, 0f}, new float[]{0.4f, 0.1f}));
@@ -56,17 +56,18 @@ public class SimpleLayeredNetworkTest {
         }
         Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 2);
         for (int i = 0; i < 10000; i++) {
-            for (Pair pair : pairs) {
-                inputLayer.states.setFloatValue(pair.input[0], 0);
-                inputLayer.states.setFloatValue(pair.input[1], 1);
-                NetworkLogic.propagate(network);
-                target.setFloatValue(pair.output[0], 0);
-                target.setFloatValue(pair.output[1], 1);
-                NetworkLogic.backPropagate(network, target);
-            }
+            int pairNumber = (int) (Math.random() * pairs.size());
+            Pair pair = pairs.get(pairNumber);
+            inputLayer.states.setFloatValue(pair.input[0], 0);
+            inputLayer.states.setFloatValue(pair.input[1], 1);
+            NetworkLogic.propagate(network);
+            target.setFloatValue(pair.output[0], 0);
+            target.setFloatValue(pair.output[1], 1);
+            NetworkLogic.backPropagate(network, target);
         }
+
         System.out.println("\nAfter training:\n");
-        
+
         DecimalFormat format = new DecimalFormat("0.000");
         for (Pair pair : pairs) {
             inputLayer.states.setFloatValue(pair.input[0], 0);
@@ -74,10 +75,10 @@ public class SimpleLayeredNetworkTest {
 
             NetworkLogic.propagate(network);
 
-            System.out.println(pair.output[0] + " -> " + format.format(outputLayer.states.getFloatValue(0)) + " (" + 
-                    (format.format(outputLayer.states.getFloatValue(0) - pair.output[0] ))+ ")");
-            System.out.println(pair.output[1] + " -> " + format.format(outputLayer.states.getFloatValue(1)) + " (" + 
-                    (format.format(outputLayer.states.getFloatValue(1) - pair.output[1] ))+ ")");
+            System.out.println(pair.output[0] + " -> " + format.format(outputLayer.states.getFloatValue(0)) + " ("
+                    + (format.format(outputLayer.states.getFloatValue(0) - pair.output[0])) + ")");
+            System.out.println(pair.output[1] + " -> " + format.format(outputLayer.states.getFloatValue(1)) + " ("
+                    + (format.format(outputLayer.states.getFloatValue(1) - pair.output[1])) + ")");
         }
     }
 

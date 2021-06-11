@@ -86,6 +86,12 @@ public abstract class Tensor {
     public abstract void randomize(short min, short max);
 
     public abstract void randomize(float min, float max);
+    
+    public abstract void fill(byte x);
+
+    public abstract void fill(short x);
+
+    public abstract void fill(float x);
 
     public abstract void add(byte scaler);
 

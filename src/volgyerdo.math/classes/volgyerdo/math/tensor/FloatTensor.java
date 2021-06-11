@@ -167,6 +167,27 @@ class FloatTensor extends Tensor {
     }
 
     @Override
+    public void fill(byte x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = x;
+        }
+    }
+
+    @Override
+    public void fill(short x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = x;
+        }
+    }
+
+    @Override
+    public void fill(float x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = x;
+        }
+    }
+    
+    @Override
     public void add(byte x) {
         add((float) x);
     }
@@ -388,7 +409,7 @@ class FloatTensor extends Tensor {
                 indices[n] = i;
                 toStringRecursive(sb, n+1, indices);
             }
-            sb.append("\n");
+            //sb.append("\n");
         } else {
             sb.append("[").append(getFloatValue(indices)).append("]");
         }

@@ -49,16 +49,14 @@ public class XorTest {
         Layer outputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 1);
         NetworkFactory.addFullyConnectedLayer(network, outputLayer);
 
-        network.activation = ActivationFactory.createReLu();
-        NetworkLogic.randomize(network);
+        network.activation = ActivationFactory.createSigmoid();
+        NetworkLogic.randomizeWeights(network);
         List<Pair> pairs = new ArrayList<>();
         pairs.add(new Pair(new float[]{0f, 0f}, new float[]{0f}));
         pairs.add(new Pair(new float[]{1f, 0f}, new float[]{1f}));
         pairs.add(new Pair(new float[]{0f, 1f}, new float[]{1f}));
         pairs.add(new Pair(new float[]{1f, 1f}, new float[]{0f}));
         System.out.println("\nBefore training:\n");
-        inputLayer = NetworkUtils.getInputLayer(network);
-        outputLayer = NetworkUtils.getOutputLayer(network);
 
         for (Pair pair : pairs) {
             inputLayer.states.setFloatValue(pair.input[0], 0);
@@ -69,17 +67,14 @@ public class XorTest {
             System.out.println(outputLayer.states.getFloatValue(0));
         }
         Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 1);
-        for (int i = 0; i < 10000; i++) {
-            for (Pair pair : pairs) {
-                inputLayer.states.setFloatValue(pair.input[0], 0);
-                inputLayer.states.setFloatValue(pair.input[1], 1);
-
-                NetworkLogic.propagate(network);
-
-                target.setFloatValue(pair.output[0], 0);
-
-                NetworkLogic.backPropagate(network, target);
-            }
+        for (int i = 0; i < 50000; i++) {
+            int pairNumber = (int) (Math.random() * pairs.size());
+            Pair pair = pairs.get(pairNumber);
+            inputLayer.states.setFloatValue(pair.input[0], 0);
+            inputLayer.states.setFloatValue(pair.input[1], 1);
+            NetworkLogic.propagate(network);
+            target.setFloatValue(pair.output[0], 0);
+            NetworkLogic.backPropagate(network, target);
         }
         System.out.println("\nAfter training:\n");
 

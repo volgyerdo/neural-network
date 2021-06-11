@@ -167,6 +167,27 @@ class ByteTensor extends Tensor {
     }
 
     @Override
+    public void fill(byte x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = x;
+        }
+    }
+
+    @Override
+    public void fill(short x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte(x);
+        }
+    }
+
+    @Override
+    public void fill(float x) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte(x);
+        }
+    }
+
+    @Override
     public void add(byte x) {
         for (int i = 0; i < values.length; i++) {
             values[i] += x;
@@ -218,7 +239,7 @@ class ByteTensor extends Tensor {
             values[i] = PrimitiveUtils.toByte((float) values[i] - x);
         }
     }
-    
+
     @Override
     public void substract(Tensor tensor) {
         checkNull(tensor);
@@ -325,15 +346,15 @@ class ByteTensor extends Tensor {
             }
         }
     }
-    
+
     @Override
     public void hadamardProduct(Tensor multiplier) {
         checkNull(multiplier);
         checkClass(multiplier);
         checkDimensionCount(multiplier.dimensions);
         checkDimensions(multiplier);
-        for(int i = 0; i< values.length; i++){
-            values[i] = PrimitiveUtils.toByte(values[i] * ((ByteTensor)multiplier).values[i]);
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toByte(values[i] * ((ByteTensor) multiplier).values[i]);
         }
     }
 
@@ -409,4 +430,5 @@ class ByteTensor extends Tensor {
             sb.append("[").append(getByteValue(indices)).append("]");
         }
     }
+
 }

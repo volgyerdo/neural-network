@@ -30,19 +30,22 @@ public class NetworkLogic {
     private NetworkLogic() {
     }
 
-    public static void randomize(LayeredNetwork network) {
+    public static void randomizeWeights(LayeredNetwork network) {
         for (LayerConnection connection : network.connections) {
             switch (connection.weights.type) {
-                case BYTE:
+                case BYTE ->
                     connection.weights.randomize(Byte.MIN_VALUE, Byte.MAX_VALUE);
-                    break;
-                case SHORT:
+                case SHORT ->
                     connection.weights.randomize(Short.MIN_VALUE, Short.MAX_VALUE);
-                    break;
-                case FLOAT:
+                case FLOAT ->
                     connection.weights.randomize(-1, 1);
-                    break;
             }
+        }
+    }
+
+    public static void setFixWeights(LayeredNetwork network, float weigth) {
+        for (LayerConnection connection : network.connections) {
+            connection.weights.fill(weigth);
         }
     }
 
@@ -57,17 +60,17 @@ public class NetworkLogic {
             //states konvertálás
             Tensor instates = NetworkUtils.converToNormalFloat(inputLayer.states);
             Tensor outstates = NetworkUtils.converToNormalFloat(outputLayer.states);
-            
+
             if (connection.type == ConnectionType.CONVOLUTION) {
                 outstates = instates.convolve(weights);
             } else {
                 outstates = weights.multiply(instates, inputLayer.dimensions.length);
 
             }
-            
+
             outstates.add(bias);
             outstates.processFloat((x) -> ActivationLogic.activate(x, network.activation));
-            
+
             //visszakonv.
             inputLayer.states = NetworkUtils.converToNormalFloat(instates);
             outputLayer.states = NetworkUtils.converToNormalFloat(outstates);
@@ -75,7 +78,6 @@ public class NetworkLogic {
     }
 
     public static void backPropagate(LayeredNetwork network, Tensor target) {
-
         Tensor actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size() - 1).states);
 
         Tensor errorTensor = NetworkUtils.converToNormalFloat(target);
@@ -104,6 +106,11 @@ public class NetworkLogic {
         actualConnection.weights
                 = NetworkUtils.convertToType(actualW, actualConnection.weights.type);
 
+        newBias = NetworkUtils.converToNormalFloat(actualConnection.bias);
+        delta.multiply(network.learningRate);
+        newBias.add(delta);
+        actualConnection.bias = NetworkUtils.convertToType(newBias, actualConnection.bias.type);
+
         for (int i = network.layers.size() - 2; i > 0; i--) {
             actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(i).states);
             delta = delta.multiply(actualW, network.layers.get(i + 1).states.dimensions.length);
@@ -125,6 +132,19 @@ public class NetworkLogic {
             delta.multiply(network.learningRate);
             newBias.add(delta);
             actualConnection.bias = NetworkUtils.convertToType(newBias, actualConnection.bias.type);
+        }
+    }
+
+    public static void print(LayeredNetwork network) {
+        for (int i = 0; i < network.layers.size() - 1; i++) {
+            Layer inputLayer = network.layers.get(i);
+            Layer outputLayer = network.layers.get(i + 1);
+            LayerConnection connection = network.connections.get(i);
+            if (i == 0) {
+                System.out.print("(" + inputLayer.states + ")");
+            }
+            System.out.print(" - " + connection.weights + "/" + connection.bias + " - ");
+            System.out.print("(" + outputLayer.states + ")");
         }
     }
 }
