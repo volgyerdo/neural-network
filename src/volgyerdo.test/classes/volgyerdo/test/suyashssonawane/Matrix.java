@@ -40,7 +40,7 @@ class Matrix {
             }
         }
     }
-    
+
     public void fill(float weight) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -136,7 +136,8 @@ class Matrix {
         Matrix temp = new Matrix(rows, cols);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                temp.data[i][j] = this.data[i][j] * (1 - this.data[i][j]);
+                temp.data[i][j] = (float) (Math.exp(-this.data[i][j])
+                        / (1 + Math.exp(-this.data[i][j])) / (1 + Math.exp(-this.data[i][j])));
             }
         }
         return temp;

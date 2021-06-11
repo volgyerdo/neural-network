@@ -40,7 +40,7 @@ public class SuyashSonawaneTest2 {
             System.out.println(output.toString());
         }
 
-        network.fit(X, Y, 1, false);
+        network.fit(X, Y, 50000, true);
         
         System.out.println("\nAfter training:\n");
 

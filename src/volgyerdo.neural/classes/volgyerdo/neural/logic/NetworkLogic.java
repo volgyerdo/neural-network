@@ -59,7 +59,7 @@ public class NetworkLogic {
             Tensor bias = NetworkUtils.converToNormalFloat(connection.bias);
             //states konvertálás
             Tensor instates = NetworkUtils.converToNormalFloat(inputLayer.states);
-            Tensor outstates = NetworkUtils.converToNormalFloat(outputLayer.states);
+            Tensor outstates;
 
             if (connection.type == ConnectionType.CONVOLUTION) {
                 outstates = instates.convolve(weights);
@@ -80,8 +80,8 @@ public class NetworkLogic {
     public static void backPropagate(LayeredNetwork network, Tensor target) {
         Tensor actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size() - 1).states);
 
-        Tensor errorTensor = NetworkUtils.converToNormalFloat(target);
-        errorTensor.substract(actualOutput);
+        Tensor error = NetworkUtils.converToNormalFloat(target);
+        error.substract(actualOutput);
 
         Tensor delta;
         Tensor deltaW;
@@ -94,7 +94,7 @@ public class NetworkLogic {
         processedOutput = actualOutput;
         processedOutput.processFloat((x) -> ActivationLogic.deactivate(x, network.activation));
         delta = processedOutput;
-        delta.hadamardProduct(errorTensor);
+        delta.hadamardProduct(error);
 
         previousOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size() - 2).states);
         deltaW = delta.multiply(previousOutput, 0);
@@ -113,7 +113,7 @@ public class NetworkLogic {
 
         for (int i = network.layers.size() - 2; i > 0; i--) {
             actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(i).states);
-            delta = delta.multiply(actualW, network.layers.get(i + 1).states.dimensions.length);
+            delta = error.multiply(actualW, network.layers.get(i + 1).states.dimensions.length);
             processedOutput = actualOutput;
             processedOutput.processFloat((x) -> ActivationLogic.deactivate(x, network.activation));
             delta.hadamardProduct(actualOutput);

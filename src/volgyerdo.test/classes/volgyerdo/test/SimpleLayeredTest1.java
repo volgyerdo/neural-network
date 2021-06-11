@@ -34,11 +34,11 @@ import volgyerdo.neural.structure.LayeredNetwork;
 public class SimpleLayeredTest1 {
 
     public static void main(String[] args) {
-        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 5, ConnectionType.FULL_CONNECTION);
-        network.activation = ActivationFactory.createSigmoid();
-//        NetworkLogic.randomizeWeights(network);
+        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 4, ConnectionType.FULL_CONNECTION);
+        network.activation = ActivationFactory.createTanH();
+        NetworkLogic.randomizeWeights(network);
         List<Pair> pairs = new ArrayList<>();
-        pairs.add(new Pair(new float[]{0f, 1f}, new float[]{0.6f, -0.5f}));
+        pairs.add(new Pair(new float[]{0f, 1f}, new float[]{0.9f, -0.5f}));
         pairs.add(new Pair(new float[]{1f, 0f}, new float[]{0.4f, 0.1f}));
 //        pairs.add(new Pair(new float[]{0f, 1f}, new float[]{0.2f, -0.2f}));
 //        pairs.add(new Pair(new float[]{1f, 1f}, new float[]{-0.7f, 0.3f}));
@@ -55,7 +55,7 @@ public class SimpleLayeredTest1 {
             System.out.println(outputLayer.states.getFloatValue(1));
         }
         Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 2);
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 50000; i++) {
             int pairNumber = (int) (Math.random() * pairs.size());
             Pair pair = pairs.get(pairNumber);
             inputLayer.states.setFloatValue(pair.input[0], 0);

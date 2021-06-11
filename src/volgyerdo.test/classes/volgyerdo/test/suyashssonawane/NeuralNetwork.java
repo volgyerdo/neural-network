@@ -24,7 +24,7 @@ import java.util.List;
 public class NeuralNetwork {
 
     Matrix weights_ih, weights_ho, bias_h, bias_o;
-    float l_rate = 1f;
+    float l_rate = 0.01f;
     Matrix input, hidden, output;
 
     public NeuralNetwork(int i, int h, int o) {
@@ -93,9 +93,9 @@ public class NeuralNetwork {
     }
 
     public void fit(float[][] X, float[][] Y, int epochs, boolean random) {
-        System.out.println();
-        print();
-        System.out.println();
+//        System.out.println();
+//        print();
+//        System.out.println();
         for (int i = 0; i < epochs; i++) {
             if (random) {
                 int sampleN = (int) (Math.random() * X.length);
@@ -103,8 +103,8 @@ public class NeuralNetwork {
             } else {
                 for (int j = 0; j < X.length; j++) {
                     this.train(X[j], Y[j]);
-                    print();
-                    System.out.println();
+//                    print();
+//                    System.out.println();
                 }
             }
         }

@@ -49,8 +49,9 @@ public class XorTest {
         Layer outputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 1);
         NetworkFactory.addFullyConnectedLayer(network, outputLayer);
 
-        network.activation = ActivationFactory.createSigmoid();
+        network.activation = ActivationFactory.createTanH();
         NetworkLogic.randomizeWeights(network);
+        
         List<Pair> pairs = new ArrayList<>();
         pairs.add(new Pair(new float[]{0f, 0f}, new float[]{0f}));
         pairs.add(new Pair(new float[]{1f, 0f}, new float[]{1f}));
