@@ -65,11 +65,7 @@ class FloatTensor extends Tensor {
     }
 
     private Tensor convertToFloatTensor() {
-        try {
-            return clone();
-        } catch (CloneNotSupportedException ex) {
-            return null;
-        }
+        return copy();
     }
 
     private Tensor convertToObjectTensor() {
@@ -396,10 +392,10 @@ class FloatTensor extends Tensor {
     }
 
     @Override
-    public Tensor clone() throws CloneNotSupportedException {
-        FloatTensor clone = new FloatTensor(dimensions);
-        System.arraycopy(values, 0, clone.values, 0, values.length);
-        return clone;
+    public Tensor copy() {
+        FloatTensor copy = new FloatTensor(dimensions);
+        System.arraycopy(values, 0, copy.values, 0, values.length);
+        return copy;
     }
     
     @Override

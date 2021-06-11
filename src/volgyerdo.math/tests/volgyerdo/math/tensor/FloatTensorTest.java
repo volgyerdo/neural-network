@@ -614,7 +614,7 @@ public class FloatTensorTest {
         t1.setFloatValue((float) 34, 0, 1);
         t1.setFloatValue((float) 2.2334, 1, 1);
         t1.setFloatValue((float) 78, 2, 1);
-        Tensor transposed = t1.clone();
+        Tensor transposed = t1.copy();
         assertEquals("Transposed tensor", (float) -34.3423, transposed.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
         assertEquals("Transposed tensor", (float) -67, transposed.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
         assertEquals("Transposed tensor", (float) 6, transposed.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);

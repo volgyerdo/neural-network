@@ -56,24 +56,19 @@ public class NetworkUtils {
     }
 
     static Tensor convertToType(Tensor input, Tensor.TYPE type) {
-        try {
-            if (input.type != Tensor.TYPE.FLOAT) {
-                throw new InvalidParameterException("Non-float input Tensor");
-            }
-            Tensor convertedInput = input.clone();
-            switch (type) {
-                case BYTE:
-                    convertedInput.multiply(Byte.MAX_VALUE);
-                    break;
-                case SHORT:
-                    convertedInput.multiply(Short.MAX_VALUE);
-                    break;
-            }
-            return convertedInput.convertTo(type);
-        } catch (CloneNotSupportedException ex) {
-
+        if (input.type != Tensor.TYPE.FLOAT) {
+            throw new InvalidParameterException("Non-float input Tensor");
         }
-        return null;
+        Tensor convertedInput = input.copy();
+        switch (type) {
+            case BYTE:
+                convertedInput.multiply(Byte.MAX_VALUE);
+                break;
+            case SHORT:
+                convertedInput.multiply(Short.MAX_VALUE);
+                break;
+        }
+        return convertedInput.convertTo(type);
     }
 
     private NetworkUtils() {

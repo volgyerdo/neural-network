@@ -25,7 +25,6 @@ import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.LayerFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
-import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.LayeredNetwork;
 

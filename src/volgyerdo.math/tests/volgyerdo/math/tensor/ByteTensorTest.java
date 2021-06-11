@@ -614,7 +614,7 @@ public class ByteTensorTest {
         t1.setByteValue((byte) 34, 0, 1);
         t1.setByteValue((byte) 2, 1, 1);
         t1.setByteValue((byte) 78, 2, 1);
-        Tensor transposed = t1.clone();
+        Tensor transposed = t1.copy();
         assertEquals("Transposed tensor", (byte) -34, transposed.getByteValue(0, 0));
         assertEquals("Transposed tensor", (byte) -67, transposed.getByteValue(1, 0));
         assertEquals("Transposed tensor", (byte) 6, transposed.getByteValue(2, 0));

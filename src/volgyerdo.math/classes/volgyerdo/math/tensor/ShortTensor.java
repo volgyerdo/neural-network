@@ -57,11 +57,7 @@ class ShortTensor extends Tensor {
     }
 
     private Tensor convertToShortTensor() {
-        try {
-            return clone();
-        } catch (CloneNotSupportedException ex) {
-            return null;
-        }
+        return copy();
     }
 
     private Tensor convertToFloatTensor() {
@@ -165,7 +161,7 @@ class ShortTensor extends Tensor {
     public void randomize(float min, float max) {
         randomize(PrimitiveUtils.toShort(min), PrimitiveUtils.toShort(max));
     }
-    
+
     @Override
     public void fill(byte x) {
         for (int i = 0; i < values.length; i++) {
@@ -235,7 +231,7 @@ class ShortTensor extends Tensor {
             values[i] = PrimitiveUtils.toShort((float) values[i] - x);
         }
     }
-    
+
     @Override
     public void substract(Tensor tensor) {
         checkNull(tensor);
@@ -284,30 +280,30 @@ class ShortTensor extends Tensor {
             values[i] = PrimitiveUtils.toShort((float) values[i] / x);
         }
     }
-    
+
     @Override
-    public void processByte(ByteProcessor processor){
+    public void processByte(ByteProcessor processor) {
         for (int i = 0; i < values.length; i++) {
             values[i] = processor.process(PrimitiveUtils.toByte(values[i]));
         }
     }
-    
+
     @Override
-    public void processShort(ShortProcessor processor){
+    public void processShort(ShortProcessor processor) {
         for (int i = 0; i < values.length; i++) {
             values[i] = processor.process(values[i]);
         }
     }
-    
+
     @Override
-    public void processFloat(FloatProcessor processor){
+    public void processFloat(FloatProcessor processor) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = PrimitiveUtils.toShort(processor.process((float)values[i]));
+            values[i] = PrimitiveUtils.toShort(processor.process((float) values[i]));
         }
     }
-    
+
     @Override
-    public void processObject(ObjectProcessor processor){
+    public void processObject(ObjectProcessor processor) {
         throw new RuntimeException("Short tensor doesn't have object processor function.");
     }
 
@@ -338,15 +334,15 @@ class ShortTensor extends Tensor {
             }
         }
     }
-    
+
     @Override
     public void hadamardProduct(Tensor multiplier) {
         checkNull(multiplier);
         checkClass(multiplier);
         checkDimensionCount(multiplier.dimensions);
         checkDimensions(multiplier);
-        for(int i = 0; i< values.length; i++){
-            values[i] = PrimitiveUtils.toShort(values[i] * ((ShortTensor)multiplier).values[i]);
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toShort(values[i] * ((ShortTensor) multiplier).values[i]);
         }
     }
 
@@ -404,18 +400,18 @@ class ShortTensor extends Tensor {
     }
 
     @Override
-    public Tensor clone() throws CloneNotSupportedException {
-        ShortTensor clone = new ShortTensor(dimensions);
-        System.arraycopy(values, 0, clone.values, 0, values.length);
-        return clone;
+    public Tensor copy() {
+        ShortTensor copy = new ShortTensor(dimensions);
+        System.arraycopy(values, 0, copy.values, 0, values.length);
+        return copy;
     }
-    
+
     @Override
     public void toStringRecursive(StringBuilder sb, int n, int[] indices) {
         if (n < indices.length) {
-            for(int i = 0; i< dimensions[n]; i++){
+            for (int i = 0; i < dimensions[n]; i++) {
                 indices[n] = i;
-                toStringRecursive(sb, n+1, indices);
+                toStringRecursive(sb, n + 1, indices);
             }
             sb.append("\n");
         } else {

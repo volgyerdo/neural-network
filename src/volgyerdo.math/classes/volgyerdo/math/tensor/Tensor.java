@@ -86,7 +86,7 @@ public abstract class Tensor {
     public abstract void randomize(short min, short max);
 
     public abstract void randomize(float min, float max);
-    
+
     public abstract void fill(byte x);
 
     public abstract void fill(short x);
@@ -106,7 +106,7 @@ public abstract class Tensor {
     public abstract void substract(short scaler);
 
     public abstract void substract(float scaler);
-    
+
     public abstract void substract(Tensor tensor);
 
     public abstract void multiply(byte scaler);
@@ -132,7 +132,7 @@ public abstract class Tensor {
     public abstract void negate();
 
     public abstract Tensor transpose();
-    
+
     public abstract void hadamardProduct(Tensor multiplier);
 
     public Tensor multiply(Tensor multiplier, int depth) {
@@ -161,7 +161,7 @@ public abstract class Tensor {
             outputDimensionLength = 1;
         }
         Tensor target = Tensor.create(type, outputDimensions);
-        multiplyRecursive(multiplier, target, commonDimensions, multiplierDimensions, 
+        multiplyRecursive(multiplier, target, commonDimensions, multiplierDimensions,
                 outputDimensions, depth, 0, new int[outputDimensionLength]);
         return target;
     }
@@ -176,23 +176,19 @@ public abstract class Tensor {
             }
         } else {
             sumProductRecursive(multiplier, target, commonDimensions,
-                        multiplierDimensions, outputDimensions, depth, indices, 0, new int[commonDimensions.length]);
+                    multiplierDimensions, outputDimensions, depth, indices, 0, new int[commonDimensions.length]);
         }
     }
-    
+
     protected abstract void sumProductRecursive(Tensor multiplier, Tensor target,
             int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices);
 
     public Tensor convolve(Tensor kernel) {
         checkNull(kernel);
         checkClass(kernel);
-        try {
-            Tensor result = clone();
-            convolveRecursive(kernel, result, 0, new int[dimensions.length]);
-            return result;
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning is not supported.");
-        }
+        Tensor result = copy();
+        convolveRecursive(kernel, result, 0, new int[dimensions.length]);
+        return result;
     }
 
     protected abstract void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d);
@@ -241,28 +237,27 @@ public abstract class Tensor {
         }
     }
 
-    @Override
-    public Tensor clone() throws CloneNotSupportedException {
+    public Tensor copy() {
         Tensor clone = null;
         if (this instanceof ByteTensor) {
-            clone = ((ByteTensor) this).clone();
+            clone = ((ByteTensor) this).copy();
         } else if (this instanceof ShortTensor) {
-            clone = ((ShortTensor) this).clone();
+            clone = ((ShortTensor) this).copy();
         } else if (this instanceof FloatTensor) {
-            clone = ((FloatTensor) this).clone();
+            clone = ((FloatTensor) this).copy();
         }
         System.arraycopy(dimensions, 0, clone.dimensions, 0, dimensions.length);
         System.arraycopy(multipliers, 0, clone.multipliers, 0, multipliers.length);
         return clone;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         toStringRecursive(sb, 0, new int[dimensions.length]);
         return sb.toString();
     }
-    
+
     public abstract void toStringRecursive(StringBuilder sb, int n, int[] indices);
 
     public interface ByteProcessor {

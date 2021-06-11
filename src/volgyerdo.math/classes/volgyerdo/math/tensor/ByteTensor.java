@@ -49,11 +49,7 @@ class ByteTensor extends Tensor {
     }
 
     private Tensor convertToByteTensor() {
-        try {
-            return clone();
-        } catch (CloneNotSupportedException ex) {
-            return null;
-        }
+        return copy();
     }
 
     private Tensor convertToShortTensor() {
@@ -412,10 +408,10 @@ class ByteTensor extends Tensor {
     }
 
     @Override
-    public Tensor clone() throws CloneNotSupportedException {
-        ByteTensor clone = new ByteTensor(dimensions);
-        System.arraycopy(values, 0, clone.values, 0, values.length);
-        return clone;
+    public Tensor copy() {
+        ByteTensor copy = new ByteTensor(dimensions);
+        System.arraycopy(values, 0, copy.values, 0, values.length);
+        return copy;
     }
 
     @Override

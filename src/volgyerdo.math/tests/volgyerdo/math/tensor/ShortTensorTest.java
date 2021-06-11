@@ -612,7 +612,7 @@ public class ShortTensorTest {
         t1.setShortValue((short) 34, 0, 1);
         t1.setShortValue((short) 2, 1, 1);
         t1.setShortValue((short) 78, 2, 1);
-        Tensor transposed = t1.clone();
+        Tensor transposed = t1.copy();
         assertEquals("Transposed tensor", (byte) -34, transposed.getShortValue(0, 0));
         assertEquals("Transposed tensor", (byte) -67, transposed.getShortValue(1, 0));
         assertEquals("Transposed tensor", (byte) 6, transposed.getShortValue(2, 0));

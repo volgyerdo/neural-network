@@ -21,5 +21,5 @@ package volgyerdo.neural.logic;
  */
 public class NetworkConstants {
     
-    public static final float DEFAULT_LEARNING_RATE = 0.01f;
+    public static final float DEFAULT_LEARNING_RATE = 0.1f;
 }

@@ -35,7 +35,6 @@ public class SimpleLayeredTest2 {
 
     public static void main(String[] args) {
         LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{1}, 3, ConnectionType.FULL_CONNECTION);
-        network.learningRate = 0.01f;
         network.activation = ActivationFactory.createTanH();
 
         NetworkLogic.randomizeWeights(network);

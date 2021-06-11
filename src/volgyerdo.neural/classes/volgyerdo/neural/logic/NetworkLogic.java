@@ -57,7 +57,7 @@ public class NetworkLogic {
 
             Tensor weights = NetworkUtils.converToNormalFloat(connection.weights);
             Tensor bias = NetworkUtils.converToNormalFloat(connection.bias);
-            //states konvertálás
+
             Tensor instates = NetworkUtils.converToNormalFloat(inputLayer.states);
             Tensor outstates;
 
@@ -71,7 +71,6 @@ public class NetworkLogic {
             outstates.add(bias);
             outstates.processFloat((x) -> ActivationLogic.activate(x, network.activation));
 
-            //visszakonv.
             inputLayer.states = NetworkUtils.converToNormalFloat(instates);
             outputLayer.states = NetworkUtils.converToNormalFloat(outstates);
         }
@@ -84,6 +83,7 @@ public class NetworkLogic {
         error.substract(actualOutput);
 
         Tensor delta;
+        Tensor deltaBias;
         Tensor deltaW;
         Tensor previousOutput;
         Tensor actualW;
@@ -107,13 +107,15 @@ public class NetworkLogic {
                 = NetworkUtils.convertToType(actualW, actualConnection.weights.type);
 
         newBias = NetworkUtils.converToNormalFloat(actualConnection.bias);
-        delta.multiply(network.learningRate);
-        newBias.add(delta);
+
+        deltaBias = delta.copy();
+        deltaBias.multiply(network.learningRate);
+        newBias.add(deltaBias);
         actualConnection.bias = NetworkUtils.convertToType(newBias, actualConnection.bias.type);
 
         for (int i = network.layers.size() - 2; i > 0; i--) {
             actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(i).states);
-            delta = error.multiply(actualW, network.layers.get(i + 1).states.dimensions.length);
+            delta = delta.multiply(actualW, network.layers.get(i + 1).states.dimensions.length);
             processedOutput = actualOutput;
             processedOutput.processFloat((x) -> ActivationLogic.deactivate(x, network.activation));
             delta.hadamardProduct(actualOutput);
@@ -129,8 +131,9 @@ public class NetworkLogic {
                     = NetworkUtils.convertToType(actualW, actualConnection.weights.type);
 
             newBias = NetworkUtils.converToNormalFloat(actualConnection.bias);
-            delta.multiply(network.learningRate);
-            newBias.add(delta);
+            deltaBias = delta.copy();
+            deltaBias.multiply(network.learningRate);
+            newBias.add(deltaBias);
             actualConnection.bias = NetworkUtils.convertToType(newBias, actualConnection.bias.type);
         }
     }
