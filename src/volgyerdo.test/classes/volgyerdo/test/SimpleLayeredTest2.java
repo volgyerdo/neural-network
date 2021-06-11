@@ -52,7 +52,7 @@ public class SimpleLayeredTest2 {
 //            System.out.println(outputLayer.states.getFloatValue(0));
 //        }
         Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 1);
-        for (int i = 0; i < 50000; i++) {
+        for (int i = 0; i < 5000; i++) {
                 int pairNumber = (int) (Math.random() * pairs.size());
                 Pair pair = pairs.get(pairNumber);
                 inputLayer.states.setFloatValue(pair.input[0], 0);
