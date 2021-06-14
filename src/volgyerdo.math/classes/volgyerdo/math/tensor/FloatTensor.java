@@ -117,6 +117,39 @@ class FloatTensor extends Tensor {
     }
 
     @Override
+    public void setByteArray(byte[] values) {
+        if (dimensions.length != 1 || dimensions[0] != values.length) {
+            throw new IllegalArgumentException("Array dimension is different.");
+        }
+        for (int i = 0; i < values.length; i++) {
+            this.values[i] = values[i];
+        }
+    }
+
+    @Override
+    public void setShortArray(short[] values) {
+        if (dimensions.length != 1 || dimensions[0] != values.length) {
+            throw new IllegalArgumentException("Array dimension is different.");
+        }
+        for (int i = 0; i < values.length; i++) {
+            this.values[i] = values[i];
+        }
+    }
+
+    @Override
+    public void setFloatArray(float[] values) {
+        if (dimensions.length != 1 || dimensions[0] != values.length) {
+            throw new IllegalArgumentException("Array dimension is different.");
+        }
+        System.arraycopy(values, 0, this.values, 0, values.length);
+    }
+
+    @Override
+    public void setObjectArray(Object[] values) {
+        throw new RuntimeException("Can't set an object array into a byte tensor.");
+    }
+
+    @Override
     public int hashCode() {
         int hash = 7;
         hash = 53 * hash + Arrays.hashCode(this.values);
@@ -182,7 +215,7 @@ class FloatTensor extends Tensor {
             values[i] = x;
         }
     }
-    
+
     @Override
     public void add(byte x) {
         add((float) x);
@@ -238,7 +271,7 @@ class FloatTensor extends Tensor {
             values[i] -= ((FloatTensor) tensor).values[i];
         }
     }
-    
+
     @Override
     public void multiply(byte x) {
         multiply((float) x);
@@ -272,30 +305,30 @@ class FloatTensor extends Tensor {
             values[i] /= x;
         }
     }
-    
+
     @Override
-    public void processByte(ByteProcessor processor){
+    public void processByte(ByteProcessor processor) {
         for (int i = 0; i < values.length; i++) {
             values[i] = processor.process(PrimitiveUtils.toByte(values[i]));
         }
     }
-    
+
     @Override
-    public void processShort(ShortProcessor processor){
+    public void processShort(ShortProcessor processor) {
         for (int i = 0; i < values.length; i++) {
             values[i] = processor.process(PrimitiveUtils.toShort(values[i]));
         }
     }
-    
+
     @Override
-    public void processFloat(FloatProcessor processor){
+    public void processFloat(FloatProcessor processor) {
         for (int i = 0; i < values.length; i++) {
             values[i] = processor.process(values[i]);
         }
     }
-    
+
     @Override
-    public void processObject(ObjectProcessor processor){
+    public void processObject(ObjectProcessor processor) {
         throw new RuntimeException("Float tensor doesn't have object processor function.");
     }
 
@@ -326,15 +359,15 @@ class FloatTensor extends Tensor {
             }
         }
     }
-    
+
     @Override
     public void hadamardProduct(Tensor multiplier) {
         checkNull(multiplier);
         checkClass(multiplier);
         checkDimensionCount(multiplier.dimensions);
         checkDimensions(multiplier);
-        for(int i = 0; i< values.length; i++){
-            values[i] = values[i] * ((FloatTensor)multiplier).values[i];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = values[i] * ((FloatTensor) multiplier).values[i];
         }
     }
 
@@ -397,13 +430,13 @@ class FloatTensor extends Tensor {
         System.arraycopy(values, 0, copy.values, 0, values.length);
         return copy;
     }
-    
+
     @Override
     public void toStringRecursive(StringBuilder sb, int n, int[] indices) {
         if (n < indices.length) {
-            for(int i = 0; i< dimensions[n]; i++){
+            for (int i = 0; i < dimensions[n]; i++) {
                 indices[n] = i;
-                toStringRecursive(sb, n+1, indices);
+                toStringRecursive(sb, n + 1, indices);
             }
             //sb.append("\n");
         } else {

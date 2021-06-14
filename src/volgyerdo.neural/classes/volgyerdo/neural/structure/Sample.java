@@ -13,35 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.test.suyashssonawane;
+package volgyerdo.neural.structure;
 
-import java.util.List;
+import volgyerdo.math.tensor.Tensor;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class SuyashSonawaneTest1 {
-
-    public static void main(String[] args) {
-        float[][] X = {
-            {0, 0},
-            {1, 0},
-            {0, 1},
-            {1, 1}
-        };
-        float[][] Y = {
-            {0}, {1}, {1}, {0}
-        };
-
-        NeuralNetwork network = new NeuralNetwork(2, 10, 1);
-        network.randomize();
-        network.fit(X, Y, 50000, true);
-
-        for (float d[] : X) {
-            List<Float> output = network.predict(d);
-            System.out.println(output.toString());
-        }
-    }
-
+public class Sample {
+    
+    public Tensor input;
+    public Tensor target;
+    
 }

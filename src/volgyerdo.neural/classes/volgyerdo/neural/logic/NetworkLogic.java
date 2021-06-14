@@ -15,11 +15,15 @@
  */
 package volgyerdo.neural.logic;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.LayerConnection;
 import volgyerdo.neural.structure.LayeredNetwork;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.ConnectionType;
+import volgyerdo.neural.structure.Sample;
 
 /**
  *
@@ -46,6 +50,38 @@ public class NetworkLogic {
     public static void setFixWeights(LayeredNetwork network, float weigth) {
         for (LayerConnection connection : network.connections) {
             connection.weights.fill(weigth);
+        }
+    }
+
+    public static void fit(LayeredNetwork network, Collection<Sample> samples, int periods) {
+        Layer inputLayer = NetworkUtils.getInputLayer(network);
+        Sample[] sampleArray = (Sample[]) samples.toArray(new Sample[samples.size()]);
+        checkSamples(network, sampleArray);
+        for (int i = 0; i < periods; i++) {
+            int pairNumber = (int) (Math.random() * sampleArray.length);
+            Sample sample = sampleArray[pairNumber];
+            inputLayer.states = sample.input;
+            NetworkLogic.propagate(network);
+            NetworkLogic.backPropagate(network, sample.target);
+        }
+    }
+
+    private static void checkSamples(LayeredNetwork network, Sample[] samples) {
+        Layer inputLayer = NetworkUtils.getInputLayer(network);
+        Layer outputLayer = NetworkUtils.getOutputLayer(network);
+        for (Sample sample : samples) {
+            if (!Arrays.equals(sample.input.dimensions, inputLayer.dimensions)) {
+                throw new IllegalArgumentException("Input dimension is wrong.");
+            }
+            if (!Objects.equals(sample.input.type, network.dataType)) {
+                throw new IllegalArgumentException("Input data type is wrong.");
+            }
+            if (!Arrays.equals(sample.target.dimensions, outputLayer.dimensions)) {
+                throw new IllegalArgumentException("Target dimension is wrong.");
+            }
+            if (!Objects.equals(sample.target.type, network.dataType)) {
+                throw new IllegalArgumentException("Target data type is wrong.");
+            }
         }
     }
 

@@ -117,6 +117,39 @@ class ByteTensor extends Tensor {
     }
 
     @Override
+    public void setByteArray(byte[] values) {
+        if (dimensions.length != 1 || dimensions[0] != values.length) {
+            throw new IllegalArgumentException("Array dimension is different.");
+        }
+        System.arraycopy(values, 0, this.values, 0, values.length);
+    }
+
+    @Override
+    public void setShortArray(short[] values) {
+        if (dimensions.length != 1 || dimensions[0] != values.length) {
+            throw new IllegalArgumentException("Array dimension is different.");
+        }
+        for (int i = 0; i < values.length; i++) {
+            this.values[i] = PrimitiveUtils.toByte(values[i]);
+        }
+    }
+
+    @Override
+    public void setFloatArray(float[] values) {
+        if (dimensions.length != 1 || dimensions[0] != values.length) {
+            throw new IllegalArgumentException("Array dimension is different.");
+        }
+        for (int i = 0; i < values.length; i++) {
+            this.values[i] = PrimitiveUtils.toByte(values[i]);
+        }
+    }
+
+    @Override
+    public void setObjectArray(Object[] values) {
+        throw new RuntimeException("Can't set an object array into a byte tensor.");
+    }
+
+    @Override
     public int hashCode() {
         int hash = 3;
         hash = 89 * hash + Arrays.hashCode(this.values);

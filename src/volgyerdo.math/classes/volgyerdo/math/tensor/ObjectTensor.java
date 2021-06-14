@@ -127,6 +127,29 @@ class ObjectTensor extends Tensor {
     }
 
     @Override
+    public void setByteArray(byte[] values) {
+        throw new RuntimeException("Can't set a byte array into an object tensor.");
+    }
+
+    @Override
+    public void setShortArray(short[] values) {
+        throw new RuntimeException("Can't set a short array into an object tensor.");
+    }
+
+    @Override
+    public void setFloatArray(float[] values) {
+        throw new RuntimeException("Can't set a float array into an object tensor.");
+    }
+
+    @Override
+    public void setObjectArray(Object[] values) {
+        if (dimensions.length != 1 || dimensions[0] != values.length) {
+            throw new IllegalArgumentException("Array dimension is different.");
+        }
+        System.arraycopy(values, 0, this.values, 0, values.length);
+    }
+    
+    @Override
     public int hashCode() {
         int hash = 7;
         hash = 47 * hash + Arrays.hashCode(this.values);

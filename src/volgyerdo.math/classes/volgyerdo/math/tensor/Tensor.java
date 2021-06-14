@@ -81,6 +81,14 @@ public abstract class Tensor {
 
     public abstract Object getObjectValue(int... indices);
 
+    public abstract void setByteArray(byte[] values);
+
+    public abstract void setShortArray(short[] values);
+
+    public abstract void setFloatArray(float[] values);
+
+    public abstract void setObjectArray(Object[] values);
+
     public abstract void randomize(byte min, byte max);
 
     public abstract void randomize(short min, short max);
