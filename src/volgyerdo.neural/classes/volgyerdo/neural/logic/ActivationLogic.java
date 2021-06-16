@@ -29,15 +29,13 @@ public class ActivationLogic {
     // f(x) = [(1 + (x + shiftX) * stretchX * swish)) / (1 + exp(-(x + shiftX) * stretchX)) 
     //        + slope * (x + shiftX) * stretchX] * stretchY + shiftY
     public static float activate(float x, Activation parameters) {
-        x = (x + parameters.shiftX) * parameters.stretchX; // vízszintes nyújtás és eltolás
+        x = (x + parameters.shiftX) * parameters.stretchX;
         x = (1 + parameters.swish * x) / (1 + (float) Math.exp(-x)) + parameters.slope * x;
-        x = x * parameters.stretchY + parameters.shiftY; // függőleges nyújtás és eltolás
+        x = x * parameters.stretchY + parameters.shiftY;
         return x;
     }
 
     // Derivative of activate()
-    // f(x)' = (exp(x))/(exp(x)+1)^2
-    // x-et itt y reprezentalja.
     public static float deactivate(float x, Activation parameters) {
         float transX = (float) Math.exp(parameters.stretchX * (x + parameters.shiftX));
         float stretchSlope = parameters.stretchX * parameters.slope;
