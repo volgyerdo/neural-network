@@ -21,10 +21,9 @@ import volgyerdo.math.tensor.Tensor;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class Layer {
-    
+public abstract class Layer {
+
     public Tensor.TYPE dataType;
-    public int[] dimensions;
     public Tensor states;
-    
+
 }

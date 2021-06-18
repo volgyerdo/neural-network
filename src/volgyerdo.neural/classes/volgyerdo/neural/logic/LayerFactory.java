@@ -16,7 +16,8 @@
 package volgyerdo.neural.logic;
 
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.structure.Layer;
+import volgyerdo.neural.structure.ConvolutionalLayer;
+import volgyerdo.neural.structure.DenseLayer;
 
 /**
  *
@@ -24,12 +25,22 @@ import volgyerdo.neural.structure.Layer;
  */
 public class LayerFactory {
     
-    public static Layer createLayer(Tensor.TYPE dataType, int... dimensions){
-        Layer currentLayer = new Layer();
-        currentLayer.dataType = dataType;
-        currentLayer.dimensions = dimensions;
-        currentLayer.states = Tensor.create(dataType, dimensions);
-        return currentLayer; 
+    public static DenseLayer createDenseLayer(Tensor.TYPE dataType, int... dimensions){
+        DenseLayer layer = new DenseLayer();
+        layer.dataType = dataType;
+        layer.states = Tensor.create(dataType, dimensions);
+        layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
+        layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
+        return layer; 
+    }
+    
+    public static ConvolutionalLayer createConvolutionalLayer(Tensor.TYPE dataType, int... dimensions){
+        ConvolutionalLayer layer = new ConvolutionalLayer();
+        layer.dataType = dataType;
+        layer.states = Tensor.create(dataType, dimensions);
+        layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
+        layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
+        return layer; 
     }
     
 }

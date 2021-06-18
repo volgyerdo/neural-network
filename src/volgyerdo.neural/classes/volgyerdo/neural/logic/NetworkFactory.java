@@ -17,10 +17,10 @@ package volgyerdo.neural.logic;
 
 import java.util.ArrayList;
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.structure.ConnectionType;
+import volgyerdo.neural.structure.ConvolutionalLayer;
+import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.LayeredNetwork;
-import volgyerdo.neural.logic.LayerFactory;
+import volgyerdo.neural.structure.Network;
 
 /**
  *
@@ -28,64 +28,53 @@ import volgyerdo.neural.logic.LayerFactory;
  */
 public class NetworkFactory {
 
-    public static LayeredNetwork createLayeredNetwork(
-            Tensor.TYPE dataType) {
-        LayeredNetwork layeredNetwork = new LayeredNetwork();
-        layeredNetwork.dataType = dataType;
+    public static Network createNetwork() {
+        Network layeredNetwork = new Network();
         layeredNetwork.layers = new ArrayList<>();
-        layeredNetwork.connections = new ArrayList<>();
-        layeredNetwork.activation = ActivationFactory.createSigmoid();
         return layeredNetwork;
     }
 
-    public static LayeredNetwork createLayeredNetwork(
+    public static Network createDenseNetwork(
             Tensor.TYPE dataType,
             int[] dimensions,
-            int layerCount,
-            ConnectionType connectionType) {
-        LayeredNetwork layeredNetwork = createLayeredNetwork(dataType);
-
-        switch (connectionType) {
-            case FULL_CONNECTION:
-                for (int i = 0; i < layerCount; i++) {
-                    Layer layer;
-                    layer = LayerFactory.createLayer(dataType, dimensions);
-                    addFullyConnectedLayer(layeredNetwork, layer);
-                    layeredNetwork.layers.get(i).dataType = dataType;
-                    layeredNetwork.layers.get(i).dimensions = dimensions;
-                }
-                break;
-
-            case CONVOLUTION:
-                for (int i = 0; i < layerCount; i++) {
-                    Layer layer;
-                    layer = LayerFactory.createLayer(dataType, dimensions);
-                    addConvolutionalLayer(layeredNetwork, layer, dimensions);
-                    layeredNetwork.layers.get(i).dataType = dataType;
-                    layeredNetwork.layers.get(i).dimensions = dimensions;
-                }
-                break;
-                
+            int layerCount) {
+        Network network = NetworkFactory.createNetwork();
+        for (int i = 0; i < layerCount; i++) {
+            DenseLayer layer = LayerFactory.createDenseLayer(dataType, dimensions);
+            addDenseLayer(network, layer);
+            network.layers.get(i).dataType = dataType;
         }
-        return layeredNetwork;
+        return network;
     }
 
-    public static void addFullyConnectedLayer(LayeredNetwork network, Layer layer) {
-        if (network.layers.size() > 0) {
+    public static void addDenseLayer(Network network, DenseLayer layer) {
+        if (!network.layers.isEmpty()) {
             Layer previousLayer = network.layers.get(network.layers.size() - 1);
-            network.connections.add(
-                    ConnectionFactory.createFullyConnectedConnection(
-                            previousLayer, layer));
+            int[] weightsDimensions = new int[previousLayer.states.dimensions.length + layer.states.dimensions.length];
+            System.arraycopy(layer.states.dimensions, 0, weightsDimensions, 0, layer.states.dimensions.length);
+            System.arraycopy(previousLayer.states.dimensions, 0, weightsDimensions, layer.states.dimensions.length, previousLayer.states.dimensions.length);
+            layer.weights = Tensor.create(layer.dataType, weightsDimensions);
+            layer.bias = Tensor.create(layer.dataType, layer.states.dimensions);
         }
         network.layers.add(layer);
     }
 
-    public static void addConvolutionalLayer(LayeredNetwork network, Layer layer, int[] kernelDimensions) {
-        if (network.layers.size() > 0) {
-            network.connections.add(
-                    ConnectionFactory.createConvolutionalConnection(
-                            network.dataType, kernelDimensions, layer));
+    public static Network createConvolutionalNetwork(
+            Tensor.TYPE dataType,
+            int[] dimensions,
+            int layerCount) {
+        Network network = NetworkFactory.createNetwork();
+        for (int i = 0; i < layerCount; i++) {
+            ConvolutionalLayer layer = LayerFactory.createConvolutionalLayer(dataType, dimensions);
+            addConvolutionalLayer(network, layer, dimensions);
+            network.layers.get(i).dataType = dataType;
         }
+        return network;
+    }
+
+    public static void addConvolutionalLayer(Network network, ConvolutionalLayer layer, int[] kernelDimensions) {
+        layer.kernel = Tensor.create(layer.dataType, kernelDimensions);
+        layer.bias = Tensor.create(layer.dataType, layer.states.dimensions);
         network.layers.add(layer);
     }
 

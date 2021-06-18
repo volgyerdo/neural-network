@@ -18,7 +18,7 @@ package volgyerdo.neural.logic;
 import java.security.InvalidParameterException;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.LayeredNetwork;
+import volgyerdo.neural.structure.Network;
 
 /**
  *
@@ -26,19 +26,19 @@ import volgyerdo.neural.structure.LayeredNetwork;
  */
 public class NetworkUtils {
 
-    public static Tensor getInputDimensions(LayeredNetwork network) {
+    public static Tensor getInputDimensions(Network network) {
         return getInputLayer(network).states;
     }
 
-    public static Tensor getOutputDimensions(LayeredNetwork network) {
+    public static Tensor getOutputDimensions(Network network) {
         return getOutputLayer(network).states;
     }
 
-    public static Layer getInputLayer(LayeredNetwork network) {
+    public static Layer getInputLayer(Network network) {
         return network.layers.get(0);
     }
 
-    public static Layer getOutputLayer(LayeredNetwork network) {
+    public static Layer getOutputLayer(Network network) {
         return network.layers.get(network.layers.size() - 1);
     }
 
@@ -69,6 +69,20 @@ public class NetworkUtils {
                 break;
         }
         return convertedInput.convertTo(type);
+    }
+    
+    public static void randomizeWeigths(Tensor weights) {
+        if(weights == null){
+            return;
+        }
+        switch (weights.type) {
+            case BYTE ->
+                weights.randomize(Byte.MIN_VALUE, Byte.MAX_VALUE);
+            case SHORT ->
+                weights.randomize(Short.MIN_VALUE, Short.MAX_VALUE);
+            case FLOAT ->
+                weights.randomize(-1, 1);
+        }
     }
 
     private NetworkUtils() {

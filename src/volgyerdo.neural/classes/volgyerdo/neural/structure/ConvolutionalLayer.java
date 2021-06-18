@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 antal.
+ * Copyright 2021 Volgyerdo Nonprofit Kft.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,18 @@
  */
 package volgyerdo.neural.structure;
 
+import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.logic.NetworkConstants;
+
 /**
  *
- * @author antal
+ * @author Volgyerdo Nonprofit Kft.
  */
-public abstract class GeneralNetwork extends Network{
+public class ConvolutionalLayer extends Layer{
+    
+    public Tensor kernel;
+    public Tensor bias;
+    public Activation activation;
+    public float learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
     
 }

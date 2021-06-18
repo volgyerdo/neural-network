@@ -21,16 +21,15 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.structure.ConnectionType;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.LayeredNetwork;
+import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class LayeredNetworkTest {
+public class SimpleNetworkTest {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     
@@ -38,9 +37,9 @@ public class LayeredNetworkTest {
     public void layeredSimpleTest() {
         double maximumError = 0.005;
 
-        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 4, ConnectionType.FULL_CONNECTION);
-        network.learningRate = 0.1f;
-        network.activation = ActivationFactory.createTanH();
+        Network network = NetworkFactory.createDenseNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 4);
+        NetworkLogic.setLearningRate(network, 0.1f);
+        NetworkLogic.setActivation(network, ActivationFactory.createTanH());
         NetworkLogic.randomizeWeights(network);
 
         List<Sample> samples = new ArrayList<>();
@@ -51,12 +50,10 @@ public class LayeredNetworkTest {
 
         System.out.println("\nAfter training:\n");
 
-        Layer inputLayer = NetworkUtils.getInputLayer(network);
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
 
         for (Sample sample : samples) {
-            inputLayer.states = sample.input;
-            NetworkLogic.propagate(network);
+            NetworkLogic.propagate(network, sample.input);
             double error1 = outputLayer.states.getFloatValue(0) - sample.target.getFloatValue(0);
             double error2 = outputLayer.states.getFloatValue(0) - sample.target.getFloatValue(0);
             System.out.println(sample.target.getFloatValue(0)
@@ -73,19 +70,17 @@ public class LayeredNetworkTest {
     public void layeredXorTest() {
         double maximumError = 0.005;
         
-        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT);
-        network.learningRate = 0.1f;
+        Network network = NetworkFactory.createNetwork();
+        
+        NetworkFactory.addDenseLayer(network,
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 2));
+        NetworkFactory.addDenseLayer(network, 
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10));
+        NetworkFactory.addDenseLayer(network, 
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 1));
 
-        Layer inputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 2);
-        NetworkFactory.addFullyConnectedLayer(network, inputLayer);
-
-        Layer hiddenLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 10);
-        NetworkFactory.addFullyConnectedLayer(network, hiddenLayer);
-
-        Layer outputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 1);
-        NetworkFactory.addFullyConnectedLayer(network, outputLayer);
-
-        network.activation = ActivationFactory.createTanH();
+        NetworkLogic.setLearningRate(network, 0.1f);
+        NetworkLogic.setActivation(network, ActivationFactory.createTanH());
         NetworkLogic.randomizeWeights(network);
 
         List<Sample> samples = new ArrayList<>();
@@ -97,10 +92,9 @@ public class LayeredNetworkTest {
         NetworkLogic.fit(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
-
+        Layer outputLayer = NetworkUtils.getOutputLayer(network);
         for (Sample sample : samples) {
-            inputLayer.states = sample.input;
-            NetworkLogic.propagate(network);
+            NetworkLogic.propagate(network, sample.input);
             double error = sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0);
             System.out.println(sample.input.getFloatValue(0) + " XOR " + sample.input.getFloatValue(1) + " = "
                     + FORMAT.format(outputLayer.states.getFloatValue(0))
@@ -114,21 +108,19 @@ public class LayeredNetworkTest {
         double maximumTrainError = 0.08;
         double maximumControlError = 0.2;
         
-        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT);
-        network.learningRate = 0.01f;
+        Network network = NetworkFactory.createNetwork();
 
-        Layer inputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 30);
-        NetworkFactory.addFullyConnectedLayer(network, inputLayer);
+        NetworkFactory.addDenseLayer(network, 
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 30));
+        NetworkFactory.addDenseLayer(network,
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 90));
+        NetworkFactory.addDenseLayer(network,
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 60));
+        NetworkFactory.addDenseLayer(network, 
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 2));
 
-        NetworkFactory.addFullyConnectedLayer(network,
-                LayerFactory.createLayer(Tensor.TYPE.FLOAT, 90));
-        NetworkFactory.addFullyConnectedLayer(network,
-                LayerFactory.createLayer(Tensor.TYPE.FLOAT, 60));
-
-        Layer outputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 2);
-        NetworkFactory.addFullyConnectedLayer(network, outputLayer);
-
-        network.activation = ActivationFactory.createSigmoid();
+        NetworkLogic.setLearningRate(network, 0.01f);
+        NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
 
         List<Sample> samples = new ArrayList<>();
@@ -213,13 +205,12 @@ public class LayeredNetworkTest {
         NetworkLogic.fit(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
-        
+        Layer outputLayer = NetworkUtils.getOutputLayer(network);
         double errorHand = 0;
         double errorReal = 0;
         int n = 0;
         for (Sample sample : samples) {
-            inputLayer.states = sample.input;
-            NetworkLogic.propagate(network);
+            NetworkLogic.propagate(network, sample.input);
             System.out.println("Original: " + sample.target.getFloatValue(0) + " - " + sample.target.getFloatValue(1) + " > "
                     + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
                     + FORMAT.format(outputLayer.states.getFloatValue(1))
@@ -238,8 +229,7 @@ public class LayeredNetworkTest {
         System.out.println();
 
         for (Sample sample : controlSamples) {
-            inputLayer.states = sample.input;
-            NetworkLogic.propagate(network);
+            NetworkLogic.propagate(network, sample.input);
             System.out.println("Control: " + sample.target.getFloatValue(0) + " - " + sample.target.getFloatValue(1) + " > "
                     + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
                     + FORMAT.format(outputLayer.states.getFloatValue(1))

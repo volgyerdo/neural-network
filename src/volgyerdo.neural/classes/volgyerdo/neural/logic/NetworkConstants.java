@@ -15,6 +15,8 @@
  */
 package volgyerdo.neural.logic;
 
+import volgyerdo.neural.structure.Activation;
+
 /**
  *
  * @author antal
@@ -22,4 +24,7 @@ package volgyerdo.neural.logic;
 public class NetworkConstants {
     
     public static final float DEFAULT_LEARNING_RATE = 0.01f;
+    
+    public static final Activation DEFAULT_ACTIVATION = ActivationFactory.createTanH();
+    
 }
