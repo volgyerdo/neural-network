@@ -16,11 +16,10 @@
 package volgyerdo.neural.logic;
 
 import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
-import volgyerdo.neural.structure.InputLayer;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.OutputLayer;
 
 /**
  *
@@ -45,19 +44,11 @@ public class LayerLogic {
     }
 
     public static void propagate(Layer prevLayer, Layer layer) {
-        if (layer instanceof InputLayer) {
-            propagate(prevLayer, (InputLayer) layer);
-        } else if (layer instanceof DenseLayer) {
+        if (layer instanceof DenseLayer) {
             propagate(prevLayer, (DenseLayer) layer);
         } else if (layer instanceof ConvolutionalLayer) {
             propagate(prevLayer, (ConvolutionalLayer) layer);
-        } else if (layer instanceof OutputLayer) {
-            propagate(prevLayer, (OutputLayer) layer);
         }
-    }
-
-    private static void propagate(Layer prevLayer, InputLayer layer) {
-        layer.states = prevLayer.states;
     }
 
     private static void propagate(Layer prevLayer, DenseLayer layer) {
@@ -90,24 +81,12 @@ public class LayerLogic {
         layer.states = NetworkUtils.converToNormalFloat(outputStates);
     }
 
-    private static void propagate(Layer prevLayer, OutputLayer layer) {
-        layer.states = prevLayer.states;
-    }
-
     public static Tensor backPropagate(Layer layer, Layer nextLayer, Tensor delta) {
-        if (layer instanceof InputLayer) {
-            return backPropagate((InputLayer) layer, nextLayer, delta);
-        } else if (layer instanceof DenseLayer) {
+        if (layer instanceof DenseLayer) {
             return backPropagate((DenseLayer) layer, nextLayer, delta);
         } else if (layer instanceof ConvolutionalLayer) {
             return backPropagate((ConvolutionalLayer) layer, nextLayer, delta);
-        } else if (layer instanceof OutputLayer) {
-            return backPropagate((OutputLayer) layer, nextLayer, delta);
         }
-        return null;
-    }
-
-    private static Tensor backPropagate(InputLayer layer, Layer nextLayer, Tensor delta) {
         return null;
     }
 
@@ -140,8 +119,19 @@ public class LayerLogic {
         return null;
     }
 
-    private static Tensor backPropagate(OutputLayer layer, Layer nextLayer, Tensor delta) {
-        return null;
+    public static void setLearningRate(Layer layer, float learningRate){
+        if (layer instanceof DenseLayer) {
+            ((DenseLayer)layer).learningRate = learningRate;
+        } else if (layer instanceof ConvolutionalLayer) {
+            ((ConvolutionalLayer)layer).learningRate = learningRate;
+        }
     }
-
+    
+    public static void setActivation(Layer layer, Activation activation){
+        if (layer instanceof DenseLayer) {
+            ((DenseLayer)layer).activation = ActivationFactory.createCopy(activation);
+        } else if (layer instanceof ConvolutionalLayer) {
+            ((ConvolutionalLayer)layer).activation = ActivationFactory.createCopy(activation);
+        }
+    }
 }

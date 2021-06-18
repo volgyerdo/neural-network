@@ -16,10 +16,8 @@
 package volgyerdo.neural.logic;
 
 import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
-import volgyerdo.neural.structure.InputLayer;
-import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.OutputLayer;
 
 /**
  *
@@ -27,31 +25,21 @@ import volgyerdo.neural.structure.OutputLayer;
  */
 public class LayerFactory {
     
-    public static Layer createInputLayer(Tensor.TYPE dataType, int... dimensions){
-        InputLayer layer = new InputLayer();
-        layer.dataType = dataType;
-        layer.states = Tensor.create(dataType, dimensions);
-        return layer;
-    }
-    
-    public static Layer createOutputLayer(Tensor.TYPE dataType, int... dimensions){
-        OutputLayer layer = new OutputLayer();
-        layer.dataType = dataType;
-        layer.states = Tensor.create(dataType, dimensions);
-        return layer;
-    }
-    
-    public static Layer createDenseLayer(Tensor.TYPE dataType, int... dimensions){
+    public static DenseLayer createDenseLayer(Tensor.TYPE dataType, int... dimensions){
         DenseLayer layer = new DenseLayer();
         layer.dataType = dataType;
         layer.states = Tensor.create(dataType, dimensions);
+        layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
+        layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
         return layer; 
     }
     
-    public static Layer createConvolutionalLayer(Tensor.TYPE dataType, int... dimensions){
-        DenseLayer layer = new DenseLayer();
+    public static ConvolutionalLayer createConvolutionalLayer(Tensor.TYPE dataType, int... dimensions){
+        ConvolutionalLayer layer = new ConvolutionalLayer();
         layer.dataType = dataType;
         layer.states = Tensor.create(dataType, dimensions);
+        layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
+        layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
         return layer; 
     }
     

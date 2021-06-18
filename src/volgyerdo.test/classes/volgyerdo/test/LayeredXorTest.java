@@ -23,6 +23,7 @@ import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.LayerFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
+import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
@@ -34,19 +35,20 @@ import volgyerdo.neural.structure.Sample;
  */
 public class LayeredXorTest {
 
+    private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
+    
     public static void main(String[] args) {
-        Network network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createNetwork();
 
-        Layer inputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 2);
-        NetworkFactory.addFullyConnectedLayer(network, inputLayer);
+        NetworkFactory.addDenseLayer(network,
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 2));
+        NetworkFactory.addDenseLayer(network, 
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10));
+        NetworkFactory.addDenseLayer(network, 
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 1));
 
-        Layer hiddenLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 10);
-        NetworkFactory.addFullyConnectedLayer(network, hiddenLayer);
-
-        Layer outputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 1);
-        NetworkFactory.addFullyConnectedLayer(network, outputLayer);
-
-        network.activation = ActivationFactory.createTanH();
+        NetworkLogic.setLearningRate(network, 0.1f);
+        NetworkLogic.setActivation(network, ActivationFactory.createTanH());
         NetworkLogic.randomizeWeights(network);
 
         List<Sample> samples = new ArrayList<>();
@@ -58,15 +60,13 @@ public class LayeredXorTest {
         NetworkLogic.fit(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
-
-        DecimalFormat format = new DecimalFormat("0.000");
-
+        Layer outputLayer = NetworkUtils.getInputLayer(network);
         for (Sample sample : samples) {
-            inputLayer.states = sample.input;
-            NetworkLogic.propagate(network);
+            NetworkLogic.propagate(network, sample.input);
+            double error = sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0);
             System.out.println(sample.input.getFloatValue(0) + " XOR " + sample.input.getFloatValue(1) + " = "
-                    + format.format(outputLayer.states.getFloatValue(0))
-                    + " (error=" + format.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0)) + ")");
+                    + FORMAT.format(outputLayer.states.getFloatValue(0))
+                    + " (error=" + FORMAT.format(error) + ")");
         }
     }
 

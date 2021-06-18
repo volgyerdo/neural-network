@@ -118,4 +118,14 @@ public class ActivationFactory {
         return activation;
     }
 
+    public static Activation createCopy(Activation original){
+        Activation activation = new Activation();
+        activation.shiftX = original.shiftX;
+        activation.shiftY = original.shiftY;
+        activation.stretchX = original.stretchX;
+        activation.stretchY = original.stretchY;
+        activation.swish = original.swish;
+        activation.slope = original.slope;
+        return activation;
+    }
 }

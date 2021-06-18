@@ -23,6 +23,7 @@ import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.LayerFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
+import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
@@ -34,22 +35,22 @@ import volgyerdo.neural.structure.Sample;
  */
 public class LayeredRandomArrayTest {
 
+    private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
+    
     public static void main(String[] args) {
-        Network network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT);
-        network.learningRate = 0.01f;
+        Network network = NetworkFactory.createNetwork();
 
-        Layer inputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 30);
-        NetworkFactory.addFullyConnectedLayer(network, inputLayer);
+        NetworkFactory.addDenseLayer(network, 
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 30));
+        NetworkFactory.addDenseLayer(network,
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 90));
+        NetworkFactory.addDenseLayer(network,
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 60));
+        NetworkFactory.addDenseLayer(network, 
+                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 2));
 
-        NetworkFactory.addFullyConnectedLayer(network,
-                LayerFactory.createLayer(Tensor.TYPE.FLOAT, 90));
-        NetworkFactory.addFullyConnectedLayer(network,
-                LayerFactory.createLayer(Tensor.TYPE.FLOAT, 60));
-
-        Layer outputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 2);
-        NetworkFactory.addFullyConnectedLayer(network, outputLayer);
-
-        network.activation = ActivationFactory.createSigmoid();
+        NetworkLogic.setLearningRate(network, 0.01f);
+        NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
 
         List<Sample> samples = new ArrayList<>();
@@ -134,20 +135,17 @@ public class LayeredRandomArrayTest {
         NetworkLogic.fit(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
-
-        DecimalFormat format = new DecimalFormat("0.000");
-        
+        Layer outputLayer = NetworkUtils.getInputLayer(network);
         double errorHand = 0;
         double errorReal = 0;
         int n = 0;
         for (Sample sample : samples) {
-            inputLayer.states = sample.input;
-            NetworkLogic.propagate(network);
+            NetworkLogic.propagate(network, sample.input);
             System.out.println("Original: " + sample.target.getFloatValue(0) + " - " + sample.target.getFloatValue(1) + " > "
-                    + format.format(outputLayer.states.getFloatValue(0)) + " - "
-                    + format.format(outputLayer.states.getFloatValue(1))
-                    + " (error=" + format.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-                    + " - " + format.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1)) +")");
+                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
+                    + FORMAT.format(outputLayer.states.getFloatValue(1))
+                    + " (error=" + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
+                    + " - " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1)) +")");
             errorHand += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
             errorReal += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
             n++;
@@ -159,13 +157,12 @@ public class LayeredRandomArrayTest {
         System.out.println();
 
         for (Sample sample : controlSamples) {
-            inputLayer.states = sample.input;
-            NetworkLogic.propagate(network);
+            NetworkLogic.propagate(network, sample.input);
             System.out.println("Control: " + sample.target.getFloatValue(0) + " - " + sample.target.getFloatValue(1) + " > "
-                    + format.format(outputLayer.states.getFloatValue(0)) + " - "
-                    + format.format(outputLayer.states.getFloatValue(1))
-                    + " (error=" + format.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-                    + " - " + format.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1)) +")");
+                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
+                    + FORMAT.format(outputLayer.states.getFloatValue(1))
+                    + " (error=" + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
+                    + " - " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1)) +")");
             errorHand += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
             errorReal += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
             n++;
