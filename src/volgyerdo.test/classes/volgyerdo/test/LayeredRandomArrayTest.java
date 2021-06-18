@@ -135,7 +135,7 @@ public class LayeredRandomArrayTest {
         NetworkLogic.fit(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
-        Layer outputLayer = NetworkUtils.getInputLayer(network);
+        Layer outputLayer = NetworkUtils.getOutputLayer(network);
         double errorHand = 0;
         double errorReal = 0;
         int n = 0;

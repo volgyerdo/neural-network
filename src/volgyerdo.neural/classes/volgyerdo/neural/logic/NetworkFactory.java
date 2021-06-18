@@ -48,12 +48,14 @@ public class NetworkFactory {
     }
 
     public static void addDenseLayer(Network network, DenseLayer layer) {
-        Layer previousLayer = network.layers.get(network.layers.size() - 1);
-        int[] weightsDimensions = new int[previousLayer.states.dimensions.length + layer.states.dimensions.length];
-        System.arraycopy(layer.states.dimensions, 0, weightsDimensions, 0, layer.states.dimensions.length);
-        System.arraycopy(previousLayer.states.dimensions, 0, weightsDimensions, layer.states.dimensions.length, previousLayer.states.dimensions.length);
-        layer.weights = Tensor.create(layer.dataType, weightsDimensions);
-        layer.bias = Tensor.create(layer.dataType, layer.states.dimensions);
+        if (!network.layers.isEmpty()) {
+            Layer previousLayer = network.layers.get(network.layers.size() - 1);
+            int[] weightsDimensions = new int[previousLayer.states.dimensions.length + layer.states.dimensions.length];
+            System.arraycopy(layer.states.dimensions, 0, weightsDimensions, 0, layer.states.dimensions.length);
+            System.arraycopy(previousLayer.states.dimensions, 0, weightsDimensions, layer.states.dimensions.length, previousLayer.states.dimensions.length);
+            layer.weights = Tensor.create(layer.dataType, weightsDimensions);
+            layer.bias = Tensor.create(layer.dataType, layer.states.dimensions);
+        }
         network.layers.add(layer);
     }
 

@@ -72,6 +72,9 @@ public class NetworkUtils {
     }
     
     public static void randomizeWeigths(Tensor weights) {
+        if(weights == null){
+            return;
+        }
         switch (weights.type) {
             case BYTE ->
                 weights.randomize(Byte.MIN_VALUE, Byte.MAX_VALUE);

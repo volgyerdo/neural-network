@@ -60,7 +60,7 @@ public class LayeredXorTest {
         NetworkLogic.fit(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
-        Layer outputLayer = NetworkUtils.getInputLayer(network);
+        Layer outputLayer = NetworkUtils.getOutputLayer(network);
         for (Sample sample : samples) {
             NetworkLogic.propagate(network, sample.input);
             double error = sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0);

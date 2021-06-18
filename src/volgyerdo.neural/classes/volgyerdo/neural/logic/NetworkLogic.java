@@ -93,9 +93,8 @@ public class NetworkLogic {
     public static void backPropagate(Network network, Tensor target) {
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
         Tensor actualOutput = NetworkUtils.converToNormalFloat(outputLayer.states);
-        Tensor error = NetworkUtils.converToNormalFloat(target);
-        NetworkUtils.getOutputLayer(network).states = target;
-        Tensor delta = null;
+        Tensor delta = NetworkUtils.converToNormalFloat(target);
+        delta.substract(actualOutput);
         for (int i = network.layers.size() - 1; i > 0; i--) {
             Layer layer = network.layers.get(i);
             Layer nextLayer = network.layers.get(i - 1);

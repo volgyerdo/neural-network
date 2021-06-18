@@ -29,7 +29,7 @@ import volgyerdo.neural.structure.Sample;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class OneDimensionalNetworkTest {
+public class SimpleNetworkTest {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     
@@ -92,7 +92,7 @@ public class OneDimensionalNetworkTest {
         NetworkLogic.fit(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
-        Layer outputLayer = NetworkUtils.getInputLayer(network);
+        Layer outputLayer = NetworkUtils.getOutputLayer(network);
         for (Sample sample : samples) {
             NetworkLogic.propagate(network, sample.input);
             double error = sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0);
@@ -205,7 +205,7 @@ public class OneDimensionalNetworkTest {
         NetworkLogic.fit(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
-        Layer outputLayer = NetworkUtils.getInputLayer(network);
+        Layer outputLayer = NetworkUtils.getOutputLayer(network);
         double errorHand = 0;
         double errorReal = 0;
         int n = 0;
