@@ -25,7 +25,7 @@ import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.SampleFactory;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.LayeredNetwork;
+import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 
 /**
@@ -35,7 +35,7 @@ import volgyerdo.neural.structure.Sample;
 public class LayeredXorTest {
 
     public static void main(String[] args) {
-        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT);
 
         Layer inputLayer = LayerFactory.createLayer(Tensor.TYPE.FLOAT, 2);
         NetworkFactory.addFullyConnectedLayer(network, inputLayer);

@@ -19,10 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.structure.LayerConnection;
-import volgyerdo.neural.structure.LayeredNetwork;
+import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.ConnectionType;
 import volgyerdo.neural.structure.Sample;
 
 /**
@@ -34,26 +32,13 @@ public class NetworkLogic {
     private NetworkLogic() {
     }
 
-    public static void randomizeWeights(LayeredNetwork network) {
-        for (LayerConnection connection : network.connections) {
-            switch (connection.weights.type) {
-                case BYTE ->
-                    connection.weights.randomize(Byte.MIN_VALUE, Byte.MAX_VALUE);
-                case SHORT ->
-                    connection.weights.randomize(Short.MIN_VALUE, Short.MAX_VALUE);
-                case FLOAT ->
-                    connection.weights.randomize(-1, 1);
-            }
+    public static void randomizeWeights(Network network) {
+        for (Layer layer : network.layers) {
+            LayerLogic.randomize(layer);
         }
     }
 
-    public static void setFixWeights(LayeredNetwork network, float weigth) {
-        for (LayerConnection connection : network.connections) {
-            connection.weights.fill(weigth);
-        }
-    }
-
-    public static void fit(LayeredNetwork network, Collection<Sample> samples, int periods) {
+    public static void fit(Network network, Collection<Sample> samples, int periods) {
         Layer inputLayer = NetworkUtils.getInputLayer(network);
         Sample[] sampleArray = (Sample[]) samples.toArray(new Sample[samples.size()]);
         checkSamples(network, sampleArray);
@@ -66,53 +51,34 @@ public class NetworkLogic {
         }
     }
 
-    private static void checkSamples(LayeredNetwork network, Sample[] samples) {
+    private static void checkSamples(Network network, Sample[] samples) {
         Layer inputLayer = NetworkUtils.getInputLayer(network);
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
         for (Sample sample : samples) {
-            if (!Arrays.equals(sample.input.dimensions, inputLayer.dimensions)) {
+            if (!Arrays.equals(sample.input.dimensions, inputLayer.states.dimensions)) {
                 throw new IllegalArgumentException("Input dimension is wrong.");
             }
-            if (!Objects.equals(sample.input.type, network.dataType)) {
+            if (!Objects.equals(sample.input.type, inputLayer.dataType)) {
                 throw new IllegalArgumentException("Input data type is wrong.");
             }
-            if (!Arrays.equals(sample.target.dimensions, outputLayer.dimensions)) {
+            if (!Arrays.equals(sample.target.dimensions, outputLayer.states.dimensions)) {
                 throw new IllegalArgumentException("Target dimension is wrong.");
             }
-            if (!Objects.equals(sample.target.type, network.dataType)) {
+            if (!Objects.equals(sample.target.type, outputLayer.dataType)) {
                 throw new IllegalArgumentException("Target data type is wrong.");
             }
         }
     }
 
-    public static void propagate(LayeredNetwork network) {
+    public static void propagate(Network network) {
         for (int i = 0; i < network.layers.size() - 1; i++) {
             Layer inputLayer = network.layers.get(i);
             Layer outputLayer = network.layers.get(i + 1);
-            LayerConnection connection = network.connections.get(i);
-
-            Tensor weights = NetworkUtils.converToNormalFloat(connection.weights);
-            Tensor bias = NetworkUtils.converToNormalFloat(connection.bias);
-
-            Tensor instates = NetworkUtils.converToNormalFloat(inputLayer.states);
-            Tensor outstates;
-
-            if (connection.type == ConnectionType.CONVOLUTION) {
-                outstates = instates.convolve(weights);
-            } else {
-                outstates = weights.multiply(instates, inputLayer.dimensions.length);
-
-            }
-
-            outstates.add(bias);
-            outstates.processFloat((x) -> ActivationLogic.activate(x, network.activation));
-
-            inputLayer.states = NetworkUtils.converToNormalFloat(instates);
-            outputLayer.states = NetworkUtils.converToNormalFloat(outstates);
+            LayerLogic.propagate(inputLayer, outputLayer);
         }
     }
 
-    public static void backPropagate(LayeredNetwork network, Tensor target) {
+    public static void backPropagate(Network network, Tensor target) {
         Tensor actualOutput = NetworkUtils.converToNormalFloat(network.layers.get(network.layers.size() - 1).states);
 
         Tensor error = NetworkUtils.converToNormalFloat(target);
@@ -174,7 +140,7 @@ public class NetworkLogic {
         }
     }
 
-    public static void print(LayeredNetwork network) {
+    public static void print(Network network) {
         for (int i = 0; i < network.layers.size() - 1; i++) {
             Layer inputLayer = network.layers.get(i);
             Layer outputLayer = network.layers.get(i + 1);

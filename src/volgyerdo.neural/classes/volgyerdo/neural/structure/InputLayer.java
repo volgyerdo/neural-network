@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 antal.
+ * Copyright 2021 Volgyerdo Nonprofit Kft.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
  */
 package volgyerdo.neural.structure;
 
-import volgyerdo.math.tensor.Tensor;
-
 /**
  *
- * @author antal
+ * @author Volgyerdo Nonprofit Kft.
  */
-public class LayerConnection {
-    public Tensor weights;
-    public ConnectionType type;
-    public Tensor bias;
+public class InputLayer extends Layer{
+    
 }

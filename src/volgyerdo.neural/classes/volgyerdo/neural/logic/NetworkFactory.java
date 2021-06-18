@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConnectionType;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.LayeredNetwork;
+import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.logic.LayerFactory;
 
 /**
@@ -28,9 +28,9 @@ import volgyerdo.neural.logic.LayerFactory;
  */
 public class NetworkFactory {
 
-    public static LayeredNetwork createLayeredNetwork(
+    public static Network createLayeredNetwork(
             Tensor.TYPE dataType) {
-        LayeredNetwork layeredNetwork = new LayeredNetwork();
+        Network layeredNetwork = new Network();
         layeredNetwork.dataType = dataType;
         layeredNetwork.layers = new ArrayList<>();
         layeredNetwork.connections = new ArrayList<>();
@@ -38,12 +38,12 @@ public class NetworkFactory {
         return layeredNetwork;
     }
 
-    public static LayeredNetwork createLayeredNetwork(
+    public static Network createLayeredNetwork(
             Tensor.TYPE dataType,
             int[] dimensions,
             int layerCount,
             ConnectionType connectionType) {
-        LayeredNetwork layeredNetwork = createLayeredNetwork(dataType);
+        Network layeredNetwork = createLayeredNetwork(dataType);
 
         switch (connectionType) {
             case FULL_CONNECTION:
@@ -70,7 +70,7 @@ public class NetworkFactory {
         return layeredNetwork;
     }
 
-    public static void addFullyConnectedLayer(LayeredNetwork network, Layer layer) {
+    public static void addFullyConnectedLayer(Network network, Layer layer) {
         if (network.layers.size() > 0) {
             Layer previousLayer = network.layers.get(network.layers.size() - 1);
             network.connections.add(
@@ -80,7 +80,7 @@ public class NetworkFactory {
         network.layers.add(layer);
     }
 
-    public static void addConvolutionalLayer(LayeredNetwork network, Layer layer, int[] kernelDimensions) {
+    public static void addConvolutionalLayer(Network network, Layer layer, int[] kernelDimensions) {
         if (network.layers.size() > 0) {
             network.connections.add(
                     ConnectionFactory.createConvolutionalConnection(

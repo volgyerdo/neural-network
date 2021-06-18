@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 antal.
+ * Copyright 2021 Volgyerdo Nonprofit Kft.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,18 @@
  */
 package volgyerdo.neural.structure;
 
-import java.util.List;
+import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.logic.NetworkConstants;
 
 /**
  *
- * @author antal
+ * @author Volgyerdo Nonprofit Kft.
  */
-public class LayeredNetwork extends Network{
+public class DenseLayer extends Layer{
     
-    public List<Layer> layers;
-    public List<LayerConnection> connections;
+    public Tensor weights;
+    public Tensor bias;
+    public Activation activation;
+    public float learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
     
 }

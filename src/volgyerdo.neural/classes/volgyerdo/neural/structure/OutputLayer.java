@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 antal.
+ * Copyright 2021 Volgyerdo Nonprofit Kft.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package volgyerdo.neural.structure;
 
 /**
  *
- * @author antal
+ * @author Volgyerdo Nonprofit Kft.
  */
-public abstract class GeneralNetwork extends Network{
+public class OutputLayer extends Layer{
     
 }

@@ -26,7 +26,7 @@ import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
 import volgyerdo.neural.structure.ConnectionType;
 import volgyerdo.neural.structure.Layer;
-import volgyerdo.neural.structure.LayeredNetwork;
+import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 
 /**
@@ -36,7 +36,7 @@ import volgyerdo.neural.structure.Sample;
 public class LayeredSimpleTest {
 
     public static void main(String[] args) {
-        LayeredNetwork network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 4, ConnectionType.FULL_CONNECTION);
+        Network network = NetworkFactory.createLayeredNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 4, ConnectionType.FULL_CONNECTION);
         network.activation = ActivationFactory.createTanH();
         NetworkLogic.randomizeWeights(network);
         
