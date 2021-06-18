@@ -154,7 +154,7 @@ public class NetworkLogic {
             delta = delta.multiply(actualW, network.layers.get(i + 1).states.dimensions.length);
             processedOutput = actualOutput;
             processedOutput.processFloat((x) -> ActivationLogic.deactivate(x, network.activation));
-            delta.hadamardProduct(actualOutput);
+            delta.hadamardProduct(processedOutput);
 
             previousOutput = NetworkUtils.converToNormalFloat(network.layers.get(i - 1).states);
             deltaW = delta.multiply(previousOutput, 0);
