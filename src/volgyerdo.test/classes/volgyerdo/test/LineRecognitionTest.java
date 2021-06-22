@@ -48,7 +48,6 @@ public class LineRecognitionTest {
 
         NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 25));
         NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 50));
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 50));
         NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 5));
 
         NetworkLogic.setLearningRate(network, 0.01f);
@@ -90,37 +89,38 @@ public class LineRecognitionTest {
 
         List<Sample> controlsamples = new ArrayList<>();
 
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(0)), new float[]{1f, 0f, 0f, 0f, 0f}));
 
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(1)), new float[]{0f, 1f, 0f, 0f, 0f}));
 
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(2)), new float[]{0f, 0f, 1f, 0f, 0f}));
 
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(3)), new float[]{0f, 0f, 0f, 1f, 0f}));
 
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
-        samples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
+        controlsamples.add(SampleFactory.createSample(convertTo1D(generateMatrixWithLines(4)), new float[]{0f, 0f, 0f, 0f, 1f}));
 
+        
         NetworkLogic.fit(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
@@ -135,17 +135,18 @@ public class LineRecognitionTest {
                     + ", " + sample.target.getFloatValue(3)
                     + ", " + sample.target.getFloatValue(4)
                     
-                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(1)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(2)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(3)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(4)) + " - "
+                    + " -- " 
+                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + ", "
+                    + FORMAT.format(outputLayer.states.getFloatValue(1)) + ", "
+                    + FORMAT.format(outputLayer.states.getFloatValue(2)) + ", "
+                    + FORMAT.format(outputLayer.states.getFloatValue(3)) + ", "
+                    + FORMAT.format(outputLayer.states.getFloatValue(4)) + ", "
                     
                     + " (error= " + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(2) - outputLayer.states.getFloatValue(2))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(3) - outputLayer.states.getFloatValue(3))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(4) - outputLayer.states.getFloatValue(4)) + ")"
+                    + ", " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1))
+                    + ", " + FORMAT.format(sample.target.getFloatValue(2) - outputLayer.states.getFloatValue(2))
+                    + ", " + FORMAT.format(sample.target.getFloatValue(3) - outputLayer.states.getFloatValue(3))
+                    + ", " + FORMAT.format(sample.target.getFloatValue(4) - outputLayer.states.getFloatValue(4)) + ")"
             );
             errorFirst += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
             errorSecond += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
@@ -158,23 +159,26 @@ public class LineRecognitionTest {
         
         for (Sample sample : controlsamples) {
             NetworkLogic.propagate(network, sample.input);
-            System.out.println("Oirinal: " + sample.target.getFloatValue(0) + ", " + sample.target.getFloatValue(1)
+            System.out.println("Control: " + sample.target.getFloatValue(0) + ", " + sample.target.getFloatValue(1)
                     + ", " + sample.target.getFloatValue(2)
                     + ", " + sample.target.getFloatValue(3)
                     + ", " + sample.target.getFloatValue(4)
                     
-                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(1)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(2)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(3)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(4)) + " - "
+                    + " -- " 
+                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + ", "
+                    + FORMAT.format(outputLayer.states.getFloatValue(1)) + ", "
+                    + FORMAT.format(outputLayer.states.getFloatValue(2)) + ", "
+                    + FORMAT.format(outputLayer.states.getFloatValue(3)) + ", "
+                    + FORMAT.format(outputLayer.states.getFloatValue(4)) + ", "
                     
                     + " (error= " + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(2) - outputLayer.states.getFloatValue(2))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(3) - outputLayer.states.getFloatValue(3))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(4) - outputLayer.states.getFloatValue(4)) + ")"
+                    + ", " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1))
+                    + ", " + FORMAT.format(sample.target.getFloatValue(2) - outputLayer.states.getFloatValue(2))
+                    + ", " + FORMAT.format(sample.target.getFloatValue(3) - outputLayer.states.getFloatValue(3))
+                    + ", " + FORMAT.format(sample.target.getFloatValue(4) - outputLayer.states.getFloatValue(4)) + ")"
             );
+            
+            
             errorFirst += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
             errorSecond += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
             n++;
@@ -183,47 +187,90 @@ public class LineRecognitionTest {
         errorSecond /= n;
         System.out.println("Average error: " + errorFirst + " - " + errorSecond);
         
-        System.out.println("Vizualis teszt: ");
-        Layer testoutputLayer = NetworkUtils.getOutputLayer(network);
-        float[][] testMatrix = generateMatrixWithLines(1);
-        writeMatrixToConsole(testMatrix,5,5);
-        NetworkLogic.propagate(network, convertToTensor(testMatrix));
-        for (int i = 0; i < 4; i++) {
-            System.out.println(i);
-           System.out.println(testoutputLayer.states.getFloatValue(i));
-            
+        Random rand = new Random();
+        for (int j = 0; j < 10; j++) {
+           System.out.println("Vizualis teszt: ");
+            Layer testoutputLayer = NetworkUtils.getOutputLayer(network);
+            float[][] testMatrix = generateMatrixWithLines(rand.nextInt(4));
+            writeMatrixToConsole(testMatrix,5,5);
+            NetworkLogic.propagate(network, convertToTensor(testMatrix));
+            for (int i = 0; i < 4; i++) {
+               System.out.println(i + ":");
+               System.out.println(testoutputLayer.states.getFloatValue(i)*100 + " %"); 
+            } 
         }
-        
-        
-        
-        
-//        //test
-//        float[][] matrix = generateMatrixWithLines(LINE_COUNT);
-//        writeMatrixToConsole(matrix, 5, 5);
+        /*
+        for (int i = 0; i < 10; i++) {
+            float[][] tesztmatrix = generateMatrixWithLines(2);
+            writeMatrixToConsole(tesztmatrix, 5, 5);
+            System.out.println("");
+        }
+            */
     }
 
     public static float[][] generateMatrixWithLines(int linecount) {
         int linelenght = LINE_LENGHT;
-        float[][] matrix = new float[5][5];
 
+        float[][] matrix = new float[5][5];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 matrix[i][j] = 0;
             }
         }
 
+        
+        int[] linedrows = new int[linecount];
+
         Random rand = new Random();
+        for (int i = 0; i < linecount; i++) {
+            linedrows[i] = rand.nextInt(5);
+        }
 
-        for (int i = 0; i < linecount;) {
-
-            int linenumber = rand.nextInt(5);
+        if (linecount == 0) {
+            return matrix;
+        } else if (linecount == 1) {
             int pos = rand.nextInt(3);
-
-            if (matrix[linenumber][pos] == 0 && matrix[linenumber][pos + 1] == 0) {
+            for (int i = 0; i < linelenght; i++) {
+                matrix[linedrows[0]][pos + i] = 1f;
+            }
+        } else if (linecount == 2) {
+            while (linedrows[0] == linedrows[1]) {
+                linedrows[1] = rand.nextInt(5);
+            }
+            for (int i = 0; i < linecount; i++) {
+                int pos = rand.nextInt(3);
                 for (int j = 0; j < linelenght; j++) {
-                    matrix[linenumber][pos + j] = 1f;
+                    matrix[linedrows[i]][pos + j] = 1f;
                 }
-                i++;
+            }
+        } else if (linecount == 3) {
+            while (linedrows[0] == linedrows[1]) {
+                linedrows[1] = rand.nextInt(5);
+            }
+            while (linedrows[2] == linedrows[0] || linedrows[2] == linedrows[1]) {
+                linedrows[2] = rand.nextInt(5);
+            }
+            for (int i = 0; i < linecount; i++) {
+                int pos = rand.nextInt(3);
+                for (int j = 0; j < linelenght; j++) {
+                    matrix[linedrows[i]][pos + j] = 1f;
+                }
+            }
+        } else if (linecount == 4) {
+            while (linedrows[0] == linedrows[1]) {
+                linedrows[1] = rand.nextInt(5);
+            }
+            while (linedrows[2] == linedrows[0] || linedrows[2] == linedrows[1]) {
+                linedrows[2] = rand.nextInt(5);
+            }
+            while (linedrows[3] == linedrows[0] || linedrows[3] == linedrows[1] || linedrows[3] == linedrows[2]) {
+                linedrows[3] = rand.nextInt(5);
+            }
+            for (int i = 0; i < linecount; i++) {
+                int pos = rand.nextInt(3);
+                for (int j = 0; j < linelenght; j++) {
+                    matrix[linedrows[i]][pos + j] = 1f;
+                }
             }
         }
 
@@ -243,7 +290,7 @@ public class LineRecognitionTest {
 
     //csak 5x5
     public static float[] convertTo1D(float[][] matrix) {
-        float[] linematrix = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        float[] linematrix = new float[25];
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -252,9 +299,9 @@ public class LineRecognitionTest {
         }
         return linematrix;
     }
-    
-    public static Tensor convertToTensor(float[][] matrix){
-        Tensor Test = Tensor.create(Tensor.TYPE.FLOAT, matrix.length);
+
+    public static Tensor convertToTensor(float[][] matrix) {
+        Tensor Test = Tensor.create(Tensor.TYPE.FLOAT, 25);
         Test.setFloatArray(convertTo1D(matrix));
         return Test;
     }
