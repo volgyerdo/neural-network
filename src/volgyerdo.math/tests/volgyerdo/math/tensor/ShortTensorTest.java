@@ -801,4 +801,297 @@ public class ShortTensorTest {
         assertEquals("2D-4D multiplication (2,3)", (short) 1, c.getShortValue(2, 3));
     }
 
+    @Test
+    public void testConvolve() {
+        Tensor a, kernel, c;
+
+        a = new ShortTensor(1);
+        a.setShortValue((byte) 5, 0);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ShortTensor(1);
+        kernel.setShortValue((byte) -3, 0);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("0D convolution", (byte) -15, c.getShortValue(0));
+
+        a = new ShortTensor(5);
+        a.setShortValue((byte) 4, 0);
+        a.setShortValue((byte) 2, 1);
+        a.setShortValue((byte) -1, 2);
+        a.setShortValue((byte) 6, 3);
+        a.setShortValue((byte) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ShortTensor(1);
+        kernel.setShortValue((byte) 2, 0);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D convolution - kernel: [1] (1)", (byte) 8, c.getShortValue(0));
+        assertEquals("1D convolution - kernel: [1] (2)", (byte) 4, c.getShortValue(1));
+        assertEquals("1D convolution - kernel: [1] (3)", (byte) -2, c.getShortValue(2));
+        assertEquals("1D convolution - kernel: [1] (4)", (byte) 12, c.getShortValue(3));
+        assertEquals("1D convolution - kernel: [1] (5)", (byte) -18, c.getShortValue(4));
+
+        a = new ShortTensor(5);
+        a.setShortValue((byte) 4, 0);
+        a.setShortValue((byte) 2, 1);
+        a.setShortValue((byte) -1, 2);
+        a.setShortValue((byte) 6, 3);
+        a.setShortValue((byte) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ShortTensor(3);
+        kernel.setShortValue((byte) 0, 0);
+        kernel.setShortValue((byte) -3, 1);
+        kernel.setShortValue((byte) 0, 2);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D convolution - kernel: [3/A] (1)", (byte) -12, c.getShortValue(0));
+        assertEquals("1D convolution - kernel: [3/A] (2)", (byte) -6, c.getShortValue(1));
+        assertEquals("1D convolution - kernel: [3/A] (3)", (byte) 3, c.getShortValue(2));
+        assertEquals("1D convolution - kernel: [3/A] (4)", (byte) -18, c.getShortValue(3));
+        assertEquals("1D convolution - kernel: [3/A] (5)", (byte) 27, c.getShortValue(4));
+
+        a = new ShortTensor(5);
+        a.setShortValue((byte) 4, 0);
+        a.setShortValue((byte) 2, 1);
+        a.setShortValue((byte) -1, 2);
+        a.setShortValue((byte) 6, 3);
+        a.setShortValue((byte) -9, 4);
+
+        System.out.println(a.toString());
+        System.out.println("X\n");
+
+        kernel = new ShortTensor(3);
+        kernel.setShortValue((byte) -1, 0);
+        kernel.setShortValue((byte) 1, 1);
+        kernel.setShortValue((byte) -1, 2);
+
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+
+        assertEquals("1D convolution - kernel: [3/B] (1)", (byte) 2, c.getShortValue(0));
+        assertEquals("1D convolution - kernel: [3/B] (2)", (byte) -1, c.getShortValue(1));
+        assertEquals("1D convolution - kernel: [3/B] (3)", (byte) -9, c.getShortValue(2));
+        assertEquals("1D convolution - kernel: [3/B] (4)", (byte) 16, c.getShortValue(3));
+        assertEquals("1D convolution - kernel: [3/B] (5)", (byte) -15, c.getShortValue(4));
+
+        a = new ShortTensor(5, 5);
+        a.setShortValue((byte) 1, 0, 0);
+        a.setShortValue((byte) -5, 1, 0);
+        a.setShortValue((byte) 1, 2, 0);
+        a.setShortValue((byte) 7, 3, 0);
+        a.setShortValue((byte) 2, 4, 0);
+
+        a.setShortValue((byte) 0, 0, 1);
+        a.setShortValue((byte) 12, 1, 1);
+        a.setShortValue((byte) 0, 2, 1);
+        a.setShortValue((byte) -2, 3, 1);
+        a.setShortValue((byte) 1, 4, 1);
+
+        a.setShortValue((byte) 3, 0, 2);
+        a.setShortValue((byte) 0, 1, 2);
+        a.setShortValue((byte) 1, 2, 2);
+        a.setShortValue((byte) -11, 3, 2);
+        a.setShortValue((byte) 14, 4, 2);
+
+        a.setShortValue((byte) 0, 0, 3);
+        a.setShortValue((byte) -1, 1, 3);
+        a.setShortValue((byte) 0, 2, 3);
+        a.setShortValue((byte) 1, 3, 3);
+        a.setShortValue((byte) 3, 4, 3);
+
+        a.setShortValue((byte) -2, 0, 4);
+        a.setShortValue((byte) 1, 1, 4);
+        a.setShortValue((byte) 3, 2, 4);
+        a.setShortValue((byte) 5, 3, 4);
+        a.setShortValue((byte) -8, 4, 4);
+
+        System.out.println(a.toString());
+        System.out.println("X\n");
+
+        kernel = new ShortTensor(3, 3);
+
+        kernel.setShortValue((byte) -1, 0, 0);
+        kernel.setShortValue((byte) 0, 1, 0);
+        kernel.setShortValue((byte) -1, 2, 0);
+
+        kernel.setShortValue((byte) 0, 0, 1);
+        kernel.setShortValue((byte) 0, 1, 1);
+        kernel.setShortValue((byte) 0, 2, 1);
+
+        kernel.setShortValue((byte) -1, 0, 2);
+        kernel.setShortValue((byte) 0, 1, 2);
+        kernel.setShortValue((byte) -1, 2, 2);
+
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+
+        assertEquals("1D convolution - kernel: [3,3] (1)", (byte) -12, c.getShortValue(0, 0));
+        assertEquals("1D convolution - kernel: [3,3] (2)", (byte) 0, c.getShortValue(1, 0));
+        assertEquals("1D convolution - kernel: [3,3] (3)", (byte) -10, c.getShortValue(2, 0));
+        assertEquals("1D convolution - kernel: [3,3] (4)", (byte) -1, c.getShortValue(3, 0));
+        assertEquals("1D convolution - kernel: [3,3] (5)", (byte) 2, c.getShortValue(4, 0));
+
+        assertEquals("1D convolution - kernel: [3,3] (6)", (byte) 5, c.getShortValue(0, 1));
+        assertEquals("1D convolution - kernel: [3,3] (7)", (byte) -6, c.getShortValue(1, 1));
+        assertEquals("1D convolution - kernel: [3,3] (8)", (byte) 9, c.getShortValue(2, 1));
+        assertEquals("1D convolution - kernel: [3,3] (9)", (byte) -18, c.getShortValue(3, 1));
+        assertEquals("1D convolution - kernel: [3,3] (10)", (byte) 4, c.getShortValue(4, 1));
+
+        assertEquals("1D convolution - kernel: [3,3] (11)", (byte) -11, c.getShortValue(0, 2));
+        assertEquals("1D convolution - kernel: [3,3] (12)", (byte) 0, c.getShortValue(1, 2));
+        assertEquals("1D convolution - kernel: [3,3] (13)", (byte) -10, c.getShortValue(2, 2));
+        assertEquals("1D convolution - kernel: [3,3] (14)", (byte) -4, c.getShortValue(3, 2));
+        assertEquals("1D convolution - kernel: [3,3] (15)", (byte) 1, c.getShortValue(4, 2));
+
+        assertEquals("1D convolution - kernel: [3,3] (16)", (byte) -1, c.getShortValue(0, 3));
+        assertEquals("1D convolution - kernel: [3,3] (17)", (byte) -5, c.getShortValue(1, 3));
+        assertEquals("1D convolution - kernel: [3,3] (18)", (byte) 5, c.getShortValue(2, 3));
+        assertEquals("1D convolution - kernel: [3,3] (19)", (byte) -10, c.getShortValue(3, 3));
+        assertEquals("1D convolution - kernel: [3,3] (20)", (byte) 6, c.getShortValue(4, 3));
+
+        assertEquals("1D convolution - kernel: [3,3] (21)", (byte) 1, c.getShortValue(0, 4));
+        assertEquals("1D convolution - kernel: [3,3] (22)", (byte) 0, c.getShortValue(1, 4));
+        assertEquals("1D convolution - kernel: [3,3] (23)", (byte) 0, c.getShortValue(2, 4));
+        assertEquals("1D convolution - kernel: [3,3] (24)", (byte) -3, c.getShortValue(3, 4));
+        assertEquals("1D convolution - kernel: [3,3] (25)", (byte) -1, c.getShortValue(4, 4));
+
+        a = new ShortTensor(3, 3, 3);
+
+        a.setShortValue((byte) 1, 0, 0, 0);
+        a.setShortValue((byte) 1, 1, 0, 0);
+        a.setShortValue((byte) 1, 2, 0, 0);
+
+        a.setShortValue((byte) 1, 0, 1, 0);
+        a.setShortValue((byte) 1, 1, 1, 0);
+        a.setShortValue((byte) 1, 2, 1, 0);
+
+        a.setShortValue((byte) 1, 0, 2, 0);
+        a.setShortValue((byte) 1, 1, 2, 0);
+        a.setShortValue((byte) 1, 2, 2, 0);
+
+        a.setShortValue((byte) 1, 0, 0, 1);
+        a.setShortValue((byte) 1, 1, 0, 1);
+        a.setShortValue((byte) 1, 2, 0, 1);
+
+        a.setShortValue((byte) 1, 0, 1, 1);
+        a.setShortValue((byte) 1, 1, 1, 1);
+        a.setShortValue((byte) 1, 2, 1, 1);
+
+        a.setShortValue((byte) 1, 0, 2, 1);
+        a.setShortValue((byte) 1, 1, 2, 1);
+        a.setShortValue((byte) 1, 2, 2, 1);
+
+        a.setShortValue((byte) 1, 0, 0, 2);
+        a.setShortValue((byte) 1, 1, 0, 2);
+        a.setShortValue((byte) 1, 2, 0, 2);
+
+        a.setShortValue((byte) 1, 0, 1, 2);
+        a.setShortValue((byte) 1, 1, 1, 2);
+        a.setShortValue((byte) 1, 2, 1, 2);
+
+        a.setShortValue((byte) 1, 0, 2, 2);
+        a.setShortValue((byte) 1, 1, 2, 2);
+        a.setShortValue((byte) 1, 2, 2, 2);
+
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ShortTensor(3, 3, 3);
+
+        kernel.setShortValue((byte) 1, 0, 0, 0);
+        kernel.setShortValue((byte) 1, 1, 0, 0);
+        kernel.setShortValue((byte) 1, 2, 0, 0);
+
+        kernel.setShortValue((byte) 1, 0, 1, 0);
+        kernel.setShortValue((byte) 1, 1, 1, 0);
+        kernel.setShortValue((byte) 1, 2, 1, 0);
+
+        kernel.setShortValue((byte) 1, 0, 2, 0);
+        kernel.setShortValue((byte) 1, 1, 2, 0);
+        kernel.setShortValue((byte) 1, 2, 2, 0);
+
+        kernel.setShortValue((byte) 1, 0, 0, 1);
+        kernel.setShortValue((byte) 1, 1, 0, 1);
+        kernel.setShortValue((byte) 1, 2, 0, 1);
+
+        kernel.setShortValue((byte) 1, 0, 1, 1);
+        kernel.setShortValue((byte) 1, 1, 1, 1);
+        kernel.setShortValue((byte) 1, 2, 1, 1);
+
+        kernel.setShortValue((byte) 1, 0, 2, 1);
+        kernel.setShortValue((byte) 1, 1, 2, 1);
+        kernel.setShortValue((byte) 1, 2, 2, 1);
+
+        kernel.setShortValue((byte) 1, 0, 0, 2);
+        kernel.setShortValue((byte) 1, 1, 0, 2);
+        kernel.setShortValue((byte) 1, 2, 0, 2);
+
+        kernel.setShortValue((byte) 1, 0, 1, 2);
+        kernel.setShortValue((byte) 1, 1, 1, 2);
+        kernel.setShortValue((byte) 1, 2, 1, 2);
+
+        kernel.setShortValue((byte) 1, 0, 2, 2);
+        kernel.setShortValue((byte) 1, 1, 2, 2);
+        kernel.setShortValue((byte) 1, 2, 2, 2);
+
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+
+        assertEquals("1D convolution - kernel: [3,3,3] (1)", (byte) 8, c.getShortValue(0, 0, 0));
+        assertEquals("1D convolution - kernel: [3,3,3] (2)", (byte) 12, c.getShortValue(1, 0, 0));
+        assertEquals("1D convolution - kernel: [3,3,3] (3)", (byte) 8, c.getShortValue(2, 0, 0));
+
+        assertEquals("1D convolution - kernel: [3,3,3] (4)", (byte) 12, c.getShortValue(0, 1, 0));
+        assertEquals("1D convolution - kernel: [3,3,3] (5)", (byte) 18, c.getShortValue(1, 1, 0));
+        assertEquals("1D convolution - kernel: [3,3,3] (6)", (byte) 12, c.getShortValue(2, 1, 0));
+
+        assertEquals("1D convolution - kernel: [3,3,3] (7)", (byte) 8, c.getShortValue(0, 2, 0));
+        assertEquals("1D convolution - kernel: [3,3,3] (8)", (byte) 12, c.getShortValue(1, 2, 0));
+        assertEquals("1D convolution - kernel: [3,3,3] (9)", (byte) 8, c.getShortValue(2, 2, 0));
+
+        assertEquals("1D convolution - kernel: [3,3,3] (10)", (byte) 12, c.getShortValue(0, 0, 1));
+        assertEquals("1D convolution - kernel: [3,3,3] (11)", (byte) 18, c.getShortValue(1, 0, 1));
+        assertEquals("1D convolution - kernel: [3,3,3] (12)", (byte) 12, c.getShortValue(2, 0, 1));
+
+        assertEquals("1D convolution - kernel: [3,3,3] (13)", (byte) 18, c.getShortValue(0, 1, 1));
+        assertEquals("1D convolution - kernel: [3,3,3] (14)", (byte) 27, c.getShortValue(1, 1, 1));
+        assertEquals("1D convolution - kernel: [3,3,3] (15)", (byte) 18, c.getShortValue(2, 1, 1));
+
+        assertEquals("1D convolution - kernel: [3,3,3] (16)", (byte) 12, c.getShortValue(0, 2, 1));
+        assertEquals("1D convolution - kernel: [3,3,3] (17)", (byte) 18, c.getShortValue(1, 2, 1));
+        assertEquals("1D convolution - kernel: [3,3,3] (18)", (byte) 12, c.getShortValue(2, 2, 1));
+
+        assertEquals("1D convolution - kernel: [3,3,3] (19)", (byte) 8, c.getShortValue(0, 0, 2));
+        assertEquals("1D convolution - kernel: [3,3,3] (20)", (byte) 12, c.getShortValue(1, 0, 2));
+        assertEquals("1D convolution - kernel: [3,3,3] (21)", (byte) 8, c.getShortValue(2, 0, 2));
+
+        assertEquals("1D convolution - kernel: [3,3,3] (22)", (byte) 12, c.getShortValue(0, 1, 2));
+        assertEquals("1D convolution - kernel: [3,3,3] (23)", (byte) 18, c.getShortValue(1, 1, 2));
+        assertEquals("1D convolution - kernel: [3,3,3] (24)", (byte) 12, c.getShortValue(2, 1, 2));
+
+        assertEquals("1D convolution - kernel: [3,3,3] (25)", (byte) 8, c.getShortValue(0, 2, 2));
+        assertEquals("1D convolution - kernel: [3,3,3] (26)", (byte) 12, c.getShortValue(1, 2, 2));
+        assertEquals("1D convolution - kernel: [3,3,3] (27)", (byte) 8, c.getShortValue(2, 2, 2));
+
+    }
 }

@@ -651,14 +651,14 @@ public class FloatTensorTest {
         t1.setFloatValue(6, 2, 0);
         t1.setFloatValue(3, 0, 1);
         t1.setFloatValue(2, 1, 1);
-        t1.setFloatValue((float)345.34, 2, 1);
+        t1.setFloatValue((float) 345.34, 2, 1);
         FloatTensor t4 = new FloatTensor(3, 2);
         t4.setFloatValue(2, 0, 0);
         t4.setFloatValue(-3, 1, 0);
         t4.setFloatValue(10, 2, 0);
         t4.setFloatValue(-10, 0, 1);
         t4.setFloatValue(7, 1, 1);
-        t4.setFloatValue((float)-292.12, 2, 1);
+        t4.setFloatValue((float) -292.12, 2, 1);
         t1.hadamardProduct(t4);
         assertEquals("Tensor sum", -68, t1.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
         assertEquals("Tensor sum", 18, t1.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
@@ -667,7 +667,7 @@ public class FloatTensorTest {
         assertEquals("Tensor sum", 14, t1.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
         assertEquals("Tensor sum", -100880.7208, t1.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
     }
-    
+
     @Test
     public void testMultiply() {
         Tensor a, b, c;
@@ -801,6 +801,300 @@ public class FloatTensorTest {
         assertEquals("2D-4D multiplication (0,3)", 4, c.getFloatValue(0, 3), FLOATING_VALUE_ACCURACY);
         assertEquals("2D-4D multiplication (1,3)", 1, c.getFloatValue(1, 3), FLOATING_VALUE_ACCURACY);
         assertEquals("2D-4D multiplication (2,3)", 1, c.getFloatValue(2, 3), FLOATING_VALUE_ACCURACY);
+    }
+
+    @Test
+    public void testConvolve() {
+        Tensor a, kernel, c;
+
+        a = new FloatTensor(1);
+        a.setFloatValue((byte) 5, 0);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new FloatTensor(1);
+        kernel.setFloatValue((byte) -3, 0);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("0D convolution", (byte) -15, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+
+        a = new FloatTensor(5);
+        a.setFloatValue((byte) 4, 0);
+        a.setFloatValue((byte) 2, 1);
+        a.setFloatValue((byte) -1, 2);
+        a.setFloatValue((byte) 6, 3);
+        a.setFloatValue((byte) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new FloatTensor(1);
+        kernel.setFloatValue((byte) 2, 0);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D convolution - kernel: [1] (1)", (byte) 8, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [1] (2)", (byte) 4, c.getFloatValue(1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [1] (3)", (byte) -2, c.getFloatValue(2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [1] (4)", (byte) 12, c.getFloatValue(3), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [1] (5)", (byte) -18, c.getFloatValue(4), FLOATING_VALUE_ACCURACY);
+
+        a = new FloatTensor(5);
+        a.setFloatValue((byte) 4, 0);
+        a.setFloatValue((byte) 2, 1);
+        a.setFloatValue((byte) -1, 2);
+        a.setFloatValue((byte) 6, 3);
+        a.setFloatValue((byte) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new FloatTensor(3);
+        kernel.setFloatValue((byte) 0, 0);
+        kernel.setFloatValue((byte) -3, 1);
+        kernel.setFloatValue((byte) 0, 2);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D convolution - kernel: [3/A] (1)", (byte) -12, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3/A] (2)", (byte) -6, c.getFloatValue(1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3/A] (3)", (byte) 3, c.getFloatValue(2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3/A] (4)", (byte) -18, c.getFloatValue(3), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3/A] (5)", (byte) 27, c.getFloatValue(4), FLOATING_VALUE_ACCURACY);
+
+        a = new FloatTensor(5);
+        a.setFloatValue((byte) 4, 0);
+        a.setFloatValue((byte) 2, 1);
+        a.setFloatValue((byte) -1, 2);
+        a.setFloatValue((byte) 6, 3);
+        a.setFloatValue((byte) -9, 4);
+
+        System.out.println(a.toString());
+        System.out.println("X\n");
+
+        kernel = new FloatTensor(3);
+        kernel.setFloatValue((byte) -1, 0);
+        kernel.setFloatValue((byte) 1, 1);
+        kernel.setFloatValue((byte) -1, 2);
+
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+
+        assertEquals("1D convolution - kernel: [3/B] (1)", (byte) 2, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3/B] (2)", (byte) -1, c.getFloatValue(1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3/B] (3)", (byte) -9, c.getFloatValue(2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3/B] (4)", (byte) 16, c.getFloatValue(3), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3/B] (5)", (byte) -15, c.getFloatValue(4), FLOATING_VALUE_ACCURACY);
+
+        a = new FloatTensor(5, 5);
+        a.setFloatValue((byte) 1, 0, 0);
+        a.setFloatValue((byte) -5, 1, 0);
+        a.setFloatValue((byte) 1, 2, 0);
+        a.setFloatValue((byte) 7, 3, 0);
+        a.setFloatValue((byte) 2, 4, 0);
+
+        a.setFloatValue((byte) 0, 0, 1);
+        a.setFloatValue((byte) 12, 1, 1);
+        a.setFloatValue((byte) 0, 2, 1);
+        a.setFloatValue((byte) -2, 3, 1);
+        a.setFloatValue((byte) 1, 4, 1);
+
+        a.setFloatValue((byte) 3, 0, 2);
+        a.setFloatValue((byte) 0, 1, 2);
+        a.setFloatValue((byte) 1, 2, 2);
+        a.setFloatValue((byte) -11, 3, 2);
+        a.setFloatValue((byte) 14, 4, 2);
+
+        a.setFloatValue((byte) 0, 0, 3);
+        a.setFloatValue((byte) -1, 1, 3);
+        a.setFloatValue((byte) 0, 2, 3);
+        a.setFloatValue((byte) 1, 3, 3);
+        a.setFloatValue((byte) 3, 4, 3);
+
+        a.setFloatValue((byte) -2, 0, 4);
+        a.setFloatValue((byte) 1, 1, 4);
+        a.setFloatValue((byte) 3, 2, 4);
+        a.setFloatValue((byte) 5, 3, 4);
+        a.setFloatValue((byte) -8, 4, 4);
+
+        System.out.println(a.toString());
+        System.out.println("X\n");
+
+        kernel = new FloatTensor(3, 3);
+
+        kernel.setFloatValue((byte) -1, 0, 0);
+        kernel.setFloatValue((byte) 0, 1, 0);
+        kernel.setFloatValue((byte) -1, 2, 0);
+
+        kernel.setFloatValue((byte) 0, 0, 1);
+        kernel.setFloatValue((byte) 0, 1, 1);
+        kernel.setFloatValue((byte) 0, 2, 1);
+
+        kernel.setFloatValue((byte) -1, 0, 2);
+        kernel.setFloatValue((byte) 0, 1, 2);
+        kernel.setFloatValue((byte) -1, 2, 2);
+
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+
+        assertEquals("1D convolution - kernel: [3,3] (1)", (byte) -12, c.getFloatValue(0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (2)", (byte) 0, c.getFloatValue(1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (3)", (byte) -10, c.getFloatValue(2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (4)", (byte) -1, c.getFloatValue(3, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (5)", (byte) 2, c.getFloatValue(4, 0), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3] (6)", (byte) 5, c.getFloatValue(0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (7)", (byte) -6, c.getFloatValue(1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (8)", (byte) 9, c.getFloatValue(2, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (9)", (byte) -18, c.getFloatValue(3, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (10)", (byte) 4, c.getFloatValue(4, 1), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3] (11)", (byte) -11, c.getFloatValue(0, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (12)", (byte) 0, c.getFloatValue(1, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (13)", (byte) -10, c.getFloatValue(2, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (14)", (byte) -4, c.getFloatValue(3, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (15)", (byte) 1, c.getFloatValue(4, 2), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3] (16)", (byte) -1, c.getFloatValue(0, 3), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (17)", (byte) -5, c.getFloatValue(1, 3), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (18)", (byte) 5, c.getFloatValue(2, 3), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (19)", (byte) -10, c.getFloatValue(3, 3), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (20)", (byte) 6, c.getFloatValue(4, 3), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3] (21)", (byte) 1, c.getFloatValue(0, 4), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (22)", (byte) 0, c.getFloatValue(1, 4), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (23)", (byte) 0, c.getFloatValue(2, 4), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (24)", (byte) -3, c.getFloatValue(3, 4), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3] (25)", (byte) -1, c.getFloatValue(4, 4), FLOATING_VALUE_ACCURACY);
+
+        a = new FloatTensor(3, 3, 3);
+
+        a.setFloatValue((byte) 1, 0, 0, 0);
+        a.setFloatValue((byte) 1, 1, 0, 0);
+        a.setFloatValue((byte) 1, 2, 0, 0);
+
+        a.setFloatValue((byte) 1, 0, 1, 0);
+        a.setFloatValue((byte) 1, 1, 1, 0);
+        a.setFloatValue((byte) 1, 2, 1, 0);
+
+        a.setFloatValue((byte) 1, 0, 2, 0);
+        a.setFloatValue((byte) 1, 1, 2, 0);
+        a.setFloatValue((byte) 1, 2, 2, 0);
+
+        a.setFloatValue((byte) 1, 0, 0, 1);
+        a.setFloatValue((byte) 1, 1, 0, 1);
+        a.setFloatValue((byte) 1, 2, 0, 1);
+
+        a.setFloatValue((byte) 1, 0, 1, 1);
+        a.setFloatValue((byte) 1, 1, 1, 1);
+        a.setFloatValue((byte) 1, 2, 1, 1);
+
+        a.setFloatValue((byte) 1, 0, 2, 1);
+        a.setFloatValue((byte) 1, 1, 2, 1);
+        a.setFloatValue((byte) 1, 2, 2, 1);
+
+        a.setFloatValue((byte) 1, 0, 0, 2);
+        a.setFloatValue((byte) 1, 1, 0, 2);
+        a.setFloatValue((byte) 1, 2, 0, 2);
+
+        a.setFloatValue((byte) 1, 0, 1, 2);
+        a.setFloatValue((byte) 1, 1, 1, 2);
+        a.setFloatValue((byte) 1, 2, 1, 2);
+
+        a.setFloatValue((byte) 1, 0, 2, 2);
+        a.setFloatValue((byte) 1, 1, 2, 2);
+        a.setFloatValue((byte) 1, 2, 2, 2);
+
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new FloatTensor(3, 3, 3);
+
+        kernel.setFloatValue((byte) 1, 0, 0, 0);
+        kernel.setFloatValue((byte) 1, 1, 0, 0);
+        kernel.setFloatValue((byte) 1, 2, 0, 0);
+
+        kernel.setFloatValue((byte) 1, 0, 1, 0);
+        kernel.setFloatValue((byte) 1, 1, 1, 0);
+        kernel.setFloatValue((byte) 1, 2, 1, 0);
+
+        kernel.setFloatValue((byte) 1, 0, 2, 0);
+        kernel.setFloatValue((byte) 1, 1, 2, 0);
+        kernel.setFloatValue((byte) 1, 2, 2, 0);
+
+        kernel.setFloatValue((byte) 1, 0, 0, 1);
+        kernel.setFloatValue((byte) 1, 1, 0, 1);
+        kernel.setFloatValue((byte) 1, 2, 0, 1);
+
+        kernel.setFloatValue((byte) 1, 0, 1, 1);
+        kernel.setFloatValue((byte) 1, 1, 1, 1);
+        kernel.setFloatValue((byte) 1, 2, 1, 1);
+
+        kernel.setFloatValue((byte) 1, 0, 2, 1);
+        kernel.setFloatValue((byte) 1, 1, 2, 1);
+        kernel.setFloatValue((byte) 1, 2, 2, 1);
+
+        kernel.setFloatValue((byte) 1, 0, 0, 2);
+        kernel.setFloatValue((byte) 1, 1, 0, 2);
+        kernel.setFloatValue((byte) 1, 2, 0, 2);
+
+        kernel.setFloatValue((byte) 1, 0, 1, 2);
+        kernel.setFloatValue((byte) 1, 1, 1, 2);
+        kernel.setFloatValue((byte) 1, 2, 1, 2);
+
+        kernel.setFloatValue((byte) 1, 0, 2, 2);
+        kernel.setFloatValue((byte) 1, 1, 2, 2);
+        kernel.setFloatValue((byte) 1, 2, 2, 2);
+
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolve(kernel);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+
+        assertEquals("1D convolution - kernel: [3,3,3] (1)", (byte) 8, c.getFloatValue(0, 0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (2)", (byte) 12, c.getFloatValue(1, 0, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (3)", (byte) 8, c.getFloatValue(2, 0, 0), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3,3] (4)", (byte) 12, c.getFloatValue(0, 1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (5)", (byte) 18, c.getFloatValue(1, 1, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (6)", (byte) 12, c.getFloatValue(2, 1, 0), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3,3] (7)", (byte) 8, c.getFloatValue(0, 2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (8)", (byte) 12, c.getFloatValue(1, 2, 0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (9)", (byte) 8, c.getFloatValue(2, 2, 0), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3,3] (10)", (byte) 12, c.getFloatValue(0, 0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (11)", (byte) 18, c.getFloatValue(1, 0, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (12)", (byte) 12, c.getFloatValue(2, 0, 1), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3,3] (13)", (byte) 18, c.getFloatValue(0, 1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (14)", (byte) 27, c.getFloatValue(1, 1, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (15)", (byte) 18, c.getFloatValue(2, 1, 1), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3,3] (16)", (byte) 12, c.getFloatValue(0, 2, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (17)", (byte) 18, c.getFloatValue(1, 2, 1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (18)", (byte) 12, c.getFloatValue(2, 2, 1), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3,3] (19)", (byte) 8, c.getFloatValue(0, 0, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (20)", (byte) 12, c.getFloatValue(1, 0, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (21)", (byte) 8, c.getFloatValue(2, 0, 2), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3,3] (22)", (byte) 12, c.getFloatValue(0, 1, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (23)", (byte) 18, c.getFloatValue(1, 1, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (24)", (byte) 12, c.getFloatValue(2, 1, 2), FLOATING_VALUE_ACCURACY);
+
+        assertEquals("1D convolution - kernel: [3,3,3] (25)", (byte) 8, c.getFloatValue(0, 2, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (26)", (byte) 12, c.getFloatValue(1, 2, 2), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D convolution - kernel: [3,3,3] (27)", (byte) 8, c.getFloatValue(2, 2, 2), FLOATING_VALUE_ACCURACY);
+
     }
 
 }

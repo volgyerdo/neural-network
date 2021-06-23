@@ -402,18 +402,18 @@ class ShortTensor extends Tensor {
 
     @Override
     protected void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d) {
-        if (k < dimensions.length - 1) {
+        if (k < dimensions.length) {
             for (int i = 0; i < dimensions[k]; i++) {
                 d[k] = i;
                 convolveRecursive(kernel, result, k + 1, d);
             }
         } else {
-            result.setShortValue(convolutionSum(kernel, d, 0, new int[dimensions.length]), d);
+            result.setShortValue(convolutionSum(kernel, d, 0, new int[kernel.dimensions.length]), d);
         }
     }
 
     private short convolutionSum(Tensor kernel, int[] d, int k, int[] e) {
-        if (k < dimensions.length - 1) {
+        if (k < kernel.dimensions.length) {
             short s = 0;
             for (int i = 0; i < kernel.dimensions[k]; i++) {
                 e[k] = i;
