@@ -16,6 +16,7 @@
 package volgyerdo.neural.logic;
 
 import java.security.InvalidParameterException;
+import java.util.Random;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
@@ -70,9 +71,9 @@ public class NetworkUtils {
         }
         return convertedInput.convertTo(type);
     }
-    
+
     public static void randomizeWeigths(Tensor weights) {
-        if(weights == null){
+        if (weights == null) {
             return;
         }
         switch (weights.type) {
@@ -83,6 +84,15 @@ public class NetworkUtils {
             case FLOAT ->
                 weights.randomize(-1, 1);
         }
+    }
+
+    public static int[] randomizeCoordinates(int[] bounds) {
+        Random rand = new Random();
+        int[] randomArray = new int[bounds.length];
+        for (int i = 0; i < bounds.length; i++) {
+            randomArray[i] = rand.nextInt(bounds[i]);
+        }
+        return randomArray;
     }
 
     private NetworkUtils() {

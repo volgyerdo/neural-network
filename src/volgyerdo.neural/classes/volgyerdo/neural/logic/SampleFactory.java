@@ -24,6 +24,13 @@ import volgyerdo.neural.structure.Sample;
  */
 public class SampleFactory {
     
+    public static Sample createSample(Tensor input, Tensor target){
+        Sample sample = new Sample();
+        sample.input = input;
+        sample.target = target;
+        return sample;
+    }
+  
     public static Sample createSample(byte[] input, byte[] target){
         Sample sample = new Sample();
         sample.input = Tensor.create(Tensor.TYPE.BYTE, input.length);

@@ -261,12 +261,16 @@ public abstract class Tensor {
 
     @Override
     public String toString() {
+        return toString(false);
+    }
+    
+    public String toString(boolean newLine) {
         StringBuilder sb = new StringBuilder();
-        toStringRecursive(sb, 0, new int[dimensions.length]);
+        toStringRecursive(sb, 0, new int[dimensions.length], newLine);
         return sb.toString();
     }
 
-    public abstract void toStringRecursive(StringBuilder sb, int n, int[] indices);
+    public abstract void toStringRecursive(StringBuilder sb, int n, int[] indices, boolean newLine);
 
     public interface ByteProcessor {
 

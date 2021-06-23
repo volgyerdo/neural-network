@@ -349,13 +349,15 @@ class ObjectTensor extends Tensor {
     }
 
     @Override
-    public void toStringRecursive(StringBuilder sb, int n, int[] indices) {
+    public void toStringRecursive(StringBuilder sb, int n, int[] indices, boolean newLine) {
         if (n < indices.length) {
             for (int i = 0; i < dimensions[n]; i++) {
                 indices[n] = i;
-                toStringRecursive(sb, n + 1, indices);
+                toStringRecursive(sb, n + 1, indices, newLine);
             }
-            sb.append("\n");
+            if(newLine){
+                sb.append("\n");
+            }
         } else {
             sb.append("[").append(String.valueOf(getObjectValue(indices))).append("]");
         }
