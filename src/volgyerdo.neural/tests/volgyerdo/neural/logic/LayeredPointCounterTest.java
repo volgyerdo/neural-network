@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.test;
+package volgyerdo.neural.logic;
 
-import volgyerdo.neural.logic.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import static org.junit.Assert.assertTrue;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
+import org.junit.Test;
 
 /**
  *
@@ -37,10 +38,13 @@ public class LayeredPointCounterTest {
     private static final int MATRIX_SIZE = 5;
     private static final int HIDDEN_LAYER_SIZE = 5;
     private static final int MAX_POINT_COUNT = 5;
-    private static final int TRAINING_SAMPLE_COUNT = 500;
-    private static final int CONTROL_SAMPLE_COUNT = 500;
+    private static final int TRAINING_SAMPLE_COUNT = 700;
+    private static final int CONTROL_SAMPLE_COUNT = 700;
+    private static final double MAX_AVERAGE_ERROR = 0.15;
+    private static final double MIN_AVERAGE_MATCH = 0.85;
 
-    public static void main(String[] args) {
+    @Test
+    public void layeredPointCounterTest() {
         Network network = NetworkFactory.createNetwork();
 
         NetworkFactory.addDenseLayer(network,
@@ -56,7 +60,7 @@ public class LayeredPointCounterTest {
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MAX_POINT_COUNT + 1));
 
-        NetworkLogic.setLearningRate(network, 0.01f);
+        NetworkLogic.setLearningRate(network, 0.008f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
 
@@ -95,7 +99,7 @@ public class LayeredPointCounterTest {
         System.out.println("Average error: " + FORMAT.format(averageError));
         System.out.println("Average match: " + FORMAT.format(matches/(double)trainingSamples.size()) + "\n");
 
-        NetworkLogic.fit(network, trainingSamples, 100000);
+        NetworkLogic.fit(network, trainingSamples, 120000);
 
         System.out.println("\nAfter training:\n");
         averageError = 0;
@@ -162,15 +166,18 @@ public class LayeredPointCounterTest {
         double averageMatch = matches/(double)trainingSamples.size();
         System.out.println("Average error: " + FORMAT.format(averageError));
         System.out.println("Average match: " + FORMAT.format(averageMatch) + "\n");
+        
+        assertTrue("Point counter test average error (" + averageError + ")", MAX_AVERAGE_ERROR > averageError);
+        assertTrue("Point counter test average match (" + averageMatch + ")", MIN_AVERAGE_MATCH < averageMatch);
     }
 
-    private static void generateSamples(Collection<Sample> samples, int count) {
+    private void generateSamples(Collection<Sample> samples, int count) {
         for (int i = 0; i < count; i++) {
             samples.add(createPointedSample());
         }
     }
 
-    private static Sample createPointedSample() {
+    private Sample createPointedSample() {
         int pointCount = RANDOM_INT.nextInt(MAX_POINT_COUNT + 1);
         Tensor input = createPointedTensor(pointCount, MATRIX_SIZE, MATRIX_SIZE);
         Tensor target = Tensor.create(Tensor.TYPE.FLOAT, MAX_POINT_COUNT + 1);
@@ -178,7 +185,7 @@ public class LayeredPointCounterTest {
         return SampleFactory.createSample(input, target);
     }
 
-    private static Tensor createPointedTensor(int pointCount, int... dimensions) {
+    private Tensor createPointedTensor(int pointCount, int... dimensions) {
         Tensor tensor = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
         for (int i = 0; i < pointCount; i++) {
             int[] coordinates;
