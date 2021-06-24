@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import volgyerdo.math.tensor.Tensor;
+import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
@@ -37,8 +38,8 @@ public class LayeredPointCounterTest {
     private static final int MATRIX_SIZE = 5;
     private static final int HIDDEN_LAYER_SIZE = 5;
     private static final int MAX_POINT_COUNT = 5;
-    private static final int TRAINING_SAMPLE_COUNT = 500;
-    private static final int CONTROL_SAMPLE_COUNT = 500;
+    private static final int TRAINING_SAMPLE_COUNT = 700;
+    private static final int CONTROL_SAMPLE_COUNT = 700;
 
     public static void main(String[] args) {
         Network network = NetworkFactory.createNetwork();
@@ -56,13 +57,13 @@ public class LayeredPointCounterTest {
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MAX_POINT_COUNT + 1));
 
-        NetworkLogic.setLearningRate(network, 0.01f);
+        NetworkLogic.setLearningRate(network, 0.008f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
 
         List<Sample> trainingSamples = new ArrayList<>();
         generateSamples(trainingSamples, TRAINING_SAMPLE_COUNT);
-        
+
         System.out.println("\nBefore training:\n");
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
         float averageError = 0;
@@ -74,7 +75,7 @@ public class LayeredPointCounterTest {
             float resultValue = 0;
             int resultIndex = 0;
             for (int i = 0; i < MAX_POINT_COUNT + 1; i++) {
-                if(resultValue < outputLayer.states.getFloatValue(i)){
+                if (resultValue < outputLayer.states.getFloatValue(i)) {
                     resultValue = outputLayer.states.getFloatValue(i);
                     resultIndex = i;
                 }
@@ -85,7 +86,7 @@ public class LayeredPointCounterTest {
                 }
                 System.out.print(FORMAT.format(errors[i]));
             }
-            if(Float.compare(sample.target.getFloatValue(resultIndex), 1) == 0){
+            if (Float.compare(sample.target.getFloatValue(resultIndex), 1) == 0) {
                 System.out.print(" > OK");
                 matches++;
             }
@@ -93,9 +94,9 @@ public class LayeredPointCounterTest {
         }
         averageError /= trainingSamples.size() * (MAX_POINT_COUNT + 1);
         System.out.println("Average error: " + FORMAT.format(averageError));
-        System.out.println("Average match: " + FORMAT.format(matches/(double)trainingSamples.size()) + "\n");
+        System.out.println("Average match: " + FORMAT.format(matches / (double) trainingSamples.size()) + "\n");
 
-        NetworkLogic.fit(network, trainingSamples, 100000);
+        NetworkLogic.fit(network, trainingSamples, 120000);
 
         System.out.println("\nAfter training:\n");
         averageError = 0;
@@ -107,7 +108,7 @@ public class LayeredPointCounterTest {
             float resultValue = 0;
             int resultIndex = 0;
             for (int i = 0; i < MAX_POINT_COUNT + 1; i++) {
-                if(resultValue < outputLayer.states.getFloatValue(i)){
+                if (resultValue < outputLayer.states.getFloatValue(i)) {
                     resultValue = outputLayer.states.getFloatValue(i);
                     resultIndex = i;
                 }
@@ -118,7 +119,7 @@ public class LayeredPointCounterTest {
                 }
                 System.out.print(FORMAT.format(errors[i]));
             }
-            if(Float.compare(sample.target.getFloatValue(resultIndex), 1) == 0){
+            if (Float.compare(sample.target.getFloatValue(resultIndex), 1) == 0) {
                 System.out.print(" > OK");
                 matches++;
             }
@@ -126,11 +127,11 @@ public class LayeredPointCounterTest {
         }
         averageError /= trainingSamples.size() * (MAX_POINT_COUNT + 1);
         System.out.println("Average error: " + FORMAT.format(averageError));
-        System.out.println("Average match: " + FORMAT.format(matches/(double)trainingSamples.size()) + "\n");
+        System.out.println("Average match: " + FORMAT.format(matches / (double) trainingSamples.size()) + "\n");
 
         List<Sample> controlSamples = new ArrayList<>();
         generateSamples(controlSamples, CONTROL_SAMPLE_COUNT);
-        
+
         System.out.println("\nControl:\n");
         averageError = 0;
         matches = 0;
@@ -141,7 +142,7 @@ public class LayeredPointCounterTest {
             float resultValue = 0;
             int resultIndex = 0;
             for (int i = 0; i < MAX_POINT_COUNT + 1; i++) {
-                if(resultValue < outputLayer.states.getFloatValue(i)){
+                if (resultValue < outputLayer.states.getFloatValue(i)) {
                     resultValue = outputLayer.states.getFloatValue(i);
                     resultIndex = i;
                 }
@@ -152,16 +153,23 @@ public class LayeredPointCounterTest {
                 }
                 System.out.print(FORMAT.format(errors[i]));
             }
-            if(Float.compare(sample.target.getFloatValue(resultIndex), 1) == 0){
+            if (Float.compare(sample.target.getFloatValue(resultIndex), 1) == 0) {
                 System.out.print(" > OK");
                 matches++;
             }
             System.out.println();
         }
         averageError /= controlSamples.size() * (MAX_POINT_COUNT + 1);
-        double averageMatch = matches/(double)trainingSamples.size();
+        double averageMatch = matches / (double) trainingSamples.size();
         System.out.println("Average error: " + FORMAT.format(averageError));
         System.out.println("Average match: " + FORMAT.format(averageMatch) + "\n");
+
+        for (Layer layer : network.layers) {
+            DenseLayer denseLayer = (DenseLayer) layer;
+            if (denseLayer.weights != null) {
+                System.out.println("\n" + denseLayer.weights.toString(true));
+            }
+        }
     }
 
     private static void generateSamples(Collection<Sample> samples, int count) {
