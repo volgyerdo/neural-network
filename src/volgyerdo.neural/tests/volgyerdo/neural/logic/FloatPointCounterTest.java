@@ -31,7 +31,7 @@ import org.junit.Test;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class LayeredPointCounterTest {
+public class FloatPointCounterTest {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     private static final Random RANDOM_INT = new Random();

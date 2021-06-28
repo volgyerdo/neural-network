@@ -63,7 +63,7 @@ public class LayerLogic {
         outputStates.add(bias);
         outputStates.processFloat((x) -> ActivationLogic.activate(x, layer.activation));
 
-        layer.states = NetworkUtils.converToNormalFloat(outputStates);
+        layer.states = NetworkUtils.convertToType(outputStates, layer.states.type);
     }
 
     private static void propagate(Layer prevLayer, ConvolutionalLayer layer) {
@@ -78,7 +78,7 @@ public class LayerLogic {
         outputStates.add(bias);
         outputStates.processFloat((x) -> ActivationLogic.activate(x, layer.activation));
 
-        layer.states = NetworkUtils.converToNormalFloat(outputStates);
+        layer.states = NetworkUtils.convertToType(outputStates, layer.states.type);
     }
 
     public static Tensor backPropagate(Layer layer, Layer nextLayer, Tensor delta) {
