@@ -170,11 +170,6 @@ public class LineRecognitionTest {
 
         //Live teszt
         guessNumber(network, 10);
-
-        for (int i = 0; i < 5;i++) {
-            System.out.println(generateTensorWithLines(i).toString(true));
-            System.out.println();
-        }
     }
     
     private static void generateSamples(Collection<Sample> samples, int count){
