@@ -27,7 +27,6 @@ public class LayerFactory {
     
     public static DenseLayer createDenseLayer(Tensor.TYPE dataType, int... dimensions){
         DenseLayer layer = new DenseLayer();
-        layer.dataType = dataType;
         layer.states = Tensor.create(dataType, dimensions);
         layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
         layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
@@ -36,7 +35,6 @@ public class LayerFactory {
     
     public static ConvolutionalLayer createConvolutionalLayer(Tensor.TYPE dataType, int... dimensions){
         ConvolutionalLayer layer = new ConvolutionalLayer();
-        layer.dataType = dataType;
         layer.states = Tensor.create(dataType, dimensions);
         layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
         layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;

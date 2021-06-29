@@ -40,6 +40,14 @@ public abstract class Tensor {
         }
     }
 
+    public Tensor createSimilar(int... dimensions) {
+        return create(type, dimensions);
+    }
+
+    public Tensor createSimilar() {
+        return create(type, dimensions);
+    }
+    
     public static Tensor create(TYPE type, int... dimensions) {
         return switch (type) {
             case BYTE ->
@@ -54,14 +62,8 @@ public abstract class Tensor {
                 null;
         };
     }
-
-    public Tensor createSimilar(int... dimensions) {
-        return create(type, dimensions);
-    }
-
-    public Tensor createSimilar() {
-        return create(type, dimensions);
-    }
+    
+    abstract public void set(Tensor tensor);
 
     abstract public Tensor convertTo(TYPE type);
 
@@ -169,27 +171,35 @@ public abstract class Tensor {
             outputDimensionLength = 1;
         }
         Tensor target = Tensor.create(type, outputDimensions);
+        int[] rd1 = new int[dimensions.length];
+        int[] rd2 = new int[multiplierDimensions.length];
         multiplyRecursive(multiplier, target, commonDimensions, multiplierDimensions,
-                outputDimensions, depth, 0, new int[outputDimensionLength]);
+                outputDimensions, depth, 0, new int[outputDimensionLength], rd1, rd2);
         return target;
     }
 
     private void multiplyRecursive(Tensor multiplier, Tensor target,
-            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int n, int[] indices) {
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions,
+            int depth, int n, int[] indices, int[] rd1, int[] rd2) {
         if (n < indices.length) {
             for (int i = 0; i < outputDimensions[n]; i++) {
                 indices[n] = i;
                 multiplyRecursive(multiplier, target, commonDimensions,
-                        multiplierDimensions, outputDimensions, depth, n + 1, indices);
+                        multiplierDimensions, outputDimensions, depth, n + 1, indices, rd1, rd2);
             }
         } else {
+            System.arraycopy(indices, 0, rd1, 0, dimensions.length - depth);
+            System.arraycopy(indices, dimensions.length - depth, rd2, depth, multiplier.dimensions.length - depth);
             sumProductRecursive(multiplier, target, commonDimensions,
-                    multiplierDimensions, outputDimensions, depth, indices, 0, new int[commonDimensions.length]);
+                    multiplierDimensions, outputDimensions, depth, indices, 
+                    0, new int[commonDimensions.length], 
+                    rd1, rd2);
         }
     }
 
     protected abstract void sumProductRecursive(Tensor multiplier, Tensor target,
-            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices);
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, 
+            int depth, int[] pos, int n, int[] indices, int[] rd1, int[] rd2);
 
     public Tensor convolve(Tensor kernel) {
         checkNull(kernel);
@@ -202,7 +212,6 @@ public abstract class Tensor {
     protected abstract void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d);
 
     protected final int index(int... indices) {
-        checkDimensionCount(indices);
         if (indices.length == 0) {
             return indices[0];
         }

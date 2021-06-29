@@ -16,6 +16,7 @@
 package volgyerdo.neural.logic;
 
 import volgyerdo.neural.structure.Activation;
+import volgyerdo.math.fast.FastMath;
 
 /**
  *
@@ -29,23 +30,23 @@ public class ActivationLogic {
     // f(x) = [(1 + (x + shiftX) * stretchX * swish)) / (1 + exp(-(x + shiftX) * stretchX)) 
     //        + slope * (x + shiftX) * stretchX] * stretchY + shiftY
     public static float activate(float x, Activation parameters) {
-        x = (x + parameters.shiftX) * parameters.stretchX;
-        x = (1 + parameters.swish * x) / (1 + (float) Math.exp(-x)) + parameters.slope * x;
-        x = x * parameters.stretchY + parameters.shiftY;
-        return x;
+        double y = (x + parameters.shiftX) * parameters.stretchX;
+        y = (1. + parameters.swish * y) / (1. + FastMath.exp(-y)) + parameters.slope * y;
+        y = y * parameters.stretchY + parameters.shiftY;
+        return (float)y;
     }
 
     // Derivative of activate()
     public static float deactivate(float x, Activation parameters) {
-        float transX = (float) Math.exp(parameters.stretchX * (x + parameters.shiftX));
-        float stretchSlope = parameters.stretchX * parameters.slope;
-        return (parameters.stretchX * parameters.stretchY
+        double transX = FastMath.exp(parameters.stretchX * (x + parameters.shiftX));
+        double stretchSlope = parameters.stretchX * parameters.slope;
+        return (float)((parameters.stretchX * parameters.stretchY
                 * transX * ((parameters.swish - parameters.slope) * transX
                 + parameters.stretchX * parameters.swish * x
-                + (parameters.shiftX * parameters.stretchX + 1) * parameters.swish + 1))
-                / (float) Math.pow((stretchSlope * x
-                        + parameters.shiftX * stretchSlope + 1)
-                        * transX + 1, 2.);
+                + (parameters.shiftX * parameters.stretchX + 1.) * parameters.swish + 1.))
+                / FastMath.pow2((stretchSlope * x
+                        + parameters.shiftX * stretchSlope + 1.)
+                        * transX + 1.));
     }
 
 }

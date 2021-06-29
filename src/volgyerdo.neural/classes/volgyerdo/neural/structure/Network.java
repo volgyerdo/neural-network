@@ -16,6 +16,7 @@
 package volgyerdo.neural.structure;
 
 import java.util.List;
+import volgyerdo.math.tensor.Tensor;
 
 /**
  *
@@ -23,6 +24,7 @@ import java.util.List;
  */
 public class Network{
     
+    public Tensor.TYPE dataType;
     public List<Layer> layers;
     
 }

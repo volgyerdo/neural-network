@@ -31,7 +31,7 @@ import org.junit.Test;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class FloatPointCounterTest {
+public class PointCounterTest {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     private static final Random RANDOM_INT = new Random();
@@ -41,11 +41,11 @@ public class FloatPointCounterTest {
     private static final int TRAINING_SAMPLE_COUNT = 700;
     private static final int CONTROL_SAMPLE_COUNT = 700;
     private static final double MAX_AVERAGE_ERROR = 0.15;
-    private static final double MIN_AVERAGE_MATCH = 0.85;
+    private static final double MIN_AVERAGE_MATCH = 0.8;
 
     @Test
     public void layeredPointCounterTest() {
-        Network network = NetworkFactory.createNetwork();
+        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
 
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MATRIX_SIZE, MATRIX_SIZE));

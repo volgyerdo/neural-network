@@ -43,35 +43,6 @@ public class NetworkUtils {
         return network.layers.get(network.layers.size() - 1);
     }
 
-    static Tensor converToNormalFloat(Tensor input) {
-        Tensor output = input.convertTo(Tensor.TYPE.FLOAT);
-        switch (input.type) {
-            case BYTE:
-                output.divide(Byte.MAX_VALUE);
-                break;
-            case SHORT:
-                output.divide(Short.MAX_VALUE);
-                break;
-        }
-        return output;
-    }
-
-    static Tensor convertToType(Tensor input, Tensor.TYPE type) {
-        if (input.type != Tensor.TYPE.FLOAT) {
-            throw new InvalidParameterException("Non-float input Tensor");
-        }
-        Tensor convertedInput = input.copy();
-        switch (type) {
-            case BYTE:
-                convertedInput.multiply(Byte.MAX_VALUE);
-                break;
-            case SHORT:
-                convertedInput.multiply(Short.MAX_VALUE);
-                break;
-        }
-        return convertedInput.convertTo(type);
-    }
-
     public static void randomizeWeigths(Tensor weights) {
         if (weights == null) {
             return;

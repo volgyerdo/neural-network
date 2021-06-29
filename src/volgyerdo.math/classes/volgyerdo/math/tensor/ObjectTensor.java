@@ -17,7 +17,6 @@ package volgyerdo.math.tensor;
 
 import java.util.Arrays;
 import volgyerdo.math.ArrayUtils;
-import volgyerdo.math.PrimitiveUtils;
 
 /**
  *
@@ -66,6 +65,11 @@ class ObjectTensor extends Tensor {
         } catch (CloneNotSupportedException ex) {
             return null;
         }
+    }
+
+    @Override
+    public void set(Tensor tensor) {
+        throw new RuntimeException("Object tensor cannot be set.");
     }
 
     @Override
@@ -148,7 +152,7 @@ class ObjectTensor extends Tensor {
         }
         System.arraycopy(values, 0, this.values, 0, values.length);
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -332,8 +336,9 @@ class ObjectTensor extends Tensor {
 
     @Override
     protected void sumProductRecursive(Tensor multiplier, Tensor target,
-            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices) {
-
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions,
+            int depth, int[] pos, int n, int[] indices, int[] rd1, int[] rd2) {
+        throw new RuntimeException("Object tensor doesn't have sumProductRecursive function.");
     }
 
     @Override
@@ -355,7 +360,7 @@ class ObjectTensor extends Tensor {
                 indices[n] = i;
                 toStringRecursive(sb, n + 1, indices, newLine);
             }
-            if(newLine){
+            if (newLine) {
                 sb.append("\n");
             }
         } else {

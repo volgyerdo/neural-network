@@ -29,7 +29,7 @@ import volgyerdo.neural.structure.Sample;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class FloatSimpleNetworkTest {
+public class SimpleNetworkTest {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     
@@ -68,9 +68,9 @@ public class FloatSimpleNetworkTest {
 
     @Test
     public void layeredXorTest() {
-        double maximumError = 0.005;
+        double maximumError = 0.01;
         
-        Network network = NetworkFactory.createNetwork();
+        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
         
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 2));
@@ -108,7 +108,7 @@ public class FloatSimpleNetworkTest {
         double maximumTrainError = 0.08;
         double maximumControlError = 0.2;
         
-        Network network = NetworkFactory.createNetwork();
+        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
 
         NetworkFactory.addDenseLayer(network, 
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 30));

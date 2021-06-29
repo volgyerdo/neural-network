@@ -38,7 +38,7 @@ public class LayeredRandomArrayTest {
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     
     public static void main(String[] args) {
-        Network network = NetworkFactory.createNetwork();
+        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
 
         NetworkFactory.addDenseLayer(network, 
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 30));

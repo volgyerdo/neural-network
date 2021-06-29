@@ -52,33 +52,25 @@ public class LayerLogic {
     }
 
     private static void propagate(Layer prevLayer, DenseLayer layer) {
-        Tensor weights = NetworkUtils.converToNormalFloat(layer.weights);
-        Tensor bias = NetworkUtils.converToNormalFloat(layer.bias);
+        Tensor weights = layer.weights.copy();
 
-        Tensor inputStates = NetworkUtils.converToNormalFloat(prevLayer.states);
-        Tensor outputStates;
+        Tensor outputStates = weights.multiply(prevLayer.states, prevLayer.states.dimensions.length);
 
-        outputStates = weights.multiply(inputStates, prevLayer.states.dimensions.length);
-
-        outputStates.add(bias);
+        outputStates.add(layer.bias);
         outputStates.processFloat((x) -> ActivationLogic.activate(x, layer.activation));
 
-        layer.states = NetworkUtils.convertToType(outputStates, layer.states.type);
+        layer.states = outputStates;
     }
 
     private static void propagate(Layer prevLayer, ConvolutionalLayer layer) {
-        Tensor kernel = NetworkUtils.converToNormalFloat(layer.kernel);
-        Tensor bias = NetworkUtils.converToNormalFloat(layer.bias);
+        Tensor kernel = layer.kernel.copy();
 
-        Tensor inputStates = NetworkUtils.converToNormalFloat(prevLayer.states);
-        Tensor outputStates;
+        Tensor outputStates = kernel.convolve(prevLayer.states);
 
-        outputStates = kernel.convolve(inputStates);
-
-        outputStates.add(bias);
+        outputStates.add(layer.bias);
         outputStates.processFloat((x) -> ActivationLogic.activate(x, layer.activation));
 
-        layer.states = NetworkUtils.convertToType(outputStates, layer.states.type);
+        layer.states = outputStates;
     }
 
     public static Tensor backPropagate(Layer layer, Layer nextLayer, Tensor delta) {
@@ -91,28 +83,19 @@ public class LayerLogic {
     }
 
     private static Tensor backPropagate(DenseLayer layer, Layer nextLayer, Tensor delta) {
-        Tensor actualOutput = NetworkUtils.converToNormalFloat(layer.states);
+        layer.states.processFloat((x) -> ActivationLogic.deactivate(x, layer.activation));
+        delta.hadamardProduct(layer.states);
 
-        Tensor processedOutput = actualOutput;
-        processedOutput.processFloat((x) -> ActivationLogic.deactivate(x, layer.activation));
-        delta.hadamardProduct(processedOutput);
-
-        Tensor nextOutput = NetworkUtils.converToNormalFloat(nextLayer.states);
-        Tensor deltaW = delta.multiply(nextOutput, 0);
+        Tensor deltaW = delta.multiply(nextLayer.states, 0);
         deltaW.multiply(layer.learningRate);
 
-        Tensor actualW = NetworkUtils.converToNormalFloat(layer.weights);
-        actualW.add(deltaW);
-        layer.weights
-                = NetworkUtils.convertToType(actualW, layer.weights.type);
+        layer.weights.add(deltaW);
 
-        Tensor newBias = NetworkUtils.converToNormalFloat(layer.bias);
         Tensor deltaBias = delta.copy();
         deltaBias.multiply(layer.learningRate);
-        newBias.add(deltaBias);
-        layer.bias = NetworkUtils.convertToType(newBias, layer.bias.type);
+        layer.bias.add(deltaBias);
   
-        return delta.multiply(actualW, layer.states.dimensions.length);
+        return delta.multiply(layer.weights, layer.states.dimensions.length);
     }
 
     private static Tensor backPropagate(ConvolutionalLayer layer, Layer nextLayer, Tensor delta) {

@@ -75,6 +75,15 @@ class ShortTensor extends Tensor {
         }
         return objectTensor;
     }
+    
+    @Override
+    public void set(Tensor tensor){
+        checkNull(tensor);
+        checkClass(tensor);
+        checkDimensionCount(tensor.dimensions);
+        checkDimensions(tensor);
+        System.arraycopy(((ByteTensor)tensor).values, 0, values, 0, values.length);
+    }
 
     @Override
     public void setFloatValue(float value, int... indices) {
@@ -381,22 +390,19 @@ class ShortTensor extends Tensor {
 
     @Override
     protected void sumProductRecursive(Tensor multiplier, Tensor target,
-            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, int depth, int[] pos, int n, int[] indices) {
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions,
+            int depth, int[] pos, int n, int[] indices, int[] rd1, int[] rd2) {
         if (n < commonDimensions.length) {
             for (int i = 0; i < commonDimensions[n]; i++) {
                 indices[n] = i;
                 sumProductRecursive(multiplier, target, commonDimensions,
-                        multiplierDimensions, outputDimensions, depth, pos, n + 1, indices);
+                        multiplierDimensions, outputDimensions, depth, pos, n + 1, indices, rd1, rd2);
             }
         } else {
-            int[] rd1 = new int[dimensions.length];
-            System.arraycopy(pos, 0, rd1, 0, dimensions.length - depth);
             System.arraycopy(indices, 0, rd1, dimensions.length - depth, depth);
-            int[] rd2 = new int[multiplierDimensions.length];
             System.arraycopy(indices, 0, rd2, 0, depth);
-            System.arraycopy(pos, dimensions.length - depth, rd2, depth, multiplier.dimensions.length - depth);
-            float value = target.getShortValue(pos);
-            target.setShortValue(PrimitiveUtils.toShort(value + getShortValue(rd1) * multiplier.getShortValue(rd2)), pos);
+            target.setShortValue(PrimitiveUtils.toShort(target.getShortValue(pos) 
+                    + getShortValue(rd1) * multiplier.getShortValue(rd2)), pos);
         }
     }
 

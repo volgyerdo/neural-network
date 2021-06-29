@@ -47,7 +47,7 @@ public class LineRecognitionTest {
 
     public static void main(String[] args) {
 
-        Network network = NetworkFactory.createNetwork();
+        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
         System.out.println("Start...");
 
         NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 25));

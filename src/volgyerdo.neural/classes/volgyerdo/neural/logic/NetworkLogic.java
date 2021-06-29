@@ -69,13 +69,13 @@ public class NetworkLogic {
             if (!Arrays.equals(sample.input.dimensions, inputLayer.states.dimensions)) {
                 throw new IllegalArgumentException("Input dimension is wrong.");
             }
-            if (!Objects.equals(sample.input.type, inputLayer.dataType)) {
+            if (!Objects.equals(sample.input.type, network.dataType)) {
                 throw new IllegalArgumentException("Input data type is wrong.");
             }
             if (!Arrays.equals(sample.target.dimensions, outputLayer.states.dimensions)) {
                 throw new IllegalArgumentException("Target dimension is wrong.");
             }
-            if (!Objects.equals(sample.target.type, outputLayer.dataType)) {
+            if (!Objects.equals(sample.target.type, network.dataType)) {
                 throw new IllegalArgumentException("Target data type is wrong.");
             }
         }
@@ -92,8 +92,8 @@ public class NetworkLogic {
 
     public static void backPropagate(Network network, Tensor target) {
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
-        Tensor actualOutput = NetworkUtils.converToNormalFloat(outputLayer.states);
-        Tensor delta = NetworkUtils.converToNormalFloat(target);
+        Tensor actualOutput = outputLayer.states.copy();
+        Tensor delta = target.copy();
         delta.substract(actualOutput);
         for (int i = network.layers.size() - 1; i > 0; i--) {
             Layer layer = network.layers.get(i);

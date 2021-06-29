@@ -42,7 +42,7 @@ public class LayeredPointCounterTest {
     private static final int CONTROL_SAMPLE_COUNT = 700;
 
     public static void main(String[] args) {
-        Network network = NetworkFactory.createNetwork();
+        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
 
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MATRIX_SIZE, MATRIX_SIZE));
