@@ -71,9 +71,9 @@ public class NetworkFactory {
         return network;
     }
 
-    public static void addConvolutionalLayer(Network network, ConvolutionalLayer layer, int[] kernelDimensions) {
+    public static void addConvolutionalLayer(Network network, ConvolutionalLayer layer, int... kernelDimensions) {
         layer.kernel = Tensor.create(network.dataType, kernelDimensions);
-        layer.bias = Tensor.create(network.dataType, layer.states.dimensions);
+        layer.bias = Tensor.create(network.dataType, 1);
         network.layers.add(layer);
     }
 

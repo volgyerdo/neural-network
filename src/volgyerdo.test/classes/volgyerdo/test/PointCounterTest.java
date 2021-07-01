@@ -31,7 +31,7 @@ import volgyerdo.neural.structure.Sample;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class LayeredPointCounterTest {
+public class PointCounterTest {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     private static final Random RANDOM_INT = new Random();

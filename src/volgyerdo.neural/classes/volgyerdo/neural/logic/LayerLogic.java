@@ -40,7 +40,7 @@ public class LayerLogic {
     }
 
     private static void randomize(ConvolutionalLayer layer) {
-        NetworkUtils.randomizeWeigths(layer.bias);
+        NetworkUtils.randomizeWeigths(layer.kernel);
     }
 
     public static void propagate(Layer prevLayer, Layer layer) {
@@ -65,9 +65,9 @@ public class LayerLogic {
     private static void propagate(Layer prevLayer, ConvolutionalLayer layer) {
         Tensor kernel = layer.kernel.copy();
 
-        Tensor outputStates = kernel.convolve(prevLayer.states);
-
-        outputStates.add(layer.bias);
+        Tensor outputStates = prevLayer.states.convolve(kernel);
+        outputStates = outputStates.convolve(layer.bias);
+        
         outputStates.processFloat((x) -> ActivationLogic.activate(x, layer.activation));
 
         layer.states = outputStates;
@@ -99,7 +99,19 @@ public class LayerLogic {
     }
 
     private static Tensor backPropagate(ConvolutionalLayer layer, Layer nextLayer, Tensor delta) {
-        return null;
+        layer.states.processFloat((x) -> ActivationLogic.deactivate(x, layer.activation));
+        delta.hadamardProduct(layer.states);
+
+        Tensor deltaKernel = nextLayer.states.convolve(delta);
+        deltaKernel.multiply(layer.learningRate);
+
+        layer.kernel.add(deltaKernel);
+
+        Tensor deltaBias = delta.sum();
+        deltaBias.multiply(layer.learningRate);
+        layer.bias.add(deltaBias);
+  
+        return delta.multiply(layer.kernel, layer.states.dimensions.length);
     }
 
     public static void setLearningRate(Layer layer, float learningRate){
