@@ -23,6 +23,7 @@ import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Sample;
+import volgyerdo.neural.structure.TestResults;
 
 /**
  *
@@ -100,6 +101,45 @@ public class NetworkLogic {
             Layer nextLayer = network.layers.get(i - 1);
             delta = LayerLogic.backPropagate(layer, nextLayer, delta);
         }
+    }
+    
+    public static TestResults test(Network network, Collection<Sample> samples, int periods){
+        long startTime = System.nanoTime();
+        TestResults results = new TestResults();
+        int collectionSize = samples.size();
+        Layer outputLayer = NetworkUtils.getOutputLayer(network);
+        int outputLayerSize = outputLayer.states.dimensions.length; //? 
+        float error[] = new float[outputLayerSize*collectionSize];
+        int averageError = 0;
+        Tensor errorTensor = Tensor.create(Tensor.TYPE.FLOAT, outputLayerSize); //típus!
+        
+        int i=0;
+        float maxError = 0;
+        float minError = 0;
+        
+        for (Sample sample: samples){
+            propagate(network, sample.input);
+            for (int j = 0; j < outputLayerSize; j++) {
+                error[i] = Math.abs(sample.target.getFloatValue(j) - outputLayer.states.getFloatValue(j));
+                
+                errorTensor.setFloatValue(error[i], j);
+                results.errorTensor = errorTensor;
+                
+                if(error[i] > maxError) { maxError = error[i]; }
+                if(error[i] < minError){ minError = error[i]; }
+                averageError += error[i];
+                i++;
+            }            
+        }
+        results.avgError = (averageError /= samples.size());
+        results.minError = minError;
+        results.maxError = maxError;
+        
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        results.runTime = duration / 1000000; //divide by 1000000 to get milliseconds.
+                
+        return results;
     }
 
 }
