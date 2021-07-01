@@ -33,7 +33,7 @@ import volgyerdo.neural.structure.Sample;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class LayeredRandomArrayTest {
+public class RandomArrayTest {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     

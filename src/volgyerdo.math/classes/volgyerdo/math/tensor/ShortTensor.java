@@ -322,6 +322,44 @@ class ShortTensor extends Tensor {
             values[i] = PrimitiveUtils.toShort((float) values[i] / x);
         }
     }
+    
+    @Override
+    public Tensor sum() {
+        long sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+        Tensor result = Tensor.create(type, 1);
+        result.setShortValue(PrimitiveUtils.toShort(sum), 0);
+        return result;
+    }
+    
+    @Override
+    public byte byteSum() {
+        long sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+        return PrimitiveUtils.toByte(sum);
+    }
+
+    @Override
+    public short shortSum() {
+        long sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+        return PrimitiveUtils.toShort(sum);
+    }
+
+    @Override
+    public float floatSum() {
+        long sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+        return sum;
+    }
 
     @Override
     public void processByte(ByteProcessor processor) {

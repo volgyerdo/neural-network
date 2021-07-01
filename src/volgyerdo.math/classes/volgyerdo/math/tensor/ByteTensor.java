@@ -75,14 +75,14 @@ class ByteTensor extends Tensor {
         }
         return objectTensor;
     }
-    
+
     @Override
-    public void set(Tensor tensor){
+    public void set(Tensor tensor) {
         checkNull(tensor);
         checkClass(tensor);
         checkDimensionCount(tensor.dimensions);
         checkDimensions(tensor);
-        System.arraycopy(((ByteTensor)tensor).values, 0, values, 0, values.length);
+        System.arraycopy(((ByteTensor) tensor).values, 0, values, 0, values.length);
     }
 
     @Override
@@ -332,6 +332,44 @@ class ByteTensor extends Tensor {
     }
 
     @Override
+    public Tensor sum() {
+        long sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+        Tensor result = Tensor.create(type, 1);
+        result.setByteValue(PrimitiveUtils.toByte(sum), 0);
+        return result;
+    }
+    
+    @Override
+    public byte byteSum() {
+        long sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+        return PrimitiveUtils.toByte(sum);
+    }
+
+    @Override
+    public short shortSum() {
+        long sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+        return PrimitiveUtils.toShort(sum);
+    }
+
+    @Override
+    public float floatSum() {
+        long sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+        return sum;
+    }
+
+    @Override
     public void processByte(ByteProcessor processor) {
         for (int i = 0; i < values.length; i++) {
             values[i] = processor.process(values[i]);
@@ -398,7 +436,7 @@ class ByteTensor extends Tensor {
 
     @Override
     protected void sumProductRecursive(Tensor multiplier, Tensor target,
-            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, 
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions,
             int depth, int[] pos, int n, int[] indices, int[] rd1, int[] rd2) {
         if (n < commonDimensions.length) {
             for (int i = 0; i < commonDimensions[n]; i++) {
@@ -460,7 +498,7 @@ class ByteTensor extends Tensor {
                 indices[n] = i;
                 toStringRecursive(sb, n + 1, indices, newLine);
             }
-            if(newLine){
+            if (newLine) {
                 sb.append("\n");
             }
         } else {

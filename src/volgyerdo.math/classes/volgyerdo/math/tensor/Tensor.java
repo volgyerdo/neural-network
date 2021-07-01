@@ -130,6 +130,14 @@ public abstract class Tensor {
     public abstract void divide(short scaler);
 
     public abstract void divide(float scaler);
+    
+    public abstract Tensor sum();
+    
+    public abstract byte byteSum();
+    
+    public abstract short shortSum();
+    
+    public abstract float floatSum();
 
     public abstract void processByte(ByteProcessor processor);
 

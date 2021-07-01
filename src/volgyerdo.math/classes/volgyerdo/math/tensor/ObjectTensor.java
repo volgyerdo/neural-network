@@ -276,6 +276,26 @@ class ObjectTensor extends Tensor {
     public void divide(float x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
+    
+    @Override
+    public Tensor sum() {
+        throw new RuntimeException("Object tensor doesn't have sum function.");
+    }
+    
+    @Override
+    public byte byteSum() {
+        throw new RuntimeException("Object tensor doesn't have byteSum function.");
+    }
+
+    @Override
+    public short shortSum() {
+        throw new RuntimeException("Object tensor doesn't have shortSum function.");
+    }
+
+    @Override
+    public float floatSum() {
+        throw new RuntimeException("Object tensor doesn't have floatSum function.");
+    }
 
     @Override
     public void processByte(ByteProcessor processor) {
@@ -367,5 +387,6 @@ class ObjectTensor extends Tensor {
             sb.append("[").append(String.valueOf(getObjectValue(indices))).append("]");
         }
     }
+
 
 }
