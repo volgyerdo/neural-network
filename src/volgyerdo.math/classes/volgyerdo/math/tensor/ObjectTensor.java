@@ -296,6 +296,51 @@ class ObjectTensor extends Tensor {
     public float floatSum() {
         throw new RuntimeException("Object tensor doesn't have floatSum function.");
     }
+    
+    @Override
+    public byte byteMin(){
+        throw new RuntimeException("Object tensor doesn't have byteMin function.");
+    }
+    
+    @Override
+    public short shortMin(){
+        throw new RuntimeException("Object tensor doesn't have shortMin function.");
+    }
+    
+    @Override
+    public float floatMin(){
+        throw new RuntimeException("Object tensor doesn't have floatMin function.");
+    }
+    
+    @Override
+    public byte byteMax(){
+        throw new RuntimeException("Object tensor doesn't have byteMax function.");
+    }
+    
+    @Override
+    public short shortMax(){
+        throw new RuntimeException("Object tensor doesn't have shortMax function.");
+    }
+    
+    @Override
+    public float floatMax(){
+        throw new RuntimeException("Object tensor doesn't have floatMax function.");
+    }
+    
+    @Override
+    public byte byteAverage(){
+        throw new RuntimeException("Object tensor doesn't have byteAverage function.");
+    }
+    
+    @Override
+    public short shortAverage(){
+        throw new RuntimeException("Object tensor doesn't have shortAverage function.");
+    }
+    
+    @Override
+    public float floatAverage(){
+        throw new RuntimeException("Object tensor doesn't have floatAverage function.");
+    }
 
     @Override
     public void processByte(ByteProcessor processor) {
@@ -364,6 +409,11 @@ class ObjectTensor extends Tensor {
     @Override
     protected void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d) {
         throw new RuntimeException("Object tensor doesn't have convolution function.");
+    }
+    
+    @Override
+    protected void convolvePartialRecursive(Tensor kernel, Tensor result, int k, int[] kd, int[] d){
+        throw new RuntimeException("Object tensor doesn't have a partial convolution function.");
     }
 
     @Override

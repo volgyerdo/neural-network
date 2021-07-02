@@ -36,7 +36,7 @@ public class PointCounterTest {
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     private static final Random RANDOM_INT = new Random();
     private static final int MATRIX_SIZE = 5;
-    private static final int HIDDEN_LAYER_SIZE = 5;
+    private static final int HIDDEN_LAYER_SIZE = 8;
     private static final int MAX_POINT_COUNT = 5;
     private static final int TRAINING_SAMPLE_COUNT = 700;
     private static final int CONTROL_SAMPLE_COUNT = 700;
@@ -56,11 +56,9 @@ public class PointCounterTest {
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
-        NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MAX_POINT_COUNT + 1));
 
-        NetworkLogic.setLearningRate(network, 0.008f);
+        NetworkLogic.setLearningRate(network, 0.01f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
 
@@ -99,7 +97,7 @@ public class PointCounterTest {
         System.out.println("Average error: " + FORMAT.format(averageError));
         System.out.println("Average match: " + FORMAT.format(matches/(double)trainingSamples.size()) + "\n");
 
-        NetworkLogic.fit(network, trainingSamples, 120000);
+        NetworkLogic.fit(network, trainingSamples, 100000);
 
         System.out.println("\nAfter training:\n");
         averageError = 0;

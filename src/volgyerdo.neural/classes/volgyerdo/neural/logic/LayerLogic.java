@@ -102,7 +102,7 @@ public class LayerLogic {
         layer.states.processFloat((x) -> ActivationLogic.deactivate(x, layer.activation));
         delta.hadamardProduct(layer.states);
 
-        Tensor deltaKernel = nextLayer.states.convolve(delta);
+        Tensor deltaKernel = nextLayer.states.convolvePartial(delta, layer.kernel.dimensions);
         deltaKernel.multiply(layer.learningRate);
 
         layer.kernel.add(deltaKernel);
@@ -111,7 +111,7 @@ public class LayerLogic {
         deltaBias.multiply(layer.learningRate);
         layer.bias.add(deltaBias);
   
-        return delta.multiply(layer.kernel, layer.states.dimensions.length);
+        return delta.convolve(layer.kernel);
     }
 
     public static void setLearningRate(Layer layer, float learningRate){

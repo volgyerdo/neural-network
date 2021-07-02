@@ -138,6 +138,24 @@ public abstract class Tensor {
     public abstract short shortSum();
     
     public abstract float floatSum();
+    
+    public abstract byte byteMin();
+    
+    public abstract short shortMin();
+    
+    public abstract float floatMin();
+    
+    public abstract byte byteMax();
+    
+    public abstract short shortMax();
+    
+    public abstract float floatMax();
+    
+    public abstract byte byteAverage();
+    
+    public abstract short shortAverage();
+    
+    public abstract float floatAverage();
 
     public abstract void processByte(ByteProcessor processor);
 
@@ -218,6 +236,16 @@ public abstract class Tensor {
     }
 
     protected abstract void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d);
+    
+    public Tensor convolvePartial(Tensor kernel, int... outputDimensions) {
+        checkNull(kernel);
+        checkClass(kernel);
+        Tensor result = Tensor.create(type, outputDimensions);
+        convolvePartialRecursive(kernel, result, 0, new int[outputDimensions.length], new int[dimensions.length]);
+        return result;
+    }
+
+    protected abstract void convolvePartialRecursive(Tensor kernel, Tensor result, int k, int[] kd, int[] d);
 
     protected final int index(int... indices) {
         if (indices.length == 0) {

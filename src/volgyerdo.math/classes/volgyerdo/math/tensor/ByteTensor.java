@@ -344,29 +344,99 @@ class ByteTensor extends Tensor {
     
     @Override
     public byte byteSum() {
-        long sum = 0;
-        for (int i = 0; i < values.length; i++) {
-            sum += values[i];
-        }
-        return PrimitiveUtils.toByte(sum);
+        return PrimitiveUtils.toByte(longSum());
     }
 
     @Override
     public short shortSum() {
-        long sum = 0;
-        for (int i = 0; i < values.length; i++) {
-            sum += values[i];
-        }
-        return PrimitiveUtils.toShort(sum);
+        return PrimitiveUtils.toShort(longSum());
     }
 
     @Override
     public float floatSum() {
+        return longSum();
+    }
+    
+    private long longSum() {
         long sum = 0;
         for (int i = 0; i < values.length; i++) {
             sum += values[i];
         }
         return sum;
+    }
+
+    @Override
+    public byte byteMin() {
+        return PrimitiveUtils.toByte(longMin());
+    }
+
+    @Override
+    public short shortMin() {
+        return PrimitiveUtils.toShort(longMin());
+    }
+
+    @Override
+    public float floatMin() {
+        return longMin();
+    }
+
+    private long longMin() {
+        long min = Long.MAX_VALUE;
+        for (int i = 0; i < values.length; i++) {
+            if (min > values[i]) {
+                min = values[i];
+            }
+        }
+        return min;
+    }
+
+    @Override
+    public byte byteMax() {
+        return PrimitiveUtils.toByte(longMax());
+    }
+
+    @Override
+    public short shortMax() {
+        return PrimitiveUtils.toShort(longMax());
+    }
+
+    @Override
+    public float floatMax() {
+        return longMax();
+    }
+
+    private long longMax() {
+        long max = Long.MIN_VALUE;
+        for (int i = 0; i < values.length; i++) {
+            if (max < values[i]) {
+                max = values[i];
+            }
+        }
+        return max;
+    }
+
+    @Override
+    public byte byteAverage() {
+        return PrimitiveUtils.toByte(longAverage());
+    }
+
+    @Override
+    public short shortAverage() {
+        return PrimitiveUtils.toShort(longAverage());
+    }
+
+    @Override
+    public float floatAverage() {
+        return PrimitiveUtils.toFloat(longAverage());
+    }
+
+    private long longAverage() {
+        long average = 0;
+        for (int i = 0; i < values.length; i++) {
+            average += values[i];
+        }
+        average /= values.length;
+        return average;
     }
 
     @Override
@@ -460,13 +530,14 @@ class ByteTensor extends Tensor {
                 convolveRecursive(kernel, result, k + 1, d);
             }
         } else {
-            result.setByteValue(convolutionSum(kernel, d, 0, new int[kernel.dimensions.length]), d);
+            result.setByteValue(
+                    PrimitiveUtils.toByte(convolutionSum(kernel, d, 0, new int[kernel.dimensions.length])), d);
         }
     }
 
-    private byte convolutionSum(Tensor kernel, int[] d, int k, int[] e) {
+    private long convolutionSum(Tensor kernel, int[] d, int k, int[] e) {
         if (k < kernel.dimensions.length) {
-            byte s = 0;
+            long s = 0;
             for (int i = 0; i < kernel.dimensions[k]; i++) {
                 e[k] = i;
                 s += convolutionSum(kernel, d, k + 1, e);
@@ -480,7 +551,41 @@ class ByteTensor extends Tensor {
                     return 0;
                 }
             }
-            return PrimitiveUtils.toByte(getByteValue(rd) * kernel.getByteValue(e));
+            return getByteValue(rd) * kernel.getByteValue(e);
+        }
+    }
+    
+    @Override
+    protected void convolvePartialRecursive(Tensor kernel, Tensor result, int k, int[] kd, int[] d){
+        if (k < result.dimensions.length) {
+            for (int i = 0; i < result.dimensions[k]; i++) {
+                kd[k] = i;
+                d[k] = dimensions[k] / 2 + i - result.dimensions[k] / 2;
+                convolveRecursive(kernel, result, k + 1, kd);
+            }
+        } else {
+            result.setByteValue(
+                    PrimitiveUtils.toByte(partialConvolutionSum(kernel, d, 0, new int[kernel.dimensions.length])), kd);
+        }
+    }
+    
+    private long partialConvolutionSum(Tensor kernel, int[] d, int k, int[] e) {
+        if (k < kernel.dimensions.length) {
+            long s = 0;
+            for (int i = 0; i < kernel.dimensions[k]; i++) {
+                e[k] = i;
+                s += convolutionSum(kernel, d, k + 1, e);
+            }
+            return s;
+        } else {
+            int[] rd = new int[dimensions.length];
+            for (int i = 0; i < dimensions.length; i++) {
+                rd[i] = d[i] + e[i] - kernel.dimensions[i] / 2;
+                if (rd[i] < 0 || rd[i] > dimensions[i] - 1) {
+                    return 0;
+                }
+            }
+            return getByteValue(rd) * kernel.getByteValue(e);
         }
     }
 
