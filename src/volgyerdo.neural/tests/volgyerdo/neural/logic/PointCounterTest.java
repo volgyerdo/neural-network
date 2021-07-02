@@ -58,7 +58,7 @@ public class PointCounterTest {
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MAX_POINT_COUNT + 1));
 
-        NetworkLogic.setLearningRate(network, 0.01f);
+        NetworkLogic.setLearningRate(network, 0.015f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
 
@@ -97,7 +97,7 @@ public class PointCounterTest {
         System.out.println("Average error: " + FORMAT.format(averageError));
         System.out.println("Average match: " + FORMAT.format(matches/(double)trainingSamples.size()) + "\n");
 
-        NetworkLogic.fit(network, trainingSamples, 100000);
+        NetworkLogic.fit(network, trainingSamples, 50000);
 
         System.out.println("\nAfter training:\n");
         averageError = 0;

@@ -181,7 +181,7 @@ public class SimpleConvolutionalTests {
                 error += sample.target.getFloatValue(i) - outputLayer.states.getFloatValue(i);
             }
             error /= sample.target.dimensions[0];
-            System.out.println(FORMAT.format(error));
+            System.out.println("Error" + FORMAT.format(error));
             assertTrue("Sample error is too large (" + error + ")", maximumError > Math.abs(error));
         }
         
