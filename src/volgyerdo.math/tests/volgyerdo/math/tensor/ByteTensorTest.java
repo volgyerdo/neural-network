@@ -1148,7 +1148,7 @@ public class ByteTensorTest {
         c = a.convolvePartial(kernel, 1);
         System.out.println(c.toString());
         System.out.println("---------------");
-        assertEquals("0D convolution", (byte) -15, c.getByteValue(0));
+        assertEquals("0D partial convolution", (byte) -15, c.getByteValue(0));
         
         a = new ByteTensor(5);
         a.setByteValue((byte) 4, 0);
@@ -1165,28 +1165,7 @@ public class ByteTensorTest {
         c = a.convolvePartial(kernel, 1);
         System.out.println(c.toString());
         System.out.println("---------------");
-        assertEquals("1D convolution - kernel: [1] (1)", (byte) 8, c.getByteValue(0));
-        
-        a = new ByteTensor(5);
-        a.setByteValue((byte) 4, 0);
-        a.setByteValue((byte) 2, 1);
-        a.setByteValue((byte) -1, 2);
-        a.setByteValue((byte) 6, 3);
-        a.setByteValue((byte) -9, 4);
-        System.out.println(a.toString());
-        System.out.println("X\n");
-        kernel = new ByteTensor(1);
-        kernel.setByteValue((byte) 2, 0);
-        System.out.println(kernel.toString());
-        System.out.println("=\n");
-        c = a.convolvePartial(kernel, 5);
-        System.out.println(c.toString());
-        System.out.println("---------------");
-        assertEquals("1D convolution - kernel: [1] (1)", (byte) 8, c.getByteValue(0));
-        assertEquals("1D convolution - kernel: [1] (2)", (byte) 4, c.getByteValue(1));
-        assertEquals("1D convolution - kernel: [1] (3)", (byte) -2, c.getByteValue(2));
-        assertEquals("1D convolution - kernel: [1] (4)", (byte) 12, c.getByteValue(3));
-        assertEquals("1D convolution - kernel: [1] (5)", (byte) -18, c.getByteValue(4));
+        assertEquals("1D partial convolution - kernel: [1]", (byte) -2, c.getByteValue(0));
         
         a = new ByteTensor(5);
         a.setByteValue((byte) 4, 0);
@@ -1197,18 +1176,35 @@ public class ByteTensorTest {
         System.out.println(a.toString());
         System.out.println("X\n");
         kernel = new ByteTensor(3);
-        kernel.setByteValue((byte) 0, 0);
-        kernel.setByteValue((byte) -3, 1);
-        kernel.setByteValue((byte) 0, 2);
+        kernel.setByteValue((byte) -3, 0);
+        kernel.setByteValue((byte) 1, 1);
+        kernel.setByteValue((byte) 2, 2);
         System.out.println(kernel.toString());
         System.out.println("=\n");
-        c = a.convolve(kernel);
+        c = a.convolvePartial(kernel, 1);
         System.out.println(c.toString());
         System.out.println("---------------");
-        assertEquals("1D convolution - kernel: [3/A] (1)", (byte) -12, c.getByteValue(0));
-        assertEquals("1D convolution - kernel: [3/A] (2)", (byte) -6, c.getByteValue(1));
-        assertEquals("1D convolution - kernel: [3/A] (3)", (byte) 3, c.getByteValue(2));
-        assertEquals("1D convolution - kernel: [3/A] (4)", (byte) -18, c.getByteValue(3));
-        assertEquals("1D convolution - kernel: [3/A] (5)", (byte) 27, c.getByteValue(4));
+        assertEquals("1D partial convolution - kernel: [1] (1)", (byte) 5, c.getByteValue(0));
+        
+        a = new ByteTensor(5);
+        a.setByteValue((byte) 4, 0);
+        a.setByteValue((byte) 2, 1);
+        a.setByteValue((byte) -1, 2);
+        a.setByteValue((byte) 6, 3);
+        a.setByteValue((byte) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ByteTensor(3);
+        kernel.setByteValue((byte) -3, 0);
+        kernel.setByteValue((byte) 1, 1);
+        kernel.setByteValue((byte) 2, 2);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolvePartial(kernel, 3);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D partial convolution - kernel: [3] (1)", (byte) -12, c.getByteValue(0));
+        assertEquals("1D partial convolution - kernel: [3] (1)", (byte) 5, c.getByteValue(1));
+        assertEquals("1D partial convolution - kernel: [3] (1)", (byte) -9, c.getByteValue(2));
     }
 }

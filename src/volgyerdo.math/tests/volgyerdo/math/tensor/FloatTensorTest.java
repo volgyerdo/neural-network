@@ -1096,5 +1096,80 @@ public class FloatTensorTest {
         assertEquals("1D convolution - kernel: [3,3,3] (27)", (byte) 8, c.getFloatValue(2, 2, 2), FLOATING_VALUE_ACCURACY);
 
     }
+    
+    @Test
+    public void testConvolvePartial(){
+        Tensor a, kernel, c;
+        
+        a = new ByteTensor(1);
+        a.setByteValue((byte) 5, 0);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ByteTensor(1);
+        kernel.setByteValue((byte) -3, 0);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolvePartial(kernel, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("0D partial convolution", (byte) -15, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+        
+        a = new ByteTensor(5);
+        a.setByteValue((byte) 4, 0);
+        a.setByteValue((byte) 2, 1);
+        a.setByteValue((byte) -1, 2);
+        a.setByteValue((byte) 6, 3);
+        a.setByteValue((byte) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ByteTensor(1);
+        kernel.setByteValue((byte) 2, 0);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolvePartial(kernel, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D partial convolution - kernel: [1]", (byte) -2, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+        
+        a = new ByteTensor(5);
+        a.setByteValue((byte) 4, 0);
+        a.setByteValue((byte) 2, 1);
+        a.setByteValue((byte) -1, 2);
+        a.setByteValue((byte) 6, 3);
+        a.setByteValue((byte) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ByteTensor(3);
+        kernel.setByteValue((byte) -3, 0);
+        kernel.setByteValue((byte) 1, 1);
+        kernel.setByteValue((byte) 2, 2);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolvePartial(kernel, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D partial convolution - kernel: [1] (1)", (byte) 5, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+        
+        a = new ByteTensor(5);
+        a.setByteValue((byte) 4, 0);
+        a.setByteValue((byte) 2, 1);
+        a.setByteValue((byte) -1, 2);
+        a.setByteValue((byte) 6, 3);
+        a.setByteValue((byte) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ByteTensor(3);
+        kernel.setByteValue((byte) -3, 0);
+        kernel.setByteValue((byte) 1, 1);
+        kernel.setByteValue((byte) 2, 2);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolvePartial(kernel, 3);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D partial convolution - kernel: [3] (1)", (byte) -12, c.getFloatValue(0), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D partial convolution - kernel: [3] (1)", (byte) 5, c.getFloatValue(1), FLOATING_VALUE_ACCURACY);
+        assertEquals("1D partial convolution - kernel: [3] (1)", (byte) -9, c.getFloatValue(2), FLOATING_VALUE_ACCURACY);
+    }
 
 }

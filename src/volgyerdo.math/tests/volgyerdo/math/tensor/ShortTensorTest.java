@@ -1094,4 +1094,79 @@ public class ShortTensorTest {
         assertEquals("1D convolution - kernel: [3,3,3] (27)", (byte) 8, c.getShortValue(2, 2, 2));
 
     }
+    
+    @Test
+    public void testConvolvePartial(){
+        Tensor a, kernel, c;
+        
+        a = new ByteTensor(1);
+        a.setShortValue((short) 5, 0);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ByteTensor(1);
+        kernel.setShortValue((short) -3, 0);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolvePartial(kernel, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("0D partial convolution", (byte) -15, c.getShortValue(0));
+        
+        a = new ByteTensor(5);
+        a.setShortValue((short) 4, 0);
+        a.setShortValue((short) 2, 1);
+        a.setShortValue((short) -1, 2);
+        a.setShortValue((short) 6, 3);
+        a.setShortValue((short) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ByteTensor(1);
+        kernel.setShortValue((byte) 2, 0);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolvePartial(kernel, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D partial convolution - kernel: [1]", (byte) -2, c.getShortValue(0));
+        
+        a = new ByteTensor(5);
+        a.setShortValue((short) 4, 0);
+        a.setShortValue((short) 2, 1);
+        a.setShortValue((short) -1, 2);
+        a.setShortValue((short) 6, 3);
+        a.setShortValue((short) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ByteTensor(3);
+        kernel.setShortValue((short) -3, 0);
+        kernel.setShortValue((short) 1, 1);
+        kernel.setShortValue((short) 2, 2);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolvePartial(kernel, 1);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D partial convolution - kernel: [1] (1)", (byte) 5, c.getShortValue(0));
+        
+        a = new ByteTensor(5);
+        a.setShortValue((short) 4, 0);
+        a.setShortValue((short) 2, 1);
+        a.setShortValue((short) -1, 2);
+        a.setShortValue((short) 6, 3);
+        a.setShortValue((short) -9, 4);
+        System.out.println(a.toString());
+        System.out.println("X\n");
+        kernel = new ByteTensor(3);
+        kernel.setShortValue((short) -3, 0);
+        kernel.setShortValue((short) 1, 1);
+        kernel.setShortValue((short) 2, 2);
+        System.out.println(kernel.toString());
+        System.out.println("=\n");
+        c = a.convolvePartial(kernel, 3);
+        System.out.println(c.toString());
+        System.out.println("---------------");
+        assertEquals("1D partial convolution - kernel: [3] (1)", (short) -12, c.getShortValue(0));
+        assertEquals("1D partial convolution - kernel: [3] (1)", (short) 5, c.getShortValue(1));
+        assertEquals("1D partial convolution - kernel: [3] (1)", (short) -9, c.getShortValue(2));
+    }
 }

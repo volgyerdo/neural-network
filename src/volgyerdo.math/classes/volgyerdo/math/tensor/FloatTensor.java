@@ -544,7 +544,7 @@ class FloatTensor extends Tensor {
             for (int i = 0; i < result.dimensions[k]; i++) {
                 kd[k] = i;
                 d[k] = dimensions[k] / 2 + i - result.dimensions[k] / 2;
-                convolveRecursive(kernel, result, k + 1, kd);
+                convolvePartialRecursive(kernel, result, k + 1, kd, d);
             }
         } else {
             result.setFloatValue(partialConvolutionSum(kernel, d, 0, new int[kernel.dimensions.length]), kd);

@@ -31,14 +31,14 @@ public class ActivationLogic {
     //        + slope * (x + shiftX) * stretchX] * stretchY + shiftY
     public static float activate(float x, Activation parameters) {
         double y = (x + parameters.shiftX) * parameters.stretchX;
-        y = (1. + parameters.swish * y) / (1. + FastMath.exp(-y)) + parameters.slope * y;
+        y = (1. + parameters.swish * y) / (1. + Math.exp(-y)) + parameters.slope * y;
         y = y * parameters.stretchY + parameters.shiftY;
         return (float)y;
     }
 
     // Derivative of activate()
     public static float deactivate(float x, Activation parameters) {
-        double transX = FastMath.exp(parameters.stretchX * (x + parameters.shiftX));
+        double transX = Math.exp(parameters.stretchX * (x + parameters.shiftX));
         double stretchSlope = parameters.stretchX * parameters.slope;
         return (float)((parameters.stretchX * parameters.stretchY
                 * transX * ((parameters.swish - parameters.slope) * transX
