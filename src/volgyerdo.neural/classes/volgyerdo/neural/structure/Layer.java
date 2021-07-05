@@ -24,5 +24,5 @@ import volgyerdo.math.tensor.Tensor;
 public abstract class Layer {
 
     public Tensor states;
-
+    
 }

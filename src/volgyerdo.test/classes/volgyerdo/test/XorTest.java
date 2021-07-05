@@ -18,7 +18,6 @@ package volgyerdo.test;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.LayerFactory;
 import volgyerdo.neural.logic.NetworkFactory;
@@ -38,14 +37,14 @@ public class XorTest {
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     
     public static void main(String[] args) {
-        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createNetwork();
 
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 2));
+                LayerFactory.createDenseLayer(2));
         NetworkFactory.addDenseLayer(network, 
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10));
+                LayerFactory.createDenseLayer(10));
         NetworkFactory.addDenseLayer(network, 
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 1));
+                LayerFactory.createDenseLayer(1));
 
         NetworkLogic.setLearningRate(network, 0.1f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());

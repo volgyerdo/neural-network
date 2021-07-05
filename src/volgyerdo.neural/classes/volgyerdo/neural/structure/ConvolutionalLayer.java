@@ -23,7 +23,7 @@ import volgyerdo.neural.logic.NetworkConstants;
  * @author Volgyerdo Nonprofit Kft.
  */
 public class ConvolutionalLayer extends Layer{
-    
+
     public Tensor kernel;
     public Tensor bias;
     public Activation activation;

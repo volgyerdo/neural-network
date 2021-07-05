@@ -18,7 +18,6 @@ package volgyerdo.test;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
@@ -37,7 +36,7 @@ public class SimpleTest {
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     
     public static void main(String[] args) {
-        Network network = NetworkFactory.createDenseNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 4);
+        Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 4);
         NetworkLogic.setLearningRate(network, 0.1f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());
         NetworkLogic.randomizeWeights(network);

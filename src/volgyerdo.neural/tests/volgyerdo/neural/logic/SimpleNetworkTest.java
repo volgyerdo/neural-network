@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
@@ -37,7 +36,7 @@ public class SimpleNetworkTest {
     public void layeredSimpleTest() {
         double maximumError = 0.005;
 
-        Network network = NetworkFactory.createDenseNetwork(Tensor.TYPE.FLOAT, new int[]{2}, 4);
+        Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 4);
         NetworkLogic.setLearningRate(network, 0.1f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());
         NetworkLogic.randomizeWeights(network);
@@ -70,14 +69,14 @@ public class SimpleNetworkTest {
     public void layeredXorTest() {
         double maximumError = 0.01;
         
-        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createNetwork();
         
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 2));
+                LayerFactory.createDenseLayer(2));
         NetworkFactory.addDenseLayer(network, 
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10));
+                LayerFactory.createDenseLayer(10));
         NetworkFactory.addDenseLayer(network, 
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 1));
+                LayerFactory.createDenseLayer(1));
 
         NetworkLogic.setLearningRate(network, 0.1f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());
@@ -108,16 +107,16 @@ public class SimpleNetworkTest {
         double maximumTrainError = 0.08;
         double maximumControlError = 0.2;
         
-        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createNetwork();
 
         NetworkFactory.addDenseLayer(network, 
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 30));
+                LayerFactory.createDenseLayer(30));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 90));
+                LayerFactory.createDenseLayer(90));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 60));
+                LayerFactory.createDenseLayer(60));
         NetworkFactory.addDenseLayer(network, 
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 2));
+                LayerFactory.createDenseLayer(2));
 
         NetworkLogic.setLearningRate(network, 0.01f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());

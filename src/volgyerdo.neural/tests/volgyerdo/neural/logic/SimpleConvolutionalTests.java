@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
@@ -38,12 +37,12 @@ public class SimpleConvolutionalTests {
     public void convolutionalTest1() {
         double maximumError = 0.001;
         
-        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createNetwork();
 
         NetworkFactory.addConvolutionalLayer(network,
-                LayerFactory.createConvolutionalLayer(Tensor.TYPE.FLOAT, 20), 0);
+                LayerFactory.createConvolutionalLayer(20), 0);
         NetworkFactory.addConvolutionalLayer(network, 
-                LayerFactory.createConvolutionalLayer(Tensor.TYPE.FLOAT, 20), 3);
+                LayerFactory.createConvolutionalLayer(20), 3);
 
         NetworkLogic.setLearningRate(network, 0.1f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());
@@ -114,14 +113,14 @@ public class SimpleConvolutionalTests {
     public void convolutionalTest2() {
         double maximumError = 0.01;
         
-        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createNetwork();
 
         NetworkFactory.addConvolutionalLayer(network,
-                LayerFactory.createConvolutionalLayer(Tensor.TYPE.FLOAT, 20), 0);
+                LayerFactory.createConvolutionalLayer(20), 0);
         NetworkFactory.addConvolutionalLayer(network, 
-                LayerFactory.createConvolutionalLayer(Tensor.TYPE.FLOAT, 20), 3);
+                LayerFactory.createConvolutionalLayer(20), 3);
         NetworkFactory.addConvolutionalLayer(network, 
-                LayerFactory.createConvolutionalLayer(Tensor.TYPE.FLOAT, 20), 3);
+                LayerFactory.createConvolutionalLayer(20), 3);
 
         NetworkLogic.setLearningRate(network, 0.1f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());

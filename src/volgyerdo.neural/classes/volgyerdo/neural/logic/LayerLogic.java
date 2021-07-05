@@ -19,6 +19,7 @@ import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
+import volgyerdo.neural.structure.GraphLayer;
 import volgyerdo.neural.structure.Layer;
 
 /**
@@ -32,6 +33,8 @@ public class LayerLogic {
             randomize((DenseLayer) layer);
         } else if (layer instanceof ConvolutionalLayer) {
             randomize((ConvolutionalLayer) layer);
+        } else if (layer instanceof GraphLayer) {
+            randomize((GraphLayer) layer);
         }
     }
 
@@ -41,6 +44,10 @@ public class LayerLogic {
 
     private static void randomize(ConvolutionalLayer layer) {
         NetworkUtils.randomizeWeigths(layer.kernel);
+    }
+    
+    private static void randomize(GraphLayer layer) {
+        NetworkUtils.randomizeWeigths(layer.links);
     }
 
     public static void propagate(Layer prevLayer, Layer layer) {

@@ -15,11 +15,12 @@
  */
 package volgyerdo.neural.logic;
 
-import java.security.InvalidParameterException;
 import java.util.Random;
+import volgyerdo.math.PrimitiveUtils;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
+import volgyerdo.neural.structure.NeuronLink;
 
 /**
  *
@@ -47,13 +48,12 @@ public class NetworkUtils {
         if (weights == null) {
             return;
         }
-        switch (weights.type) {
-            case BYTE ->
-                weights.randomize(Byte.MIN_VALUE, Byte.MAX_VALUE);
-            case SHORT ->
-                weights.randomize(Short.MIN_VALUE, Short.MAX_VALUE);
-            case FLOAT ->
-                weights.randomize(-1, 1);
+        weights.randomize(-1, 1);
+    }
+
+    public static void randomizeWeigths(NeuronLink[] links) {
+        for (int i = 0; i < links.length; i++) {
+            links[i].weight = PrimitiveUtils.random(-1f, 1f);
         }
     }
 

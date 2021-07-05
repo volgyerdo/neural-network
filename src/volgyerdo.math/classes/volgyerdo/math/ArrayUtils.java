@@ -131,5 +131,12 @@ public class ArrayUtils {
         }
         return b;
     }
+    
+    public static void randomize(float[] a, float min, float max){
+        float delta = max - min;
+        for (int i = 0; i < a.length; i++) {
+            a[i] = (float)(Math.random() * delta + min);
+        }
+    }
 
 }

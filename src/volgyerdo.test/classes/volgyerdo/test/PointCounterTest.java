@@ -42,20 +42,20 @@ public class PointCounterTest {
     private static final int CONTROL_SAMPLE_COUNT = 700;
 
     public static void main(String[] args) {
-        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createNetwork();
 
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MATRIX_SIZE, MATRIX_SIZE));
+                LayerFactory.createDenseLayer(MATRIX_SIZE, MATRIX_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
+                LayerFactory.createDenseLayer(HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
+                LayerFactory.createDenseLayer(HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
+                LayerFactory.createDenseLayer(HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
+                LayerFactory.createDenseLayer(HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MAX_POINT_COUNT + 1));
+                LayerFactory.createDenseLayer(MAX_POINT_COUNT + 1));
 
         NetworkLogic.setLearningRate(network, 0.008f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());

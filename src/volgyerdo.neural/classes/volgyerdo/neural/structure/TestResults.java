@@ -15,7 +15,6 @@
  */
 package volgyerdo.neural.structure;
 
-import static java.lang.Character.FORMAT;
 import java.text.DecimalFormat;
 import volgyerdo.math.tensor.Tensor;
 

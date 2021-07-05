@@ -45,18 +45,18 @@ public class PointCounterTest {
 
     @Test
     public void layeredPointCounterTest() {
-        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createNetwork();
 
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MATRIX_SIZE, MATRIX_SIZE));
+                LayerFactory.createDenseLayer(MATRIX_SIZE, MATRIX_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
+                LayerFactory.createDenseLayer(HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
+                LayerFactory.createDenseLayer(HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
+                LayerFactory.createDenseLayer(HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, MAX_POINT_COUNT + 1));
+                LayerFactory.createDenseLayer(MAX_POINT_COUNT + 1));
 
         NetworkLogic.setLearningRate(network, 0.015f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());

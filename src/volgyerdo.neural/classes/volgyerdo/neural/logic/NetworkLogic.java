@@ -17,7 +17,6 @@ package volgyerdo.neural.logic;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
@@ -70,14 +69,8 @@ public class NetworkLogic {
             if (!Arrays.equals(sample.input.dimensions, inputLayer.states.dimensions)) {
                 throw new IllegalArgumentException("Input dimension is wrong.");
             }
-            if (!Objects.equals(sample.input.type, network.dataType)) {
-                throw new IllegalArgumentException("Input data type is wrong.");
-            }
             if (!Arrays.equals(sample.target.dimensions, outputLayer.states.dimensions)) {
                 throw new IllegalArgumentException("Target dimension is wrong.");
-            }
-            if (!Objects.equals(sample.target.type, network.dataType)) {
-                throw new IllegalArgumentException("Target data type is wrong.");
             }
         }
     }

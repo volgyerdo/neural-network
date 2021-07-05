@@ -15,18 +15,14 @@
  */
 package volgyerdo.neural.structure;
 
-import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.logic.NetworkConstants;
-
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class DenseLayer extends Layer{
-   
-    public Tensor weights;
-    public Tensor bias;
-    public Activation activation;
-    public float learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
+public class GraphLayer extends Layer{
     
+    public Neuron[] neurons;
+    public NeuronLink[] links;
+    public int[] inputIds;
+    public int[] outputIds;
 }

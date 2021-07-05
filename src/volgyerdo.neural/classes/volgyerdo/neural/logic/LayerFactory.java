@@ -15,30 +15,58 @@
  */
 package volgyerdo.neural.logic;
 
+import volgyerdo.math.fast.FastMath;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
+import volgyerdo.neural.structure.GraphLayer;
+import volgyerdo.neural.structure.Neuron;
+import volgyerdo.neural.structure.NeuronLink;
 
 /**
  *
  * @author antal
  */
 public class LayerFactory {
-    
-    public static DenseLayer createDenseLayer(Tensor.TYPE dataType, int... dimensions){
+
+    public static DenseLayer createDenseLayer(int... dimensions) {
         DenseLayer layer = new DenseLayer();
-        layer.states = Tensor.create(dataType, dimensions);
+        layer.states = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
         layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
         layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
-        return layer; 
+        return layer;
     }
-    
-    public static ConvolutionalLayer createConvolutionalLayer(Tensor.TYPE dataType, int... dimensions){
+
+    public static ConvolutionalLayer createConvolutionalLayer(int... dimensions) {
         ConvolutionalLayer layer = new ConvolutionalLayer();
-        layer.states = Tensor.create(dataType, dimensions);
+        layer.states = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
         layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
         layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
-        return layer; 
+        return layer;
     }
-    
+
+    public static GraphLayer createGraphLayer(int neuronCount, int[] inputIds, int[] outputIds) {
+        GraphLayer graphLayer = new GraphLayer();
+        graphLayer.neurons = new Neuron[neuronCount];
+        Neuron neuron;
+        for (int i = 0; i < neuronCount; i++) {
+            neuron = new Neuron();
+            neuron.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
+            graphLayer.neurons[i] = neuron;
+        }
+        graphLayer.links = new NeuronLink[FastMath.pow2(neuronCount)];
+        NeuronLink link;
+        for (int i = 0; i < neuronCount; i++) {
+            for (int j = 0; j < neuronCount; j++) {
+                link = new NeuronLink();
+                link.inputId = i;
+                link.outputId = j;
+                graphLayer.links[i * j + j] = link;
+            }
+        }
+        graphLayer.inputIds = inputIds;
+        graphLayer.outputIds = outputIds;
+        return graphLayer;
+    }
+
 }

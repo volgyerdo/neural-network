@@ -19,9 +19,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Arrays;
-import volgyerdo.neural.logic.NetworkFactory;
-import volgyerdo.neural.structure.Network;
 import java.util.Collection;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.logic.ActivationFactory;
@@ -51,17 +48,17 @@ public class LineRecognitionTest {
     public static void main(String[] args) {
 
         //network
-        Network network = NetworkFactory.createNetwork(Tensor.TYPE.FLOAT);
+        Network network = NetworkFactory.createNetwork();
         System.out.println("Start...");
 
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 5,5));
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10, 10));
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10, 10));
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10, 10));
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10, 10));
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10, 10));
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 10, 10));
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(Tensor.TYPE.FLOAT, 5));
+        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(5,5));
+        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(10, 10));
+        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(10, 10));
+        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(10, 10));
+        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(10, 10));
+        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(10, 10));
+        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(10, 10));
+        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(5));
         System.out.println("Layers Added...");
 
         NetworkLogic.setLearningRate(network, 0.01f);
@@ -256,7 +253,7 @@ public class LineRecognitionTest {
         }
         //convert to tensor
         int counter = 0;
-        Tensor toReturn = Tensor.create(Tensor.TYPE.FLOAT, 5,5);
+        Tensor toReturn = Tensor.create(Tensor.TYPE.FLOAT, 5, 5);
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 toReturn.setFloatValue(matrix[j][i], counter++);
