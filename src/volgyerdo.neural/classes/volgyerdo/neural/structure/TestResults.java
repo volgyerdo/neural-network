@@ -23,7 +23,6 @@ import volgyerdo.math.tensor.Tensor;
  * @author Antal
  */
 public class TestResults {
-    private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     
     public long runTime;
     public Tensor errorTensor;
@@ -32,9 +31,9 @@ public class TestResults {
     public float maxError;
 
     public void toConsole(){
-        System.out.println("Avg: " + FORMAT.format(this.avgError) + ", ");
-        System.out.print("Min: " + FORMAT.format(this.minError) + ", ");
-        System.out.print("Max: " + FORMAT.format(this.maxError) + ", ");
-        System.out.print("Runtime: " + FORMAT.format(this.runTime) + " ms ");
+        System.out.print("Avg: " + avgError + ", ");
+        System.out.print("Min: " + minError + ", ");
+        System.out.print("Max: " + maxError + ", ");
+        System.out.print("Runtime: " + runTime + " ms ");
     }
 }

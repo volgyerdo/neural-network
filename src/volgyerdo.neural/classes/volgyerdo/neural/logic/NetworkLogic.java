@@ -103,27 +103,24 @@ public class NetworkLogic {
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
         int outputLayerSize = outputLayer.states.dimensions.length; //? 
         float error[] = new float[outputLayerSize*collectionSize];
-        int averageError = 0;
+        float averageError = 0;
         Tensor errorTensor = Tensor.create(Tensor.TYPE.FLOAT, outputLayerSize); //típus!
-        
-        int i=0;
+
         float maxError = 0;
-        float minError = 0;
+        float minError = 10;
         
-        for (Sample sample: samples){
-            propagate(network, sample.input);
-            for (int j = 0; j < outputLayerSize; j++) {
-                error[i] = Math.abs(sample.target.getFloatValue(j) - outputLayer.states.getFloatValue(j));
+        for (int i = 0; i < periods; i++) {
+            for (Sample sample: samples){
+                propagate(network, sample.input);
+                sample.target.substract(outputLayer.states);
+                errorTensor.set(sample.target);
                 
-                errorTensor.setFloatValue(error[i], j);
-                results.errorTensor = errorTensor;
-                
-                if(error[i] > maxError) { maxError = error[i]; }
-                if(error[i] < minError){ minError = error[i]; }
-                averageError += error[i];
-                i++;
-            }            
+                if(errorTensor.floatMax() > maxError){ maxError = errorTensor.floatMax(); };
+                if(errorTensor.floatMin() < minError){ minError = errorTensor.floatMin(); };
+                averageError = errorTensor.floatAverage();
+            }
         }
+        
         results.avgError = (averageError /= samples.size());
         results.minError = minError;
         results.maxError = maxError;

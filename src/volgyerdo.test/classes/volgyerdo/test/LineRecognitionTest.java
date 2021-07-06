@@ -39,7 +39,7 @@ import volgyerdo.neural.structure.TestResults;
 public class LineRecognitionTest {
 
     private static final Random RANDOM_INT = new Random();
-    private static int LINE_LENGHT = 3; //min0 max5
+    private static int LINE_LENGHT = 2; //min0 max5
     private static int LINE_COUNT = 4; //min 0 max4
     private static int TRAINING_SAMPLE_COUNT = 100;
     private static int ROWCOUNT = 5;
@@ -169,6 +169,15 @@ public class LineRecognitionTest {
 
         //Live teszt
         guessNumber(network, 10);
+        
+
+//        //mátrix teszt
+//        int lines = 2;
+//        for (int i = 0; i < 10; i++) {
+//            System.out.println(lines);
+//            Tensor teszt = generateTensorWithLines(lines);
+//            System.out.println(teszt.toString(true));
+//        }
     }
     
     private static void generateSamples(Collection<Sample> samples, int count){
@@ -223,6 +232,8 @@ public class LineRecognitionTest {
     public static Tensor generateTensorWithLines(int linecount) {
         int linelenght = LINE_LENGHT;
 
+//        Tensor matrix = Tensor.create(Tensor.TYPE.FLOAT, 5,5);
+//        matrix.fill(0f);
         float[][] matrix = new float[5][5];
         List<Integer> rows = new ArrayList<Integer>();
 
@@ -245,13 +256,16 @@ public class LineRecognitionTest {
         int y;
         for (int i = 0; i < linecount; i++) {
             for (int j = 0; j < linelenght; j++) {
+                
                 x = rows.get(i);
                 y = columns.get(i);
+//                System.out.println(x+" "+y);
+//                matrix.setFloatValue(1f, ?); //????
                 matrix[x][y + j]
                         = 1f;
             }
         }
-        //convert to tensor
+        
         int counter = 0;
         Tensor toReturn = Tensor.create(Tensor.TYPE.FLOAT, 5, 5);
         for (int i = 0; i < matrix.length; i++) {
