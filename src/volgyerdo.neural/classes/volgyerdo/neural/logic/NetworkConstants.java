@@ -27,8 +27,6 @@ public class NetworkConstants {
     
     public static final Activation DEFAULT_ACTIVATION = ActivationFactory.createTanH();
     
-    public static final float DEFAULT_MINIMUM_WEIGHT = -2f;
-    
-    public static final float DEFAULT_MAXIMUM_WEIGHT = 2f;
+    public static final float DEFAULT_WEIGHT_RADIUS = 1f;
     
 }

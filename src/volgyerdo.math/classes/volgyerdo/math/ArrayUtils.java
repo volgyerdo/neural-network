@@ -132,6 +132,20 @@ public class ArrayUtils {
         return b;
     }
     
+    public static void randomize(byte[] a, byte min, byte max){
+        double delta = max - min;
+        for (int i = 0; i < a.length; i++) {
+            a[i] = (byte)(Math.random() * delta + min);
+        }
+    }
+    
+    public static void randomize(short[] a, short min, short max){
+        double delta = max - min;
+        for (int i = 0; i < a.length; i++) {
+            a[i] = (short)(Math.random() * delta + min);
+        }
+    }
+    
     public static void randomize(float[] a, float min, float max){
         float delta = max - min;
         for (int i = 0; i < a.length; i++) {

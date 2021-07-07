@@ -48,12 +48,14 @@ public class NetworkUtils {
         if (weights == null) {
             return;
         }
-        weights.randomize(-1, 1);
+        weights.randomize(
+                -NetworkConstants.DEFAULT_WEIGHT_RADIUS, NetworkConstants.DEFAULT_WEIGHT_RADIUS);
     }
 
     public static void randomizeWeigths(NeuronLink[] links) {
         for (int i = 0; i < links.length; i++) {
-            links[i].weight = PrimitiveUtils.random(-1f, 1f);
+            links[i].weight = PrimitiveUtils.random(
+                    -NetworkConstants.DEFAULT_WEIGHT_RADIUS, NetworkConstants.DEFAULT_WEIGHT_RADIUS);
         }
     }
 

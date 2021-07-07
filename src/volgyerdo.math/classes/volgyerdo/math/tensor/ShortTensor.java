@@ -193,10 +193,7 @@ class ShortTensor extends Tensor {
         if (max < min) {
             throw new RuntimeException("Max < min in randomize parameters.");
         }
-        double interval = max - min;
-        for (int i = 0; i < values.length; i++) {
-            values[i] = PrimitiveUtils.toShort((Math.random() * interval + min));
-        }
+        ArrayUtils.randomize(values, min, max);
     }
 
     @Override
