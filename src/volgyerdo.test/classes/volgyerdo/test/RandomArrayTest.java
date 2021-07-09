@@ -131,7 +131,7 @@ public class RandomArrayTest {
         controlSamples.add(SampleFactory.createSample(convertStrToFloat(
                 "ugufzgvvqdandagjjzzbbztserzawc"), new float[]{0f, 1f}));
 
-        NetworkLogic.fit(network, samples, 50000);
+        NetworkLogic.train(network, samples, 50000);
 
         System.out.println("\nAfter training:\n");
         Layer outputLayer = NetworkUtils.getOutputLayer(network);

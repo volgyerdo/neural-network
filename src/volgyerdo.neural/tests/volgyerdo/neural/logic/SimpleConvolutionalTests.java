@@ -92,7 +92,7 @@ public class SimpleConvolutionalTests {
             System.out.println("Error: " + FORMAT.format(error));
         }
         
-        NetworkLogic.fit(network, samples, 2000);
+        NetworkLogic.train(network, samples, 2000);
 
         System.out.println("\nAfter training:\n");
         for (Sample sample : samples) {
@@ -170,7 +170,7 @@ public class SimpleConvolutionalTests {
             System.out.println("Error: " + FORMAT.format(error));
         }
         
-        NetworkLogic.fit(network, samples, 6000);
+        NetworkLogic.train(network, samples, 6000);
 
         System.out.println("\nAfter training:\n");
         for (Sample sample : samples) {

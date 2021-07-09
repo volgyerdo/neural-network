@@ -96,7 +96,7 @@ public class PointCounterTest {
         System.out.println("Average error: " + FORMAT.format(averageError));
         System.out.println("Average match: " + FORMAT.format(matches / (double) trainingSamples.size()) + "\n");
 
-        NetworkLogic.fit(network, trainingSamples, 120000);
+        NetworkLogic.train(network, trainingSamples, 120000);
 
         System.out.println("\nAfter training:\n");
         averageError = 0;

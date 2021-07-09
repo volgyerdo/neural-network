@@ -76,7 +76,7 @@ public class LineRecognitionTest {
 
         //training
         System.out.println("fitting...");
-        NetworkLogic.fit(network, trainingSamples, 4000);
+        NetworkLogic.train(network, trainingSamples, 4000);
         
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
         double errorZero = 0;
@@ -87,7 +87,7 @@ public class LineRecognitionTest {
         int n = 0;
         
         System.out.println("\nAfter training:\n");
-        TestResults training = NetworkLogic.test(network, trainingSamples, 1);
+        TestResults training = NetworkLogic.test(network, trainingSamples);
         training.toConsole();
         
 //        for (Sample sample : trainingSamples) {

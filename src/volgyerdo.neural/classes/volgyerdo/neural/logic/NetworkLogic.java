@@ -38,20 +38,20 @@ public class NetworkLogic {
             LayerLogic.randomize(layer);
         }
     }
-    
-    public static void setLearningRate(Network network, float learningRate){
+
+    public static void setLearningRate(Network network, float learningRate) {
         for (Layer layer : network.layers) {
             LayerLogic.setLearningRate(layer, learningRate);
         }
     }
-    
-    public static void setActivation(Network network, Activation activation){
+
+    public static void setActivation(Network network, Activation activation) {
         for (Layer layer : network.layers) {
             LayerLogic.setActivation(layer, activation);
         }
     }
 
-    public static void fit(Network network, Collection<Sample> samples, int periods) {
+    public static void train(Network network, Collection<Sample> samples, int periods) {
         Sample[] sampleArray = (Sample[]) samples.toArray(new Sample[samples.size()]);
         checkSamples(network, sampleArray);
         for (int i = 0; i < periods; i++) {
@@ -95,40 +95,42 @@ public class NetworkLogic {
             delta = LayerLogic.backPropagate(layer, nextLayer, delta);
         }
     }
-    
-    public static TestResults test(Network network, Collection<Sample> samples, int periods){
+
+    public static TestResults test(Network network, Collection<Sample> samples) {
         long startTime = System.nanoTime();
         TestResults results = new TestResults();
         int collectionSize = samples.size();
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
-        int outputLayerSize = outputLayer.states.dimensions.length; //? 
-        float error[] = new float[outputLayerSize*collectionSize];
+        int[] outputLayerSize = outputLayer.states.dimensions; //? 
+
         float averageError = 0;
         Tensor errorTensor = Tensor.create(Tensor.TYPE.FLOAT, outputLayerSize); //típus!
 
         float maxError = 0;
         float minError = 10;
-        
-        for (int i = 0; i < periods; i++) {
-            for (Sample sample: samples){
-                propagate(network, sample.input);
-                sample.target.substract(outputLayer.states);
-                errorTensor.set(sample.target);
-                
-                if(errorTensor.floatMax() > maxError){ maxError = errorTensor.floatMax(); };
-                if(errorTensor.floatMin() < minError){ minError = errorTensor.floatMin(); };
-                averageError = errorTensor.floatAverage();
+
+        for (Sample sample : samples) {
+            propagate(network, sample.input);
+            sample.target.substract(outputLayer.states);
+            errorTensor.set(sample.target);
+
+            if (errorTensor.floatMax() > maxError) {
+                maxError = errorTensor.floatMax();
             }
+            if (errorTensor.floatMin() < minError) {
+                minError = errorTensor.floatMin();
+            }
+            averageError = errorTensor.floatAverage();
         }
-        
+
         results.avgError = (averageError /= samples.size());
         results.minError = minError;
         results.maxError = maxError;
-        
+
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         results.runTime = duration / 1000000; //divide by 1000000 to get milliseconds.
-                
+
         return results;
     }
 

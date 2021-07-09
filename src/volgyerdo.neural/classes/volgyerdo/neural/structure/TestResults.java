@@ -25,7 +25,6 @@ import volgyerdo.math.tensor.Tensor;
 public class TestResults {
     
     public long runTime;
-    public Tensor errorTensor;
     public float avgError;
     public float minError;
     public float maxError;

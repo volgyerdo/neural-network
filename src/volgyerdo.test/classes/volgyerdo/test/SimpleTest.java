@@ -45,7 +45,7 @@ public class SimpleTest {
         samples.add(SampleFactory.createSample(new float[]{0f, 1f}, new float[]{0.9f, -0.5f}));
         samples.add(SampleFactory.createSample(new float[]{1f, 0f}, new float[]{0.4f, 0.1f}));
 
-        NetworkLogic.fit(network, samples, 2000);
+        NetworkLogic.train(network, samples, 2000);
 
         System.out.println("\nAfter training:\n");
 
