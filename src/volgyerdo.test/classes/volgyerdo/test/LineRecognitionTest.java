@@ -79,94 +79,12 @@ public class LineRecognitionTest {
         NetworkLogic.train(network, trainingSamples, 4000);
         
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
-        double errorZero = 0;
-        double errorOne = 0;
-        double errorTwo = 0;
-        double errorThree = 0;
-        double errorFour = 0;
-        int n = 0;
-        
         System.out.println("\nAfter training:\n");
         TestResults training = NetworkLogic.test(network, trainingSamples);
-        training.toConsole();
-        
-//        for (Sample sample : trainingSamples) {
-//            NetworkLogic.propagate(network, sample.input);
-//            System.out.println("Oirinal: " + sample.target.getFloatValue(0) + ", " + sample.target.getFloatValue(1)
-//                    + ", " + sample.target.getFloatValue(2)
-//                    + ", " + sample.target.getFloatValue(3)
-//                    + ", " + sample.target.getFloatValue(4)
-//                    + " -- "
-//                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + ", "
-//                    + FORMAT.format(outputLayer.states.getFloatValue(1)) + ", "
-//                    + FORMAT.format(outputLayer.states.getFloatValue(2)) + ", "
-//                    + FORMAT.format(outputLayer.states.getFloatValue(3)) + ", "
-//                    + FORMAT.format(outputLayer.states.getFloatValue(4)) + ", "
-//                    + " (error= " + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-//                    + ", " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1))
-//                    + ", " + FORMAT.format(sample.target.getFloatValue(2) - outputLayer.states.getFloatValue(2))
-//                    + ", " + FORMAT.format(sample.target.getFloatValue(3) - outputLayer.states.getFloatValue(3))
-//                    + ", " + FORMAT.format(sample.target.getFloatValue(4) - outputLayer.states.getFloatValue(4)) + ")"
-//            );
-//            errorZero += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
-//            errorOne += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
-//            errorTwo += Math.abs(sample.target.getFloatValue(2) - outputLayer.states.getFloatValue(2));
-//            errorThree += Math.abs(sample.target.getFloatValue(3) - outputLayer.states.getFloatValue(3));
-//            errorFour += Math.abs(sample.target.getFloatValue(4) - outputLayer.states.getFloatValue(4));
-//            n++;
-//        }
-//        errorZero /= n;
-//        errorOne /= n;
-//        errorTwo /= n;
-//        errorThree /= n;
-//        errorFour /= n;
-//        double avg = (errorZero + errorOne + errorTwo + errorThree + errorFour) / 5;
-//
-//        System.out.println("Average error: " + avg);
-//        System.out.println("0: " + errorZero);
-//        System.out.println("1: " + errorOne);
-//        System.out.println("2: " + errorTwo);
-//        System.out.println("3: " + errorThree);
-//        System.out.println("4: " + errorFour);
+        NetworkUtils.printTestResults(training);
 
-        for (Sample sample : controlSamples) {
-            NetworkLogic.propagate(network, sample.input);
-            System.out.println("Control: " + sample.target.getFloatValue(0) + ", " + sample.target.getFloatValue(1)
-                    + ", " + sample.target.getFloatValue(2)
-                    + ", " + sample.target.getFloatValue(3)
-                    + ", " + sample.target.getFloatValue(4)
-                    + " -- "
-                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + ", "
-                    + FORMAT.format(outputLayer.states.getFloatValue(1)) + ", "
-                    + FORMAT.format(outputLayer.states.getFloatValue(2)) + ", "
-                    + FORMAT.format(outputLayer.states.getFloatValue(3)) + ", "
-                    + FORMAT.format(outputLayer.states.getFloatValue(4)) + ", "
-                    + " (error= " + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-                    + ", " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1))
-                    + ", " + FORMAT.format(sample.target.getFloatValue(2) - outputLayer.states.getFloatValue(2))
-                    + ", " + FORMAT.format(sample.target.getFloatValue(3) - outputLayer.states.getFloatValue(3))
-                    + ", " + FORMAT.format(sample.target.getFloatValue(4) - outputLayer.states.getFloatValue(4)) + ")"
-            );
-
-            errorZero += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
-            errorOne += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
-            errorTwo += Math.abs(sample.target.getFloatValue(2) - outputLayer.states.getFloatValue(2));
-            errorThree += Math.abs(sample.target.getFloatValue(3) - outputLayer.states.getFloatValue(3));
-            errorFour += Math.abs(sample.target.getFloatValue(4) - outputLayer.states.getFloatValue(4));
-            n++;
-        }
-        errorZero /= n;
-        errorOne /= n;
-        errorTwo /= n;
-        errorThree /= n;
-        errorFour /= n;
-        
-        System.out.println("0: " + errorZero);
-        System.out.println("1: " + errorOne);
-        System.out.println("2: " + errorTwo);
-        System.out.println("3: " + errorThree);
-        System.out.println("4: " + errorFour);
-
+        TestResults control = NetworkLogic.test(network, controlSamples);
+        NetworkUtils.printTestResults(control);
         //Live teszt
         guessNumber(network, 10);
         
@@ -186,7 +104,7 @@ public class LineRecognitionTest {
         }
     }
     
-    private static Sample createLineSample(){ //nem biztos hogy minden opcioval találkozik
+    private static Sample createLineSample(){ 
         int r = RANDOM_INT.nextInt(LINE_COUNT + 1); 
         Tensor input = generateTensorWithLines(r);
         Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 5);

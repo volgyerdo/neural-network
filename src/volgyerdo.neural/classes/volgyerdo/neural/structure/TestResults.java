@@ -29,10 +29,4 @@ public class TestResults {
     public float minError;
     public float maxError;
 
-    public void toConsole(){
-        System.out.print("Avg: " + avgError + ", ");
-        System.out.print("Min: " + minError + ", ");
-        System.out.print("Max: " + maxError + ", ");
-        System.out.print("Runtime: " + runTime + " ms ");
-    }
 }
