@@ -19,7 +19,7 @@ package volgyerdo.neural.structure;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class NeuronLink {
+public class Link {
     
     public int inputId;
     public int outputId;

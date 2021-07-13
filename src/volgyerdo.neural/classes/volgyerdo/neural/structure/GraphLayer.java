@@ -22,7 +22,7 @@ package volgyerdo.neural.structure;
 public class GraphLayer extends Layer{
     
     public Neuron[] neurons;
-    public NeuronLink[] links;
+    public Link[] links;
     public int[] inputIds;
     public int[] outputIds;
 }

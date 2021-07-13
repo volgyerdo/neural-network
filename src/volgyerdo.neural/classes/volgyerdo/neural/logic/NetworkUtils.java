@@ -20,7 +20,7 @@ import volgyerdo.math.PrimitiveUtils;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
-import volgyerdo.neural.structure.NeuronLink;
+import volgyerdo.neural.structure.Link;
 import volgyerdo.neural.structure.TestResults;
 
 /**
@@ -53,7 +53,7 @@ public class NetworkUtils {
                 -NetworkConstants.DEFAULT_WEIGHT_RADIUS, NetworkConstants.DEFAULT_WEIGHT_RADIUS);
     }
 
-    public static void randomizeWeigths(NeuronLink[] links) {
+    public static void randomizeWeigths(Link[] links) {
         for (int i = 0; i < links.length; i++) {
             links[i].weight = PrimitiveUtils.random(
                     -NetworkConstants.DEFAULT_WEIGHT_RADIUS, NetworkConstants.DEFAULT_WEIGHT_RADIUS);

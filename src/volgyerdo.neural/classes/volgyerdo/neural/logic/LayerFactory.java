@@ -21,7 +21,7 @@ import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.GraphLayer;
 import volgyerdo.neural.structure.Neuron;
-import volgyerdo.neural.structure.NeuronLink;
+import volgyerdo.neural.structure.Link;
 
 /**
  *
@@ -54,11 +54,11 @@ public class LayerFactory {
             neuron.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
             graphLayer.neurons[i] = neuron;
         }
-        graphLayer.links = new NeuronLink[FastMath.pow2(neuronCount)];
-        NeuronLink link;
+        graphLayer.links = new Link[FastMath.pow2(neuronCount)];
+        Link link;
         for (int i = 0; i < neuronCount; i++) {
             for (int j = 0; j < neuronCount; j++) {
-                link = new NeuronLink();
+                link = new Link();
                 link.inputId = i;
                 link.outputId = j;
                 graphLayer.links[i * j + j] = link;
