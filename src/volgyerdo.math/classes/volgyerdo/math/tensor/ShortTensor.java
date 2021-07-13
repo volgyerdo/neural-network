@@ -82,7 +82,7 @@ class ShortTensor extends Tensor {
         checkClass(tensor);
         checkDimensionCount(tensor.dimensions);
         checkDimensions(tensor);
-        System.arraycopy(((ByteTensor)tensor).values, 0, values, 0, values.length);
+        System.arraycopy(((ShortTensor)tensor).values, 0, values, 0, values.length);
     }
 
     @Override
