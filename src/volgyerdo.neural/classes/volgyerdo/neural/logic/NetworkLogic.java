@@ -17,6 +17,7 @@ package volgyerdo.neural.logic;
 
 import java.util.Arrays;
 import java.util.Collection;
+import volgyerdo.math.fast.FastMath;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
@@ -96,10 +97,9 @@ public class NetworkLogic {
         }
     }
 
-    public static TestResults test(Network network, Collection<Sample> samples) {
+    public static TestResults test(Network network, Collection<Sample> samples, boolean enableStatPrint) {
         long startTime = System.nanoTime();
         TestResults results = new TestResults();
-        int collectionSize = samples.size();
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
         int[] outputLayerSize = outputLayer.states.dimensions; //? 
 
@@ -109,6 +109,7 @@ public class NetworkLogic {
         float maxError = 0;
         float minError = 10;
 
+        int i = 0;
         for (Sample sample : samples) {
             propagate(network, sample.input);
             sample.target.substract(outputLayer.states);
@@ -117,13 +118,22 @@ public class NetworkLogic {
             if (errorTensor.floatMax() > maxError) {
                 maxError = errorTensor.floatMax();
             }
-            if (errorTensor.floatMin() < minError) {
-                minError = errorTensor.floatMin();
+            if (FastMath.abs(errorTensor.floatMin()) < minError) {
+                minError = FastMath.abs(errorTensor.floatMin());
+                
             }
             averageError = errorTensor.floatAverage();
+
+            //print stats
+            if (enableStatPrint) {
+                System.out.println("At " + i++
+                        + ", Avg: " + averageError
+                        + ", Min: " + minError
+                        + ", Max: " + maxError);
+            }
         }
 
-        results.avgError = (averageError /= samples.size());
+        results.avgError = (averageError);
         results.minError = minError;
         results.maxError = maxError;
 

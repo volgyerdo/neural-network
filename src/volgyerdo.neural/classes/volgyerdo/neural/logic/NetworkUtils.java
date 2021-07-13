@@ -70,10 +70,14 @@ public class NetworkUtils {
     }
 
     public static void printTestResults(TestResults res){
+        System.out.println("");
+        System.out.println("");
         System.out.print("Avg: " + res.avgError + ", ");
         System.out.print("Min: " + res.minError + ", ");
         System.out.print("Max: " + res.maxError + ", ");
         System.out.print("Runtime: " + res.runTime + " ms ");
+        System.out.println("");
+        System.out.println("");
     }
     
     private NetworkUtils() {

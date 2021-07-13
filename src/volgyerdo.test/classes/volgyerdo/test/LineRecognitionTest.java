@@ -41,8 +41,9 @@ public class LineRecognitionTest {
     private static final Random RANDOM_INT = new Random();
     private static int LINE_LENGHT = 2; //min0 max5
     private static int LINE_COUNT = 4; //min 0 max4
-    private static int TRAINING_SAMPLE_COUNT = 100;
+    private static int TRAINING_SAMPLE_COUNT = 10;
     private static int ROWCOUNT = 5;
+    private static int TRAIN_CYCLES = 5; //forward and back prop (4000-8000)
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
 
     public static void main(String[] args) {
@@ -76,17 +77,18 @@ public class LineRecognitionTest {
 
         //training
         System.out.println("fitting...");
-        NetworkLogic.train(network, trainingSamples, 4000);
+        NetworkLogic.train(network, trainingSamples, TRAIN_CYCLES);
         
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
-        System.out.println("\nAfter training:\n");
-        TestResults training = NetworkLogic.test(network, trainingSamples);
+        System.out.println("\nTraining:\n");
+        TestResults training = NetworkLogic.test(network, trainingSamples, true);
         NetworkUtils.printTestResults(training);
 
-        TestResults control = NetworkLogic.test(network, controlSamples);
+        System.out.println("\nControl:\n");
+        TestResults control = NetworkLogic.test(network, controlSamples, true);
         NetworkUtils.printTestResults(control);
         //Live teszt
-        guessNumber(network, 10);
+        //guessNumber(network, 100);
         
 
 //        //mátrix teszt
@@ -114,6 +116,7 @@ public class LineRecognitionTest {
     }
     
     public static void guessNumber(Network network, int numberOfMatrices) {
+        System.out.println("");
         System.out.println("guessNumber teszt: ");
 
         Random rand = new Random();
