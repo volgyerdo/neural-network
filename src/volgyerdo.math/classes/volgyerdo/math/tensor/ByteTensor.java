@@ -338,7 +338,7 @@ class ByteTensor extends Tensor {
         result.setByteValue(PrimitiveUtils.toByte(sum), 0);
         return result;
     }
-    
+
     @Override
     public byte byteSum() {
         return PrimitiveUtils.toByte(longSum());
@@ -353,7 +353,7 @@ class ByteTensor extends Tensor {
     public float floatSum() {
         return longSum();
     }
-    
+
     private long longSum() {
         long sum = 0;
         for (int i = 0; i < values.length; i++) {
@@ -470,6 +470,13 @@ class ByteTensor extends Tensor {
     }
 
     @Override
+    public void abs() {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = values[i] >= 0 ? values[i] : (byte) -values[i];
+        }
+    }
+
+    @Override
     public Tensor transpose() {
         ByteTensor transposed = (ByteTensor) Tensor.create(TYPE.BYTE, ArrayUtils.reverse(dimensions));
         int[] indices = new int[dimensions.length];
@@ -551,9 +558,9 @@ class ByteTensor extends Tensor {
             return getByteValue(rd) * kernel.getByteValue(e);
         }
     }
-    
+
     @Override
-    protected void convolvePartialRecursive(Tensor kernel, Tensor result, int k, int[] kd, int[] d){
+    protected void convolvePartialRecursive(Tensor kernel, Tensor result, int k, int[] kd, int[] d) {
         if (k < result.dimensions.length) {
             for (int i = 0; i < result.dimensions[k]; i++) {
                 kd[k] = i;
@@ -565,7 +572,7 @@ class ByteTensor extends Tensor {
                     PrimitiveUtils.toByte(partialConvolutionSum(kernel, d, 0, new int[kernel.dimensions.length])), kd);
         }
     }
-    
+
     private long partialConvolutionSum(Tensor kernel, int[] d, int k, int[] e) {
         if (k < kernel.dimensions.length) {
             long s = 0;

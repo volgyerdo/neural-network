@@ -368,6 +368,11 @@ class ObjectTensor extends Tensor {
     public void negate() {
         throw new RuntimeException("Object tensor doesn't have negate function.");
     }
+    
+    @Override
+    public void abs() {
+        throw new RuntimeException("Object tensor doesn't have abs function.");
+    }
 
     @Override
     public Tensor transpose() {

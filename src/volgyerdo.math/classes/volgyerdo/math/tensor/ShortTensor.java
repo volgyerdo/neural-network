@@ -460,6 +460,13 @@ class ShortTensor extends Tensor {
             values[i] = (short) -values[i];
         }
     }
+    
+    @Override
+    public void abs() {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = values[i] >= 0 ? values[i] : (short) -values[i];
+        }
+    }
 
     @Override
     public Tensor transpose() {

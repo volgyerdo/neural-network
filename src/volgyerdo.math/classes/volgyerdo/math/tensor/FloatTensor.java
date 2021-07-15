@@ -452,6 +452,13 @@ class FloatTensor extends Tensor {
             values[i] = (float) -values[i];
         }
     }
+    
+    @Override
+    public void abs() {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = values[i] >= 0 ? values[i] : (float) -values[i];
+        }
+    }
 
     @Override
     public Tensor transpose() {

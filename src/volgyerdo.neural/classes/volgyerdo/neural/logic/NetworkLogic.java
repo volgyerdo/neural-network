@@ -17,6 +17,7 @@ package volgyerdo.neural.logic;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import volgyerdo.math.fast.FastMath;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
@@ -24,6 +25,8 @@ import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Sample;
 import volgyerdo.neural.structure.TestResults;
+import volgyerdo.neural.structure.TrainResults;
+import volgyerdo.neural.structure.TrainSample;
 
 /**
  *
@@ -61,6 +64,62 @@ public class NetworkLogic {
             NetworkLogic.propagate(network, sample.input);
             NetworkLogic.backPropagate(network, sample.target);
         }
+    }
+
+    public static void train(Network network, Collection<Sample> samples) {
+        Sample[] sampleArray = (Sample[]) samples.toArray(new Sample[samples.size()]);
+        checkSamples(network, sampleArray);
+        TrainSample[] trainSamples = createTrainSamples(sampleArray);
+        TrainResults results = new TrainResults();
+        int cycle = 1;
+        do {
+            TrainSample trainSample = getOldRandomSample(trainSamples);
+            trainSample.cycle = cycle;
+            NetworkLogic.propagate(network, trainSample.sample.input);
+            Tensor errors = trainSample.sample.target.copy();
+            errors.substract(NetworkUtils.getOutputLayer(network).states);
+            errors.abs();
+            double error = errors.floatAverage();
+            double errorDelta = error - results.error;
+            results.cycle = cycle;
+            results.errorSum += error;
+            results.errorDeltaSum += errorDelta;
+            results.error = error;
+            results.errorDelta = errorDelta;
+//            System.out.println(trainSample.sample.input + ";" + trainSample.sample.target + ";"
+//                    + results.error + ";" + results.errorDelta + ";"
+//                    + (results.errorSum / results.cycle) + ";" + (results.errorDeltaSum / results.cycle));
+            NetworkLogic.backPropagate(network, trainSample.sample.target);
+            cycle++;
+        } while (cycle < samples.size()
+                || !(results.error < 0.1 &&
+                results.errorDeltaSum / results.cycle < 0.00001));
+        System.out.println("CYCLES: " + cycle);
+    }
+
+    private static TrainSample getOldRandomSample(TrainSample[] sampleArray) {
+        Arrays.sort(sampleArray, new TrainSampleComparator());
+        int index = (int) (Math.random() * sampleArray.length / 2);
+        return sampleArray[index];
+    }
+
+    private static class TrainSampleComparator implements Comparator<TrainSample> {
+
+        @Override
+        public int compare(TrainSample o1, TrainSample o2) {
+            return o1.cycle - o2.cycle;
+        }
+
+    }
+
+    private static TrainSample[] createTrainSamples(Sample[] samples) {
+        TrainSample[] trainSamples = new TrainSample[samples.length];
+        for (int i = 0; i < samples.length; i++) {
+            TrainSample trainSample = new TrainSample();
+            trainSample.sample = samples[i];
+            trainSamples[i] = trainSample;
+        }
+        return trainSamples;
     }
 
     private static void checkSamples(Network network, Sample[] samples) {
@@ -120,7 +179,7 @@ public class NetworkLogic {
             }
             if (FastMath.abs(errorTensor.floatMin()) < minError) {
                 minError = FastMath.abs(errorTensor.floatMin());
-                
+
             }
             averageError = errorTensor.floatAverage();
 

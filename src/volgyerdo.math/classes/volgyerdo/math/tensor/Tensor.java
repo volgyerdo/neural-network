@@ -166,6 +166,8 @@ public abstract class Tensor {
     public abstract void processObject(ObjectProcessor processor);
 
     public abstract void negate();
+    
+    public abstract void abs();
 
     public abstract Tensor transpose();
 

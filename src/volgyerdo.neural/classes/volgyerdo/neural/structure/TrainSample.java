@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 User.
+ * Copyright 2021 Volgyerdo Nonprofit Kft.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,11 @@ package volgyerdo.neural.structure;
 
 /**
  *
- * @author Antal
+ * @author Volgyerdo Nonprofit Kft.
  */
-public class TestResults {
+public class TrainSample {
     
-    public long runTime;
-    public float avgError;
-    public float minError;
-    public float maxError;
-
+    public Sample sample;
+    public int cycle;
+    
 }
