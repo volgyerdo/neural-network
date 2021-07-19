@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.neural.structure;
+package volgyerdo.neural.logic;
 
-import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.logic.NetworkConstants;
+import volgyerdo.neural.structure.Neuron;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class ConvolutionalLayer extends Layer{
+public class NeuronFactory {
 
-    public Tensor kernel;
-    public Tensor bias;
-    public Tensor activations;
-    public float learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
-    
+    public static Neuron createDefaultNeuron() {
+        Neuron neuron = new Neuron();
+        neuron.activation = ActivationFactory.createDefaultActivation();
+        return neuron;
+    }
+
+    private NeuronFactory() {
+    }
+
 }

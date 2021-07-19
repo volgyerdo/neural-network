@@ -26,7 +26,7 @@ public class DenseLayer extends Layer{
    
     public Tensor weights;
     public Tensor bias;
-    public Activation activation;
+    public Tensor activations;
     public float learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
     
 }

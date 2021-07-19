@@ -17,6 +17,9 @@ package volgyerdo.neural.logic;
 
 import volgyerdo.neural.structure.Activation;
 import volgyerdo.math.fast.FastMath;
+import volgyerdo.math.tensor.FloatTensor;
+import volgyerdo.math.tensor.ObjectTensor;
+import volgyerdo.math.tensor.Tensor;
 
 /**
  *
@@ -25,6 +28,24 @@ import volgyerdo.math.fast.FastMath;
 public class ActivationLogic {
 
     private ActivationLogic() {
+    }
+
+    public static void activate(Tensor states, Tensor activations) {
+        FloatTensor floatStates = (FloatTensor)states;
+        ObjectTensor activationObjects = (ObjectTensor)activations;
+        for (int i = 0; i < floatStates.values.length; i++) {
+            floatStates.values[i] = 
+                    activate(floatStates.values[i], (Activation)activationObjects.values[i]);
+        }
+    }
+    
+    public static void deactivate(Tensor states, Tensor activations) {
+        FloatTensor floatStates = (FloatTensor)states;
+        ObjectTensor activationObjects = (ObjectTensor)activations;
+        for (int i = 0; i < floatStates.values.length; i++) {
+            floatStates.values[i] = 
+                    deactivate(floatStates.values[i], (Activation)activationObjects.values[i]);
+        }
     }
 
     // f(x) = [(1 + (x + shiftX) * stretchX * swish)) / (1 + exp(-(x + shiftX) * stretchX)) 

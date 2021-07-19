@@ -64,7 +64,7 @@ public class LayerLogic {
         Tensor outputStates = weights.multiply(prevLayer.states, prevLayer.states.dimensions.length);
 
         outputStates.add(layer.bias);
-        outputStates.processFloat((x) -> ActivationLogic.activate(x, layer.activation));
+        ActivationLogic.activate(outputStates, layer.activations);
 
         layer.states = outputStates;
     }
@@ -75,7 +75,7 @@ public class LayerLogic {
         Tensor outputStates = prevLayer.states.convolve(kernel);
         outputStates = outputStates.convolve(layer.bias);
         
-        outputStates.processFloat((x) -> ActivationLogic.activate(x, layer.activation));
+        ActivationLogic.activate(outputStates, layer.activations);
 
         layer.states = outputStates;
     }
@@ -90,7 +90,7 @@ public class LayerLogic {
     }
 
     private static Tensor backPropagate(DenseLayer layer, Layer nextLayer, Tensor delta) {
-        layer.states.processFloat((x) -> ActivationLogic.deactivate(x, layer.activation));
+        ActivationLogic.deactivate(layer.states, layer.activations);
         delta.hadamardProduct(layer.states);
 
         Tensor deltaW = delta.multiply(nextLayer.states, 0);
@@ -106,7 +106,7 @@ public class LayerLogic {
     }
 
     private static Tensor backPropagate(ConvolutionalLayer layer, Layer nextLayer, Tensor delta) {
-        layer.states.processFloat((x) -> ActivationLogic.deactivate(x, layer.activation));
+        ActivationLogic.deactivate(layer.states, layer.activations);
         delta.hadamardProduct(layer.states);
 
         Tensor deltaKernel = nextLayer.states.convolvePartial(delta, layer.kernel.dimensions);
@@ -131,9 +131,9 @@ public class LayerLogic {
     
     public static void setActivation(Layer layer, Activation activation){
         if (layer instanceof DenseLayer) {
-            ((DenseLayer)layer).activation = ActivationFactory.createCopy(activation);
+            ((DenseLayer)layer).activations.fillWithObject(() -> ActivationFactory.createCopy(activation));
         } else if (layer instanceof ConvolutionalLayer) {
-            ((ConvolutionalLayer)layer).activation = ActivationFactory.createCopy(activation);
+            ((ConvolutionalLayer)layer).activations.fillWithObject(() -> ActivationFactory.createCopy(activation));
         }
     }
 }

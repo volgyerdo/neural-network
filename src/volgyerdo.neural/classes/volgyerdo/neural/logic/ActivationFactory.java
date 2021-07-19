@@ -15,6 +15,7 @@
  */
 package volgyerdo.neural.logic;
 
+import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 
 /**
@@ -24,6 +25,15 @@ import volgyerdo.neural.structure.Activation;
 public class ActivationFactory {
 
     private ActivationFactory() {
+    }
+
+    public static Tensor createDefaultActivations(int... dimensions) {
+        Tensor activations = Tensor.create(Tensor.TYPE.OBJECT, dimensions);
+        activations.fillWithObject(() -> createDefaultActivation());
+        return activations;
+    }
+    public static Activation createDefaultActivation() {
+        return ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
     }
         
     public static Activation create(

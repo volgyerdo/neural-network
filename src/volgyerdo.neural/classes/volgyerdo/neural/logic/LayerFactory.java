@@ -32,7 +32,7 @@ public class LayerFactory {
     public static DenseLayer createDenseLayer(int... dimensions) {
         DenseLayer layer = new DenseLayer();
         layer.states = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
-        layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
+        layer.activations = ActivationFactory.createDefaultActivations(dimensions);
         layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
         return layer;
     }
@@ -40,7 +40,7 @@ public class LayerFactory {
     public static ConvolutionalLayer createConvolutionalLayer(int... dimensions) {
         ConvolutionalLayer layer = new ConvolutionalLayer();
         layer.states = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
-        layer.activation = ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
+        layer.activations = ActivationFactory.createDefaultActivations(dimensions);
         layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
         return layer;
     }
