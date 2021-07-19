@@ -16,7 +16,7 @@
 package volgyerdo.neural.logic;
 
 import java.util.Random;
-import volgyerdo.math.PrimitiveUtils;
+import volgyerdo.math.primitive.PrimitiveUtils;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;

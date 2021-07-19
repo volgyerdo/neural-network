@@ -16,14 +16,22 @@
 package volgyerdo.math.tensor;
 
 import java.util.Arrays;
-import volgyerdo.math.ArrayUtils;
-import volgyerdo.math.PrimitiveUtils;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+import volgyerdo.math.primitive.ArrayUtils;
+import volgyerdo.math.primitive.ByteSupplier;
+import volgyerdo.math.primitive.PrimitiveUtils;
+import volgyerdo.math.primitive.ByteUnaryOperator;
+import volgyerdo.math.primitive.FloatSupplier;
+import volgyerdo.math.primitive.FloatUnaryOperator;
+import volgyerdo.math.primitive.ShortSupplier;
+import volgyerdo.math.primitive.ShortUnaryOperator;
 
 /**
  *
  * @author Pocze Zsolt
  */
-class ShortTensor extends Tensor {
+public class ShortTensor extends Tensor {
 
     public final short[] values;
 
@@ -75,14 +83,19 @@ class ShortTensor extends Tensor {
         }
         return objectTensor;
     }
-    
+
     @Override
-    public void set(Tensor tensor){
+    public int size() {
+        return values.length;
+    }
+
+    @Override
+    public void set(Tensor tensor) {
         checkNull(tensor);
         checkClass(tensor);
         checkDimensionCount(tensor.dimensions);
         checkDimensions(tensor);
-        System.arraycopy(((ShortTensor)tensor).values, 0, values, 0, values.length);
+        System.arraycopy(((ShortTensor) tensor).values, 0, values, 0, values.length);
     }
 
     @Override
@@ -157,7 +170,7 @@ class ShortTensor extends Tensor {
     public void setObjectArray(Object[] values) {
         throw new RuntimeException("Can't set an object array into a byte tensor.");
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -319,7 +332,7 @@ class ShortTensor extends Tensor {
             values[i] = PrimitiveUtils.toShort((float) values[i] / x);
         }
     }
-    
+
     @Override
     public Tensor sum() {
         long sum = 0;
@@ -330,7 +343,7 @@ class ShortTensor extends Tensor {
         result.setShortValue(PrimitiveUtils.toShort(sum), 0);
         return result;
     }
-    
+
     @Override
     public byte byteSum() {
         return PrimitiveUtils.toByte(longSum());
@@ -345,7 +358,7 @@ class ShortTensor extends Tensor {
     public float floatSum() {
         return longSum();
     }
-    
+
     private long longSum() {
         long sum = 0;
         for (int i = 0; i < values.length; i++) {
@@ -429,29 +442,55 @@ class ShortTensor extends Tensor {
     }
 
     @Override
-    public void processByte(ByteProcessor processor) {
+    public void processByte(ByteUnaryOperator operator) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = processor.process(PrimitiveUtils.toByte(values[i]));
+            values[i] = operator.applyAsByte(PrimitiveUtils.toByte(values[i]));
         }
     }
 
     @Override
-    public void processShort(ShortProcessor processor) {
+    public void processShort(ShortUnaryOperator operator) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = processor.process(values[i]);
+            values[i] = operator.applyAsShort(values[i]);
         }
     }
 
     @Override
-    public void processFloat(FloatProcessor processor) {
+    public void processFloat(FloatUnaryOperator operator) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = PrimitiveUtils.toShort(processor.process((float) values[i]));
+            values[i] = PrimitiveUtils.toShort(operator.applyAsFloat((float) values[i]));
         }
     }
 
     @Override
-    public void processObject(ObjectProcessor processor) {
+    public void processObject(UnaryOperator operator) {
         throw new RuntimeException("Short tensor doesn't have object processor function.");
+    }
+
+    @Override
+    public void fillWithByte(ByteSupplier operator) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = operator.getAsByte();
+        }
+    }
+
+    @Override
+    public void fillWithShort(ShortSupplier operator) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = operator.getAsShort();
+        }
+    }
+
+    @Override
+    public void fillWithFloat(FloatSupplier operator) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = PrimitiveUtils.toShort(operator.getAsFloat());
+        }
+    }
+
+    @Override
+    public void fillWithObject(Supplier operator) {
+        throw new RuntimeException("Short tensor doesn't have object filler function.");
     }
 
     @Override
@@ -460,7 +499,7 @@ class ShortTensor extends Tensor {
             values[i] = (short) -values[i];
         }
     }
-    
+
     @Override
     public void abs() {
         for (int i = 0; i < values.length; i++) {
@@ -513,7 +552,7 @@ class ShortTensor extends Tensor {
         } else {
             System.arraycopy(indices, 0, rd1, dimensions.length - depth, depth);
             System.arraycopy(indices, 0, rd2, 0, depth);
-            target.setShortValue(PrimitiveUtils.toShort(target.getShortValue(pos) 
+            target.setShortValue(PrimitiveUtils.toShort(target.getShortValue(pos)
                     + getShortValue(rd1) * multiplier.getShortValue(rd2)), pos);
         }
     }
@@ -550,9 +589,9 @@ class ShortTensor extends Tensor {
             return getShortValue(rd) * kernel.getShortValue(e);
         }
     }
-    
+
     @Override
-    protected void convolvePartialRecursive(Tensor kernel, Tensor result, int k, int[] kd, int[] d){
+    protected void convolvePartialRecursive(Tensor kernel, Tensor result, int k, int[] kd, int[] d) {
         if (k < result.dimensions.length) {
             for (int i = 0; i < result.dimensions[k]; i++) {
                 kd[k] = i;
@@ -564,7 +603,7 @@ class ShortTensor extends Tensor {
                     PrimitiveUtils.toShort(partialConvolutionSum(kernel, d, 0, new int[kernel.dimensions.length])), kd);
         }
     }
-    
+
     private long partialConvolutionSum(Tensor kernel, int[] d, int k, int[] e) {
         if (k < kernel.dimensions.length) {
             long s = 0;
@@ -599,7 +638,7 @@ class ShortTensor extends Tensor {
                 indices[n] = i;
                 toStringRecursive(sb, n + 1, indices, newLine);
             }
-            if(newLine){
+            if (newLine) {
                 sb.append("\n");
             }
         } else {

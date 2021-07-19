@@ -17,7 +17,7 @@ package volgyerdo.math.tensor;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-import volgyerdo.math.PrimitiveUtils;
+import volgyerdo.math.primitive.PrimitiveUtils;
 
 /**
  *

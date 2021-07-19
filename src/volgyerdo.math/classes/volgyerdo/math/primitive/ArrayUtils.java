@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.math;
+package volgyerdo.math.primitive;
 
 /**
  *
@@ -150,6 +150,24 @@ public class ArrayUtils {
         float delta = max - min;
         for (int i = 0; i < a.length; i++) {
             a[i] = (float)(Math.random() * delta + min);
+        }
+    }
+    
+    public static void process(byte[] a, ByteArrayOperator operator){
+        for (int i = 0; i < a.length; i++) {
+            a[i] = operator.applyAsByte(a[i], i);
+        }
+    }
+    
+    public static void process(short[] a, ShortArrayOperator operator){
+        for (int i = 0; i < a.length; i++) {
+            a[i] = operator.applyAsShort(a[i], i);
+        }
+    }
+    
+    public static void process(float[] a, FloatArrayOperator operator){
+        for (int i = 0; i < a.length; i++) {
+            a[i] = operator.applyAsFloat(a[i], i);
         }
     }
 

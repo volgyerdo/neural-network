@@ -16,14 +16,22 @@
 package volgyerdo.math.tensor;
 
 import java.util.Arrays;
-import volgyerdo.math.ArrayUtils;
-import volgyerdo.math.PrimitiveUtils;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+import volgyerdo.math.primitive.ArrayUtils;
+import volgyerdo.math.primitive.ByteSupplier;
+import volgyerdo.math.primitive.PrimitiveUtils;
+import volgyerdo.math.primitive.ByteUnaryOperator;
+import volgyerdo.math.primitive.FloatSupplier;
+import volgyerdo.math.primitive.FloatUnaryOperator;
+import volgyerdo.math.primitive.ShortSupplier;
+import volgyerdo.math.primitive.ShortUnaryOperator;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-class FloatTensor extends Tensor {
+public class FloatTensor extends Tensor {
 
     public final float[] values;
 
@@ -74,6 +82,11 @@ class FloatTensor extends Tensor {
             objectTensor.values[i] = values[i];
         }
         return objectTensor;
+    }
+
+    @Override
+    public int size() {
+        return values.length;
     }
 
     @Override
@@ -337,7 +350,7 @@ class FloatTensor extends Tensor {
     public float floatSum() {
         return PrimitiveUtils.toFloat(doubleSum());
     }
-    
+
     private double doubleSum() {
         double sum = 0;
         for (int i = 0; i < values.length; i++) {
@@ -421,29 +434,55 @@ class FloatTensor extends Tensor {
     }
 
     @Override
-    public void processByte(ByteProcessor processor) {
+    public void processByte(ByteUnaryOperator operator) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = processor.process(PrimitiveUtils.toByte(values[i]));
+            values[i] = operator.applyAsByte(PrimitiveUtils.toByte(values[i]));
         }
     }
 
     @Override
-    public void processShort(ShortProcessor processor) {
+    public void processShort(ShortUnaryOperator operator) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = processor.process(PrimitiveUtils.toShort(values[i]));
+            values[i] = operator.applyAsShort(PrimitiveUtils.toShort(values[i]));
         }
     }
 
     @Override
-    public void processFloat(FloatProcessor processor) {
+    public void processFloat(FloatUnaryOperator operator) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = processor.process(values[i]);
+            values[i] = operator.applyAsFloat(values[i]);
         }
     }
 
     @Override
-    public void processObject(ObjectProcessor processor) {
+    public void processObject(UnaryOperator operator) {
         throw new RuntimeException("Float tensor doesn't have object processor function.");
+    }
+
+    @Override
+    public void fillWithByte(ByteSupplier operator) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = operator.getAsByte();
+        }
+    }
+
+    @Override
+    public void fillWithShort(ShortSupplier operator) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = operator.getAsShort();
+        }
+    }
+
+    @Override
+    public void fillWithFloat(FloatSupplier operator) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = operator.getAsFloat();
+        }
+    }
+
+    @Override
+    public void fillWithObject(Supplier operator) {
+        throw new RuntimeException("Float tensor doesn't have object filler function.");
     }
 
     @Override
@@ -452,7 +491,7 @@ class FloatTensor extends Tensor {
             values[i] = (float) -values[i];
         }
     }
-    
+
     @Override
     public void abs() {
         for (int i = 0; i < values.length; i++) {

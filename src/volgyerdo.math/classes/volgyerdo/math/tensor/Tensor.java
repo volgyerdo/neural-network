@@ -15,6 +15,15 @@
  */
 package volgyerdo.math.tensor;
 
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+import volgyerdo.math.primitive.ByteSupplier;
+import volgyerdo.math.primitive.ByteUnaryOperator;
+import volgyerdo.math.primitive.FloatSupplier;
+import volgyerdo.math.primitive.FloatUnaryOperator;
+import volgyerdo.math.primitive.ShortSupplier;
+import volgyerdo.math.primitive.ShortUnaryOperator;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
@@ -47,7 +56,7 @@ public abstract class Tensor {
     public Tensor createSimilar() {
         return create(type, dimensions);
     }
-    
+
     public static Tensor create(TYPE type, int... dimensions) {
         return switch (type) {
             case BYTE ->
@@ -62,10 +71,12 @@ public abstract class Tensor {
                 null;
         };
     }
-    
-    abstract public void set(Tensor tensor);
 
     abstract public Tensor convertTo(TYPE type);
+
+    public abstract int size();
+
+    abstract public void set(Tensor tensor);
 
     public abstract void setByteValue(byte value, int... indices);
 
@@ -130,43 +141,51 @@ public abstract class Tensor {
     public abstract void divide(short scaler);
 
     public abstract void divide(float scaler);
-    
+
     public abstract Tensor sum();
-    
+
     public abstract byte byteSum();
-    
+
     public abstract short shortSum();
-    
+
     public abstract float floatSum();
-    
+
     public abstract byte byteMin();
-    
+
     public abstract short shortMin();
-    
+
     public abstract float floatMin();
-    
+
     public abstract byte byteMax();
-    
+
     public abstract short shortMax();
-    
+
     public abstract float floatMax();
-    
+
     public abstract byte byteAverage();
-    
+
     public abstract short shortAverage();
-    
+
     public abstract float floatAverage();
 
-    public abstract void processByte(ByteProcessor processor);
+    public abstract void processByte(ByteUnaryOperator operator);
 
-    public abstract void processShort(ShortProcessor processor);
+    public abstract void processShort(ShortUnaryOperator operator);
 
-    public abstract void processFloat(FloatProcessor processor);
+    public abstract void processFloat(FloatUnaryOperator operator);
 
-    public abstract void processObject(ObjectProcessor processor);
+    public abstract void processObject(UnaryOperator operator);
+
+    public abstract void fillWithByte(ByteSupplier supplier);
+
+    public abstract void fillWithShort(ShortSupplier supplier);
+
+    public abstract void fillWithFloat(FloatSupplier supplier);
+
+    public abstract void fillWithObject(Supplier supplier);
 
     public abstract void negate();
-    
+
     public abstract void abs();
 
     public abstract Tensor transpose();
@@ -219,14 +238,14 @@ public abstract class Tensor {
             System.arraycopy(indices, 0, rd1, 0, dimensions.length - depth);
             System.arraycopy(indices, dimensions.length - depth, rd2, depth, multiplier.dimensions.length - depth);
             sumProductRecursive(multiplier, target, commonDimensions,
-                    multiplierDimensions, outputDimensions, depth, indices, 
-                    0, new int[commonDimensions.length], 
+                    multiplierDimensions, outputDimensions, depth, indices,
+                    0, new int[commonDimensions.length],
                     rd1, rd2);
         }
     }
 
     protected abstract void sumProductRecursive(Tensor multiplier, Tensor target,
-            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions, 
+            int[] commonDimensions, int[] multiplierDimensions, int[] outputDimensions,
             int depth, int[] pos, int n, int[] indices, int[] rd1, int[] rd2);
 
     public Tensor convolve(Tensor kernel) {
@@ -238,7 +257,7 @@ public abstract class Tensor {
     }
 
     protected abstract void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d);
-    
+
     public Tensor convolvePartial(Tensor kernel, int... outputDimensions) {
         checkNull(kernel);
         checkClass(kernel);
@@ -310,7 +329,7 @@ public abstract class Tensor {
     public String toString() {
         return toString(false);
     }
-    
+
     public String toString(boolean newLine) {
         StringBuilder sb = new StringBuilder();
         toStringRecursive(sb, 0, new int[dimensions.length], newLine);
@@ -318,24 +337,4 @@ public abstract class Tensor {
     }
 
     public abstract void toStringRecursive(StringBuilder sb, int n, int[] indices, boolean newLine);
-
-    public interface ByteProcessor {
-
-        public byte process(byte x);
-    }
-
-    public interface ShortProcessor {
-
-        public short process(short x);
-    }
-
-    public interface FloatProcessor {
-
-        public float process(float x);
-    }
-
-    public interface ObjectProcessor {
-
-        public Object process(Object x);
-    }
 }

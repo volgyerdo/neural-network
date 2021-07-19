@@ -16,13 +16,21 @@
 package volgyerdo.math.tensor;
 
 import java.util.Arrays;
-import volgyerdo.math.ArrayUtils;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+import volgyerdo.math.primitive.ArrayUtils;
+import volgyerdo.math.primitive.ByteSupplier;
+import volgyerdo.math.primitive.ByteUnaryOperator;
+import volgyerdo.math.primitive.FloatSupplier;
+import volgyerdo.math.primitive.FloatUnaryOperator;
+import volgyerdo.math.primitive.ShortSupplier;
+import volgyerdo.math.primitive.ShortUnaryOperator;
 
 /**
  *
  * @author Pocze Zsolt
  */
-class ObjectTensor extends Tensor {
+public class ObjectTensor extends Tensor {
 
     public final Object[] values;
 
@@ -65,6 +73,11 @@ class ObjectTensor extends Tensor {
         } catch (CloneNotSupportedException ex) {
             return null;
         }
+    }
+
+    @Override
+    public int size() {
+        return values.length;
     }
 
     @Override
@@ -276,12 +289,12 @@ class ObjectTensor extends Tensor {
     public void divide(float x) {
         throw new RuntimeException("Object tensor doesn't have add function.");
     }
-    
+
     @Override
     public Tensor sum() {
         throw new RuntimeException("Object tensor doesn't have sum function.");
     }
-    
+
     @Override
     public byte byteSum() {
         throw new RuntimeException("Object tensor doesn't have byteSum function.");
@@ -296,71 +309,93 @@ class ObjectTensor extends Tensor {
     public float floatSum() {
         throw new RuntimeException("Object tensor doesn't have floatSum function.");
     }
-    
+
     @Override
-    public byte byteMin(){
+    public byte byteMin() {
         throw new RuntimeException("Object tensor doesn't have byteMin function.");
     }
-    
+
     @Override
-    public short shortMin(){
+    public short shortMin() {
         throw new RuntimeException("Object tensor doesn't have shortMin function.");
     }
-    
+
     @Override
-    public float floatMin(){
+    public float floatMin() {
         throw new RuntimeException("Object tensor doesn't have floatMin function.");
     }
-    
+
     @Override
-    public byte byteMax(){
+    public byte byteMax() {
         throw new RuntimeException("Object tensor doesn't have byteMax function.");
     }
-    
+
     @Override
-    public short shortMax(){
+    public short shortMax() {
         throw new RuntimeException("Object tensor doesn't have shortMax function.");
     }
-    
+
     @Override
-    public float floatMax(){
+    public float floatMax() {
         throw new RuntimeException("Object tensor doesn't have floatMax function.");
     }
-    
+
     @Override
-    public byte byteAverage(){
+    public byte byteAverage() {
         throw new RuntimeException("Object tensor doesn't have byteAverage function.");
     }
-    
+
     @Override
-    public short shortAverage(){
+    public short shortAverage() {
         throw new RuntimeException("Object tensor doesn't have shortAverage function.");
     }
-    
+
     @Override
-    public float floatAverage(){
+    public float floatAverage() {
         throw new RuntimeException("Object tensor doesn't have floatAverage function.");
     }
 
     @Override
-    public void processByte(ByteProcessor processor) {
+    public void processByte(ByteUnaryOperator operator) {
         throw new RuntimeException("Object tensor doesn't have byte process function.");
     }
 
     @Override
-    public void processShort(ShortProcessor processor) {
+    public void processShort(ShortUnaryOperator operator) {
         throw new RuntimeException("Object tensor doesn't have short process function.");
     }
 
     @Override
-    public void processFloat(FloatProcessor processor) {
+    public void processFloat(FloatUnaryOperator operator) {
         throw new RuntimeException("Object tensor doesn't have float process function.");
     }
 
     @Override
-    public void processObject(ObjectProcessor processor) {
+    public void processObject(UnaryOperator operator) {
         for (int i = 0; i < values.length; i++) {
-            values[i] = processor.process(values[i]);
+            values[i] = operator.apply(values[i]);
+        }
+    }
+
+    @Override
+    public void fillWithByte(ByteSupplier operator) {
+        throw new RuntimeException("Object tensor doesn't have byte filler function.");
+    }
+
+    @Override
+    public void fillWithShort(ShortSupplier operator) {
+        throw new RuntimeException("Object tensor doesn't have short filler function.");
+    }
+
+    @Override
+    public void fillWithFloat(FloatSupplier operator) {
+        throw new RuntimeException("Object tensor doesn't have float filler function.");
+    }
+
+    @Override
+    public void fillWithObject(Supplier operator) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = operator.get();
         }
     }
 
@@ -368,7 +403,7 @@ class ObjectTensor extends Tensor {
     public void negate() {
         throw new RuntimeException("Object tensor doesn't have negate function.");
     }
-    
+
     @Override
     public void abs() {
         throw new RuntimeException("Object tensor doesn't have abs function.");
@@ -415,9 +450,9 @@ class ObjectTensor extends Tensor {
     protected void convolveRecursive(Tensor kernel, Tensor result, int k, int[] d) {
         throw new RuntimeException("Object tensor doesn't have convolution function.");
     }
-    
+
     @Override
-    protected void convolvePartialRecursive(Tensor kernel, Tensor result, int k, int[] kd, int[] d){
+    protected void convolvePartialRecursive(Tensor kernel, Tensor result, int k, int[] kd, int[] d) {
         throw new RuntimeException("Object tensor doesn't have a partial convolution function.");
     }
 
@@ -442,6 +477,5 @@ class ObjectTensor extends Tensor {
             sb.append("[").append(String.valueOf(getObjectValue(indices))).append("]");
         }
     }
-
 
 }
