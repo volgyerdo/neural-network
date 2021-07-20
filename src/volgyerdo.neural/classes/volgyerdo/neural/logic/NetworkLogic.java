@@ -156,50 +156,36 @@ public class NetworkLogic {
         }
     }
 
-    public static TestResults test(Network network, Collection<Sample> samples, boolean enableStatPrint) {
+    public static TestResults test(Network network, Collection<Sample> samples) {
         long startTime = System.nanoTime();
         TestResults results = new TestResults();
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
         int[] outputLayerSize = outputLayer.states.dimensions; //? 
-
-        float averageError = 0;
         Tensor errorTensor = Tensor.create(Tensor.TYPE.FLOAT, outputLayerSize); //típus!
-
+        Tensor averageErrorTensor = Tensor.create(Tensor.TYPE.FLOAT, outputLayerSize);
         float maxError = 0;
         float minError = 10;
-
-        int i = 0;
+        results.sampleCount = samples.size();
         for (Sample sample : samples) {
             propagate(network, sample.input);
-            sample.target.substract(outputLayer.states);
-            errorTensor.set(sample.target);
-
+            errorTensor.set(outputLayer.states);
+            errorTensor.substract(sample.target);
+            errorTensor.abs();
+            averageErrorTensor.add(errorTensor);
             if (errorTensor.floatMax() > maxError) {
                 maxError = errorTensor.floatMax();
             }
-            if (FastMath.abs(errorTensor.floatMin()) < minError) {
-                minError = FastMath.abs(errorTensor.floatMin());
-
-            }
-            averageError = errorTensor.floatAverage();
-
-            //print stats
-            if (enableStatPrint) {
-                System.out.println("At " + i++
-                        + ", Avg: " + averageError
-                        + ", Min: " + minError
-                        + ", Max: " + maxError);
+            if (errorTensor.floatMin() < minError) {
+                minError = errorTensor.floatMin();
             }
         }
-
-        results.avgError = (averageError);
+        averageErrorTensor.divide(results.sampleCount);
+        results.avgError = averageErrorTensor.floatAverage();
         results.minError = minError;
         results.maxError = maxError;
-
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         results.runTime = duration / 1000000; //divide by 1000000 to get milliseconds.
-
         return results;
     }
 

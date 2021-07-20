@@ -43,7 +43,7 @@ public class LineRecognitionTest {
     private static int LINE_COUNT = 4; //min 0 max4
     private static int TRAINING_SAMPLE_COUNT = 10;
     private static int ROWCOUNT = 5;
-    private static int TRAIN_CYCLES = 5; //forward and back prop (4000-8000)
+    private static int TRAIN_CYCLES = 5000; //forward and back prop (4000-8000)
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
 
     public static void main(String[] args) {
@@ -81,11 +81,11 @@ public class LineRecognitionTest {
         
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
         System.out.println("\nTraining:\n");
-        TestResults training = NetworkLogic.test(network, trainingSamples, true);
+        TestResults training = NetworkLogic.test(network, trainingSamples);
         NetworkUtils.printTestResults(training);
 
         System.out.println("\nControl:\n");
-        TestResults control = NetworkLogic.test(network, controlSamples, true);
+        TestResults control = NetworkLogic.test(network, controlSamples);
         NetworkUtils.printTestResults(control);
         //Live teszt
         //guessNumber(network, 100);

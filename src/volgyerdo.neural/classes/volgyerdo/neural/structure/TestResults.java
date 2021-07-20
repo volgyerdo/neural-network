@@ -25,5 +25,6 @@ public class TestResults {
     public float avgError;
     public float minError;
     public float maxError;
+    public int sampleCount;
 
 }
