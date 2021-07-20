@@ -68,11 +68,7 @@ public class ObjectTensor extends Tensor {
     }
 
     private Tensor convertToObjectTensor() {
-        try {
-            return clone();
-        } catch (CloneNotSupportedException ex) {
-            return null;
-        }
+        return copy();
     }
 
     @Override
@@ -457,10 +453,15 @@ public class ObjectTensor extends Tensor {
     }
 
     @Override
-    public Tensor clone() throws CloneNotSupportedException {
-        ObjectTensor clone = new ObjectTensor(dimensions);
-        System.arraycopy(values, 0, clone.values, 0, values.length);
-        return clone;
+    public Tensor copy() {
+        ObjectTensor copy = new ObjectTensor(dimensions);
+        System.arraycopy(values, 0, copy.values, 0, values.length);
+        return copy;
+    }
+
+    @Override
+    public IndexIterator indexIterator() {
+        return new IndexIterator(dimensions);
     }
 
     @Override
