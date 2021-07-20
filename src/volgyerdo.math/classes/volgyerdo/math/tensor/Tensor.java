@@ -324,6 +324,8 @@ public abstract class Tensor {
         System.arraycopy(multipliers, 0, clone.multipliers, 0, multipliers.length);
         return clone;
     }
+    
+    public abstract IndexIterator indexIterator();
 
     @Override
     public String toString() {

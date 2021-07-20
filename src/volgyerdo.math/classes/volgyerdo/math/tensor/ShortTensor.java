@@ -630,6 +630,11 @@ public class ShortTensor extends Tensor {
         System.arraycopy(values, 0, copy.values, 0, values.length);
         return copy;
     }
+    
+    @Override
+    public IndexIterator indexIterator(){
+        return new IndexIterator(dimensions);
+    }
 
     @Override
     public void toStringRecursive(StringBuilder sb, int n, int[] indices, boolean newLine) {
