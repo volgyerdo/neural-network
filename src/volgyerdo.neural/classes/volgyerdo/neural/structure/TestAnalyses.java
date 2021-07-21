@@ -24,5 +24,6 @@ public class TestAnalyses {
     public float errorGeometricMean;
     public float errorArithmeticMean;
     public float errorMedian;
+    public float errorStandardDeviation;
     
 }

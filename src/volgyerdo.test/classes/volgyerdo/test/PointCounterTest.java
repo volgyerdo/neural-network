@@ -26,6 +26,8 @@ import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
+import volgyerdo.neural.structure.TestAnalyses;
+import volgyerdo.neural.structure.TestRowAnalyses;
 
 /**
  *
@@ -96,7 +98,7 @@ public class PointCounterTest {
         System.out.println("Average error: " + FORMAT.format(averageError));
         System.out.println("Average match: " + FORMAT.format(matches / (double) trainingSamples.size()) + "\n");
 
-        NetworkLogic.train(network, trainingSamples);
+        NetworkLogic.train(network, trainingSamples, 100000);
 
         System.out.println("\nAfter training:\n");
         averageError = 0;
@@ -164,12 +166,12 @@ public class PointCounterTest {
         System.out.println("Average error: " + FORMAT.format(averageError));
         System.out.println("Average match: " + FORMAT.format(averageMatch) + "\n");
 
-        for (Layer layer : network.layers) {
-            DenseLayer denseLayer = (DenseLayer) layer;
-            if (denseLayer.weights != null) {
-                System.out.println("\n" + denseLayer.weights.toString(true));
-            }
-        }
+        TestAnalyses analysis = TestAnalysesLogic.analyze(network.testData);
+        NetworkUtils.printAnalysis(analysis);
+        
+        TestRowAnalyses rowAnalysis = TestAnalysesLogic.rowAnalyze(network.testData);
+        NetworkUtils.printRowAnalysis(rowAnalysis);
+        
     }
 
     private static void generateSamples(Collection<Sample> samples, int count) {

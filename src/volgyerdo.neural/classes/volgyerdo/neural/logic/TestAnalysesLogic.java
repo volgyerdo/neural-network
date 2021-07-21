@@ -18,6 +18,7 @@ package volgyerdo.neural.logic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import volgyerdo.math.fast.FastMath;
 import volgyerdo.neural.structure.TestAnalyses;
 import volgyerdo.neural.structure.TestRowAnalyses;
 import volgyerdo.neural.structure.TestData;
@@ -41,9 +42,18 @@ public class TestAnalysesLogic {
             sum += error;
             product *= error;
         }
-        analyses.errorArithmeticMean = (float) (sum / errors.size());
-        analyses.errorGeometricMean = (float) (Math.pow(product, 1. / errors.size()));
-        analyses.errorMedian = (float) (errors.get(errors.size() / 2));
+        double errorArithmeticMean = sum / errors.size();
+        double errorGeometricMean = Math.pow(product, 1. / errors.size());
+        double errorMedian = errors.get(errors.size() / 2);
+        double deviationSum = 0;
+        for (float error : errors) {
+            deviationSum += FastMath.pow2(error - errorArithmeticMean);
+        }
+        double standardDeviation = Math.pow(deviationSum / errors.size(), 0.5);
+        analyses.errorArithmeticMean = (float) errorArithmeticMean;
+        analyses.errorGeometricMean = (float) errorGeometricMean;
+        analyses.errorMedian = (float) errorMedian;
+        analyses.errorStandardDeviation = (float) standardDeviation;
         return analyses;
     }
 

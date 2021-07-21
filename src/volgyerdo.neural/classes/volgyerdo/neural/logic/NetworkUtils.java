@@ -90,6 +90,7 @@ public class NetworkUtils {
         System.out.println("Arithmetic mean: " + FORMAT.format(analysis.errorArithmeticMean));
         System.out.println("Geometric mean: " + FORMAT.format(analysis.errorGeometricMean));
         System.out.println("Median: " + FORMAT.format(analysis.errorMedian));
+        System.out.println("Standard deviation: " + FORMAT.format(analysis.errorStandardDeviation));
         System.out.println();
     }
     
@@ -98,7 +99,8 @@ public class NetworkUtils {
         for(TestAnalyses analysis : rowAnalysis.analyses){
             System.out.print(FORMAT.format(analysis.errorArithmeticMean) + ";");
             System.out.print(FORMAT.format(analysis.errorGeometricMean) + ";");
-            System.out.print(FORMAT.format(analysis.errorMedian));
+            System.out.print(FORMAT.format(analysis.errorMedian) + ";");
+            System.out.print(FORMAT.format(analysis.errorStandardDeviation));
             System.out.println();
         }
         System.out.println();

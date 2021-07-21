@@ -40,7 +40,7 @@ public class SimpleTest {
     
     public static void main(String[] args) {
         Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 4);
-        NetworkLogic.setLearningRate(network, 0.1f);
+        NetworkLogic.setLearningRate(network, 0.5f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());
         NetworkLogic.randomizeWeights(network);
 
