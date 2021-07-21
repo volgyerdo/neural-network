@@ -25,5 +25,6 @@ public class Sample {
     
     public Tensor input;
     public Tensor target;
+    public int lastTrainCycle;
     
 }

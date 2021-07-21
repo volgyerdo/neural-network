@@ -29,4 +29,6 @@ public class NetworkConstants {
     
     public static final float DEFAULT_WEIGHT_RADIUS = 1f;
     
+    public static final int ANALYSES_ROW_LENGTH = 50;
+    
 }

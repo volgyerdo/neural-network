@@ -19,9 +19,10 @@ package volgyerdo.neural.structure;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class TrainSample {
-    
-    public Sample sample;
-    public int cycle;
+public class TestAnalyses {
+
+    public float errorGeometricMean;
+    public float errorArithmeticMean;
+    public float errorMedian;
     
 }

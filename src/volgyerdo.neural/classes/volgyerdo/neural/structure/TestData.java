@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 antal.
+ * Copyright 2021 Volgyerdo Nonprofit Kft.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,10 @@ import java.util.List;
 
 /**
  *
- * @author antal
+ * @author Volgyerdo Nonprofit Kft.
  */
-public class Network{
+public class TestData {
     
-    public List<Layer> layers;
-    public TestData testData;
+    public List<Float> errors;
     
 }
