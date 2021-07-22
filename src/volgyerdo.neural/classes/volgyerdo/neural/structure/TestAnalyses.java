@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 antal.
+ * Copyright 2021 Volgyerdo Nonprofit Kft.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,15 @@
  */
 package volgyerdo.neural.structure;
 
-import java.util.List;
-
 /**
  *
- * @author antal
+ * @author Volgyerdo Nonprofit Kft.
  */
-public class Network{
-    
-    public List<Layer> layers;
-    public TestData testData;
+public class TestAnalyses {
+
+    public float errorGeometricMean;
+    public float errorArithmeticMean;
+    public float errorMedian;
+    public float errorStandardDeviation;
     
 }

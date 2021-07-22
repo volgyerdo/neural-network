@@ -17,7 +17,7 @@ package volgyerdo.neural.logic;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
+import java.util.List;
 import volgyerdo.math.fast.FastMath;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
@@ -25,8 +25,6 @@ import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Sample;
 import volgyerdo.neural.structure.TestResults;
-import volgyerdo.neural.structure.TrainResults;
-import volgyerdo.neural.structure.TrainSample;
 
 /**
  *
@@ -55,74 +53,54 @@ public class NetworkLogic {
         }
     }
 
-    public static void train(Network network, Collection<Sample> samples, int periods) {
-        Sample[] sampleArray = (Sample[]) samples.toArray(new Sample[samples.size()]);
-        checkSamples(network, sampleArray);
-        for (int i = 0; i < periods; i++) {
-            int pairNumber = (int) (Math.random() * sampleArray.length);
-            Sample sample = sampleArray[pairNumber];
-            NetworkLogic.propagate(network, sample.input);
-            NetworkLogic.backPropagate(network, sample.target);
+    public static void train(Network network, List<Sample> samples, int periods) {
+        checkSamples(network, samples);
+        for (int cycle = 0; cycle < periods; cycle++) {
+            Sample sample = getRandomSample(samples);
+            train(network, sample);
         }
     }
 
-    public static void train(Network network, Collection<Sample> samples) {
-        Sample[] sampleArray = (Sample[]) samples.toArray(new Sample[samples.size()]);
-        checkSamples(network, sampleArray);
-        TrainSample[] trainSamples = createTrainSamples(sampleArray);
-        TrainResults results = new TrainResults();
-        int cycle = 1;
+    public static void train(Network network, List<Sample> samples) {
+        checkSamples(network, samples);
         do {
-            TrainSample trainSample = getOldRandomSample(trainSamples);
-            trainSample.cycle = cycle;
-            NetworkLogic.propagate(network, trainSample.sample.input);
-            Tensor errors = trainSample.sample.target.copy();
-            errors.substract(NetworkUtils.getOutputLayer(network).states);
-            errors.abs();
-            double error = errors.floatAverage();
-            double errorDelta = error - results.error;
-            results.cycle = cycle;
-            results.errorSum += error;
-            results.errorDeltaSum += errorDelta;
-            results.error = error;
-            results.errorDelta = errorDelta;
-//            System.out.println(trainSample.sample.input + ";" + trainSample.sample.target + ";"
-//                    + results.error + ";" + results.errorDelta + ";"
-//                    + (results.errorSum / results.cycle) + ";" + (results.errorDeltaSum / results.cycle));
-            NetworkLogic.backPropagate(network, trainSample.sample.target);
-            cycle++;
-        } while (cycle < samples.size()
-                || !(results.error < 0.1 &&
-                results.errorDeltaSum / results.cycle < 0.00001));
-        System.out.println("CYCLES: " + cycle);
+            Sample sample = getRandomSample(samples);
+            train(network, sample);
+        } while (NetworkUtils.getTrainingCycle(network) < 1000);
     }
 
-    private static TrainSample getOldRandomSample(TrainSample[] sampleArray) {
-        Arrays.sort(sampleArray, new TrainSampleComparator());
-        int index = (int) (Math.random() * sampleArray.length / 2);
-        return sampleArray[index];
+    public static void train(Network network, Sample sample) {
+        NetworkLogic.propagate(network, sample.input);
+        storeTestData(network, sample);
+        NetworkLogic.backPropagate(network, sample.target);
+        sample.lastTrainCycle = network.testData.errors.size() - 1;
     }
 
-    private static class TrainSampleComparator implements Comparator<TrainSample> {
-
-        @Override
-        public int compare(TrainSample o1, TrainSample o2) {
-            return o1.cycle - o2.cycle;
-        }
-
+    private static void storeTestData(Network network, Sample sample) {
+        Tensor errors = sample.target.copy();
+        errors.substract(NetworkUtils.getOutputLayer(network).states);
+        errors.abs();
+        network.testData.errors.add(errors.floatAverage());
     }
 
-    private static TrainSample[] createTrainSamples(Sample[] samples) {
-        TrainSample[] trainSamples = new TrainSample[samples.length];
-        for (int i = 0; i < samples.length; i++) {
-            TrainSample trainSample = new TrainSample();
-            trainSample.sample = samples[i];
-            trainSamples[i] = trainSample;
-        }
-        return trainSamples;
+    private static Sample getRandomSample(List<Sample> samples) {
+        int randomSampleNumber = (int) (Math.random() * samples.size());
+        return samples.get(randomSampleNumber);
     }
 
-    private static void checkSamples(Network network, Sample[] samples) {
+//    private static Sample getOldestSample(List<Sample> samples) {
+//        int minCycle = Integer.MAX_VALUE;
+//        Sample oldestSample = null;
+//        for (Sample sample : samples) {
+//            if (sample.lastTrainCycle < minCycle) {
+//                minCycle = sample.lastTrainCycle;
+//                oldestSample = sample;
+//            }
+//        }
+//        return oldestSample;
+//    }
+
+    private static void checkSamples(Network network, Collection<Sample> samples) {
         Layer inputLayer = NetworkUtils.getInputLayer(network);
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
         for (Sample sample : samples) {

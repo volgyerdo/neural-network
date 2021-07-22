@@ -15,19 +15,24 @@
  */
 package volgyerdo.neural.logic;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 import volgyerdo.math.primitive.PrimitiveUtils;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Link;
+import volgyerdo.neural.structure.TestAnalyses;
 import volgyerdo.neural.structure.TestResults;
+import volgyerdo.neural.structure.TestRowAnalyses;
 
 /**
  *
  * @author antal
  */
 public class NetworkUtils {
+    
+    private static final DecimalFormat FORMAT = new DecimalFormat("0.0000");
 
     public static Tensor getInputDimensions(Network network) {
         return getInputLayer(network).states;
@@ -70,14 +75,39 @@ public class NetworkUtils {
     }
 
     public static void printTestResults(TestResults res){
-        System.out.println("");
-        System.out.println("");
-        System.out.print("Avg: " + res.avgError + ", ");
-        System.out.print("Min: " + res.minError + ", ");
-        System.out.print("Max: " + res.maxError + ", ");
+        System.out.println();
+        System.out.println();
+        System.out.print("Avg: " + FORMAT.format(res.avgError) + "; ");
+        System.out.print("Min: " + FORMAT.format(res.minError) + "; ");
+        System.out.print("Max: " + FORMAT.format(res.maxError) + "; ");
         System.out.print("Runtime: " + res.runTime + " ms ");
-        System.out.println("");
-        System.out.println("");
+        System.out.println();
+        System.out.println();
+    }
+    
+    public static void printAnalysis(TestAnalyses analysis){
+        System.out.println();
+        System.out.println("Arithmetic mean: " + FORMAT.format(analysis.errorArithmeticMean));
+        System.out.println("Geometric mean: " + FORMAT.format(analysis.errorGeometricMean));
+        System.out.println("Median: " + FORMAT.format(analysis.errorMedian));
+        System.out.println("Standard deviation: " + FORMAT.format(analysis.errorStandardDeviation));
+        System.out.println();
+    }
+    
+    public static void printRowAnalysis(TestRowAnalyses rowAnalysis){
+        System.out.println();
+        for(TestAnalyses analysis : rowAnalysis.analyses){
+            System.out.print(FORMAT.format(analysis.errorArithmeticMean) + ";");
+            System.out.print(FORMAT.format(analysis.errorGeometricMean) + ";");
+            System.out.print(FORMAT.format(analysis.errorMedian) + ";");
+            System.out.print(FORMAT.format(analysis.errorStandardDeviation));
+            System.out.println();
+        }
+        System.out.println();
+    }
+    
+    public static int getTrainingCycle(Network network){
+        return network.testData.errors.size() - 1;
     }
     
     private NetworkUtils() {

@@ -15,13 +15,14 @@
  */
 package volgyerdo.neural.structure;
 
+import java.util.List;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class TrainSample {
+public class TestData {
     
-    public Sample sample;
-    public int cycle;
+    public List<Float> errors;
     
 }

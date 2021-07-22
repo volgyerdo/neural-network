@@ -24,9 +24,12 @@ import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
+import volgyerdo.neural.logic.TestAnalysesLogic;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
+import volgyerdo.neural.structure.TestAnalyses;
+import volgyerdo.neural.structure.TestRowAnalyses;
 
 /**
  *
@@ -48,7 +51,7 @@ public class RandomArrayTest {
         NetworkFactory.addDenseLayer(network, 
                 LayerFactory.createDenseLayer(2));
 
-        NetworkLogic.setLearningRate(network, 0.01f);
+        NetworkLogic.setLearningRate(network, 0.1f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
 
@@ -131,7 +134,7 @@ public class RandomArrayTest {
         controlSamples.add(SampleFactory.createSample(convertStrToFloat(
                 "ugufzgvvqdandagjjzzbbztserzawc"), new float[]{0f, 1f}));
 
-        NetworkLogic.train(network, samples);
+        NetworkLogic.train(network, samples, 10000);
 
         System.out.println("\nAfter training:\n");
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
@@ -169,6 +172,12 @@ public class RandomArrayTest {
         errorHand /= n;
         errorReal /= n;
         System.out.println("Average error: " + errorHand + " - " + errorReal);
+        
+        TestAnalyses analysis = TestAnalysesLogic.analyze(network.testData);
+        NetworkUtils.printAnalysis(analysis);
+        
+        TestRowAnalyses rowAnalysis = TestAnalysesLogic.rowAnalyze(network.testData);
+        NetworkUtils.printRowAnalysis(rowAnalysis);
     }
 
     private static float[] convertStrToFloat(String str) {

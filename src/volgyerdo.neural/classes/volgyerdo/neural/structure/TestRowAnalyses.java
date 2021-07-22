@@ -15,16 +15,14 @@
  */
 package volgyerdo.neural.structure;
 
+import java.util.List;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class TrainResults {
-    
-    public long cycle;
-    public double error;
-    public double errorDelta;
-    public double errorSum;
-    public double errorDeltaSum;
+public class TestRowAnalyses {
+
+    public List<TestAnalyses> analyses;
     
 }

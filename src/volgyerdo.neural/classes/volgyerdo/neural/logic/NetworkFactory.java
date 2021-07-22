@@ -21,6 +21,7 @@ import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
+import volgyerdo.neural.structure.TestData;
 
 /**
  *
@@ -31,6 +32,8 @@ public class NetworkFactory {
     public static Network createNetwork() {
         Network network = new Network();
         network.layers = new ArrayList<>();
+        network.testData = new TestData();
+        network.testData.errors = new ArrayList<>();
         return network;
     }
 
