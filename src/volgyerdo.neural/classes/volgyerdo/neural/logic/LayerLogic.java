@@ -97,8 +97,8 @@ public class LayerLogic {
             layer.neurons[inputId].state = inputStates.getFloatValue(inputIterator.next());
             inputId++;
         }
-        DecimalFormat format = new DecimalFormat("0.0000");
-        for (int i = 0; i < 1000; i++) {
+        float[] output = new float[layer.outputIds.length];
+        for (int i = 0; i < layer.neurons.length; i++) {
             float[] newStates = new float[layer.neurons.length];
             Link link;
             for (int neuronId = 0; neuronId < neurons.length; neuronId++) {
@@ -112,11 +112,18 @@ public class LayerLogic {
             for (int neuronId = 0; neuronId < neurons.length; neuronId++) {
                 neurons[neuronId].state = ActivationLogic.activate(newStates[neuronId], neurons[neuronId].activation);
             }
-            for (int id = 0; id < layer.outputIds.length; id++) {
-                System.out.print(format.format(neurons[layer.outputIds[id]].state) + ";");
+            for (int outputId = 0; outputId < layer.outputIds.length; outputId++) {
+                output[outputId] += neurons[layer.outputIds[outputId]].state;
             }
-            System.out.println();
         }
+        for (int outputId = 0; outputId < layer.outputIds.length; outputId++) {
+            output[outputId] /= layer.neurons.length;
+            neurons[layer.outputIds[outputId]].state = output[outputId];
+        }
+//        DecimalFormat format = new DecimalFormat("0.0000");
+//        for (int outputId = 0; outputId < layer.outputIds.length; outputId++) {
+//            System.out.print(format.format(output[outputId]) + ";");
+//        }
     }
 
     public static Tensor backPropagate(Layer layer, Layer prevLayer, Tensor delta) {
