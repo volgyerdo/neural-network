@@ -15,7 +15,7 @@
  */
 package volgyerdo.neural.logic;
 
-import java.util.Arrays;
+import java.text.DecimalFormat;
 import volgyerdo.math.tensor.IndexIterator;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
@@ -97,18 +97,25 @@ public class LayerLogic {
             layer.neurons[inputId].state = inputStates.getFloatValue(inputIterator.next());
             inputId++;
         }
-        float[] newStates = new float[layer.neurons.length];
-        Link link;
-        for (int neuronId = 0; neuronId < neurons.length; neuronId++) {
-            for (int linkId = 0; linkId < links.length; linkId++) {
-                link = links[linkId];
-                if (link.outputId == neuronId) {
-                    newStates[neuronId] += link.weight * neurons[link.inputId].state;
+        DecimalFormat format = new DecimalFormat("0.0000");
+        for (int i = 0; i < 1000; i++) {
+            float[] newStates = new float[layer.neurons.length];
+            Link link;
+            for (int neuronId = 0; neuronId < neurons.length; neuronId++) {
+                for (int linkId = 0; linkId < links.length; linkId++) {
+                    link = links[linkId];
+                    if (link.outputId == neuronId) {
+                        newStates[neuronId] += link.weight * neurons[link.inputId].state;
+                    }
                 }
             }
-        }
-        for (int neuronId = 0; neuronId < neurons.length; neuronId++) {
-            neurons[neuronId].state = newStates[neuronId];
+            for (int neuronId = 0; neuronId < neurons.length; neuronId++) {
+                neurons[neuronId].state = ActivationLogic.activate(newStates[neuronId], neurons[neuronId].activation);
+            }
+            for (int id = 0; id < layer.outputIds.length; id++) {
+                System.out.print(format.format(neurons[layer.outputIds[id]].state) + ";");
+            }
+            System.out.println();
         }
     }
 

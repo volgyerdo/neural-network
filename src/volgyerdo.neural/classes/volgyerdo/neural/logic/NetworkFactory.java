@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
+import volgyerdo.neural.structure.GraphLayer;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.TestData;
@@ -32,6 +33,7 @@ public class NetworkFactory {
     public static Network createNetwork() {
         Network network = new Network();
         network.layers = new ArrayList<>();
+        network.layers.add(LayerFactory.createInputLayer());
         network.testData = new TestData();
         network.testData.errors = new ArrayList<>();
         return network;
@@ -75,6 +77,13 @@ public class NetworkFactory {
         layer.kernel = Tensor.create(Tensor.TYPE.FLOAT, kernelDimensions);
         layer.bias = Tensor.create(Tensor.TYPE.FLOAT, 1);
         network.layers.add(layer);
+    }
+    
+    public static Network createGraphNetwork(int neurons, int inputs, int outputs){
+        Network network = NetworkFactory.createNetwork();
+        GraphLayer layer = LayerFactory.createGraphLayer(neurons, inputs, outputs);
+        network.layers.add(layer);
+        return network;
     }
 
 }

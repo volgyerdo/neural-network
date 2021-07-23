@@ -20,6 +20,7 @@ import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.GraphLayer;
+import volgyerdo.neural.structure.InputLayer;
 import volgyerdo.neural.structure.Neuron;
 import volgyerdo.neural.structure.Link;
 
@@ -29,6 +30,10 @@ import volgyerdo.neural.structure.Link;
  */
 public class LayerFactory {
 
+    public static InputLayer createInputLayer(){
+        return new InputLayer();
+    }
+    
     public static DenseLayer createDenseLayer(int... dimensions) {
         DenseLayer layer = new DenseLayer();
         layer.states = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
@@ -43,6 +48,18 @@ public class LayerFactory {
         layer.activations = ActivationFactory.createDefaultActivations(dimensions);
         layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
         return layer;
+    }
+
+    public static GraphLayer createGraphLayer(int neuronCount, int inputs, int outputs) {
+        int[] inputIds = new int[inputs];
+        for (int i = 0; i < inputs; i++) {
+            inputIds[i] = i;
+        }
+        int[] outputIds = new int[outputs];
+        for (int i = 0; i < outputs; i++) {
+            outputIds[i] = i + inputs;
+        }
+        return createGraphLayer(neuronCount, inputIds, outputIds);
     }
 
     public static GraphLayer createGraphLayer(int neuronCount, int[] inputIds, int[] outputIds) {
@@ -61,7 +78,7 @@ public class LayerFactory {
                 link = new Link();
                 link.inputId = i;
                 link.outputId = j;
-                graphLayer.links[i * j + j] = link;
+                graphLayer.links[i * neuronCount + j] = link;
             }
         }
         graphLayer.inputIds = inputIds;
