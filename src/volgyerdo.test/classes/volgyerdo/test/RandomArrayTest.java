@@ -42,8 +42,8 @@ public class RandomArrayTest {
     public static void main(String[] args) {
         Network network = NetworkFactory.createNetwork();
 
-        NetworkFactory.addDenseLayer(network, 
-                LayerFactory.createDenseLayer(30));
+        NetworkFactory.addInputLayer(network, 
+                LayerFactory.createInputLayer(30));
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(90));
         NetworkFactory.addDenseLayer(network,

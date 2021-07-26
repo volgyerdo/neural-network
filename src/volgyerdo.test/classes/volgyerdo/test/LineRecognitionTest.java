@@ -52,7 +52,7 @@ public class LineRecognitionTest {
         Network network = NetworkFactory.createNetwork();
         System.out.println("Start...");
 
-        NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(5,5));
+        NetworkFactory.addInputLayer(network, LayerFactory.createInputLayer(5,5));
         NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(10, 10));
         NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(10, 10));
         NetworkFactory.addDenseLayer(network, LayerFactory.createDenseLayer(10, 10));

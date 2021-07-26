@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
@@ -46,8 +45,8 @@ public class PointCounterTest {
     public static void main(String[] args) {
         Network network = NetworkFactory.createNetwork();
 
-        NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(MATRIX_SIZE, MATRIX_SIZE));
+        NetworkFactory.addInputLayer(network,
+                LayerFactory.createInputLayer(MATRIX_SIZE, MATRIX_SIZE));
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,
