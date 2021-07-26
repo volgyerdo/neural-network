@@ -47,8 +47,8 @@ public class PointCounterTest {
     public void layeredPointCounterTest() {
         Network network = NetworkFactory.createNetwork();
 
-        NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(MATRIX_SIZE, MATRIX_SIZE));
+        NetworkFactory.addInputLayer(network,
+                LayerFactory.createInputLayer(MATRIX_SIZE, MATRIX_SIZE));
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(HIDDEN_LAYER_SIZE, HIDDEN_LAYER_SIZE));
         NetworkFactory.addDenseLayer(network,

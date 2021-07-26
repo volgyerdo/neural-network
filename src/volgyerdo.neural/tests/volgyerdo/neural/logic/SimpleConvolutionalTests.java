@@ -39,8 +39,8 @@ public class SimpleConvolutionalTests {
         
         Network network = NetworkFactory.createNetwork();
 
-        NetworkFactory.addConvolutionalLayer(network,
-                LayerFactory.createConvolutionalLayer(20), 0);
+        NetworkFactory.addInputLayer(network,
+                LayerFactory.createInputLayer(20));
         NetworkFactory.addConvolutionalLayer(network, 
                 LayerFactory.createConvolutionalLayer(20), 3);
 
@@ -115,14 +115,14 @@ public class SimpleConvolutionalTests {
         
         Network network = NetworkFactory.createNetwork();
 
-        NetworkFactory.addConvolutionalLayer(network,
-                LayerFactory.createConvolutionalLayer(20), 0);
+        NetworkFactory.addInputLayer(network,
+                LayerFactory.createInputLayer(20));
         NetworkFactory.addConvolutionalLayer(network, 
                 LayerFactory.createConvolutionalLayer(20), 3);
         NetworkFactory.addConvolutionalLayer(network, 
                 LayerFactory.createConvolutionalLayer(20), 3);
 
-        NetworkLogic.setLearningRate(network, 0.1f);
+        NetworkLogic.setLearningRate(network, 0.05f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());
         NetworkLogic.randomizeWeights(network);
 
@@ -170,7 +170,7 @@ public class SimpleConvolutionalTests {
             System.out.println("Error: " + FORMAT.format(error));
         }
         
-        NetworkLogic.train(network, samples, 6000);
+        NetworkLogic.train(network, samples, 10000);
 
         System.out.println("\nAfter training:\n");
         for (Sample sample : samples) {

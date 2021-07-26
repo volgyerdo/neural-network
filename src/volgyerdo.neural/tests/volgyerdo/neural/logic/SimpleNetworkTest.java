@@ -36,7 +36,7 @@ public class SimpleNetworkTest {
     public void layeredSimpleTest() {
         double maximumError = 0.005;
 
-        Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 4);
+        Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 3);
         NetworkLogic.setLearningRate(network, 0.1f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());
         NetworkLogic.randomizeWeights(network);
@@ -71,8 +71,8 @@ public class SimpleNetworkTest {
         
         Network network = NetworkFactory.createNetwork();
         
-        NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(2));
+        NetworkFactory.addInputLayer(network,
+                LayerFactory.createInputLayer(2));
         NetworkFactory.addDenseLayer(network, 
                 LayerFactory.createDenseLayer(10));
         NetworkFactory.addDenseLayer(network, 
@@ -109,8 +109,8 @@ public class SimpleNetworkTest {
         
         Network network = NetworkFactory.createNetwork();
 
-        NetworkFactory.addDenseLayer(network, 
-                LayerFactory.createDenseLayer(30));
+        NetworkFactory.addInputLayer(network, 
+                LayerFactory.createInputLayer(30));
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(90));
         NetworkFactory.addDenseLayer(network,

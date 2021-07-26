@@ -30,8 +30,10 @@ import volgyerdo.neural.structure.Link;
  */
 public class LayerFactory {
 
-    public static InputLayer createInputLayer(){
-        return new InputLayer();
+    public static InputLayer createInputLayer(int... dimensions){
+        InputLayer inputLayer = new InputLayer();
+        inputLayer.states = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
+        return inputLayer;
     }
     
     public static DenseLayer createDenseLayer(int... dimensions) {

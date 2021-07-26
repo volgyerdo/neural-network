@@ -20,6 +20,7 @@ import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.GraphLayer;
+import volgyerdo.neural.structure.InputLayer;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.TestData;
@@ -33,7 +34,6 @@ public class NetworkFactory {
     public static Network createNetwork() {
         Network network = new Network();
         network.layers = new ArrayList<>();
-        network.layers.add(LayerFactory.createInputLayer());
         network.testData = new TestData();
         network.testData.errors = new ArrayList<>();
         return network;
@@ -43,6 +43,7 @@ public class NetworkFactory {
             int[] dimensions,
             int layerCount) {
         Network network = NetworkFactory.createNetwork();
+        addInputLayer(network, LayerFactory.createInputLayer(dimensions));
         for (int i = 0; i < layerCount; i++) {
             DenseLayer layer = LayerFactory.createDenseLayer(dimensions);
             addDenseLayer(network, layer);
@@ -66,8 +67,9 @@ public class NetworkFactory {
             int[] dimensions,
             int layerCount) {
         Network network = NetworkFactory.createNetwork();
+        addInputLayer(network, LayerFactory.createInputLayer(dimensions));
         for (int i = 0; i < layerCount; i++) {
-            ConvolutionalLayer layer = LayerFactory.createConvolutionalLayer( dimensions);
+            ConvolutionalLayer layer = LayerFactory.createConvolutionalLayer(dimensions);
             addConvolutionalLayer(network, layer, dimensions);
         }
         return network;
@@ -78,12 +80,17 @@ public class NetworkFactory {
         layer.bias = Tensor.create(Tensor.TYPE.FLOAT, 1);
         network.layers.add(layer);
     }
-    
-    public static Network createGraphNetwork(int neurons, int inputs, int outputs){
+
+    public static Network createGraphNetwork(int neurons, int inputs, int outputs) {
         Network network = NetworkFactory.createNetwork();
+        addInputLayer(network, LayerFactory.createInputLayer(inputs));
         GraphLayer layer = LayerFactory.createGraphLayer(neurons, inputs, outputs);
         network.layers.add(layer);
         return network;
+    }
+
+    public static void addInputLayer(Network network, InputLayer layer) {
+        network.layers.add(layer);
     }
 
 }
