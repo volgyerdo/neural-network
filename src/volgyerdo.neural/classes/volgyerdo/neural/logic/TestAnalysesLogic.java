@@ -50,10 +50,18 @@ public class TestAnalysesLogic {
             deviationSum += FastMath.pow2(error - errorArithmeticMean);
         }
         double standardDeviation = Math.pow(deviationSum / errors.size(), 0.5);
+        long runTimeSum = 0;
+        for (int runTime : data.runTimes) {
+            runTime += runTime;
+        }
         analyses.errorArithmeticMean = (float) errorArithmeticMean;
         analyses.errorGeometricMean = (float) errorGeometricMean;
         analyses.errorMedian = (float) errorMedian;
         analyses.errorStandardDeviation = (float) standardDeviation;
+        analyses.minError = errors.get(0);
+        analyses.maxError = errors.get(errors.size() - 1);
+        analyses.runTime = runTimeSum;
+        analyses.runPeriod = data.timestamps.get(data.timestamps.size() - 1) - data.timestamps.get(0);
         return analyses;
     }
 

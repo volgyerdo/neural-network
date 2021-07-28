@@ -25,5 +25,9 @@ public class TestAnalyses {
     public float errorArithmeticMean;
     public float errorMedian;
     public float errorStandardDeviation;
+    public float minError;
+    public float maxError;
+    public long runTime;
+    public long runPeriod;
     
 }

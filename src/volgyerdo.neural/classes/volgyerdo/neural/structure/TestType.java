@@ -15,17 +15,12 @@
  */
 package volgyerdo.neural.structure;
 
-import java.util.List;
-
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class TestData {
+public enum TestType {
     
-    public List<Float> errors;
-    public List<TestType> testTypes;
-    public List<Long> timestamps;
-    public List<Integer> runTimes;
+    TRAIN, TEST
     
 }

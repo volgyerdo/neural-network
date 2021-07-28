@@ -18,13 +18,13 @@ package volgyerdo.neural.logic;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import volgyerdo.math.fast.FastMath;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Sample;
 import volgyerdo.neural.structure.TestResults;
+import volgyerdo.neural.structure.TestType;
 
 /**
  *
@@ -70,35 +70,18 @@ public class NetworkLogic {
     }
 
     public static void train(Network network, Sample sample) {
+        long startTime = System.currentTimeMillis();
         NetworkLogic.propagate(network, sample.input);
-        storeTestData(network, sample);
         NetworkLogic.backPropagate(network, sample.target);
+        storeTestData(network, sample, TestType.TRAIN,
+                System.currentTimeMillis(), System.currentTimeMillis() - startTime);
         sample.lastTrainCycle = network.testData.errors.size() - 1;
-    }
-
-    private static void storeTestData(Network network, Sample sample) {
-        Tensor errors = sample.target.copy();
-        errors.substract(NetworkUtils.getOutputLayer(network).states);
-        errors.abs();
-        network.testData.errors.add(errors.floatAverage());
     }
 
     private static Sample getRandomSample(List<Sample> samples) {
         int randomSampleNumber = (int) (Math.random() * samples.size());
         return samples.get(randomSampleNumber);
     }
-
-//    private static Sample getOldestSample(List<Sample> samples) {
-//        int minCycle = Integer.MAX_VALUE;
-//        Sample oldestSample = null;
-//        for (Sample sample : samples) {
-//            if (sample.lastTrainCycle < minCycle) {
-//                minCycle = sample.lastTrainCycle;
-//                oldestSample = sample;
-//            }
-//        }
-//        return oldestSample;
-//    }
 
     private static void checkSamples(Network network, Collection<Sample> samples) {
         Layer inputLayer = NetworkUtils.getInputLayer(network);
@@ -137,34 +120,23 @@ public class NetworkLogic {
     public static TestResults test(Network network, Collection<Sample> samples) {
         long startTime = System.nanoTime();
         TestResults results = new TestResults();
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
-        int[] outputLayerSize = outputLayer.states.dimensions; //? 
-        Tensor errorTensor = Tensor.create(Tensor.TYPE.FLOAT, outputLayerSize); //típus!
-        Tensor averageErrorTensor = Tensor.create(Tensor.TYPE.FLOAT, outputLayerSize);
-        float maxError = 0;
-        float minError = 10;
         results.sampleCount = samples.size();
         for (Sample sample : samples) {
             propagate(network, sample.input);
-            errorTensor.set(outputLayer.states);
-            errorTensor.substract(sample.target);
-            errorTensor.abs();
-            averageErrorTensor.add(errorTensor);
-            if (errorTensor.floatMax() > maxError) {
-                maxError = errorTensor.floatMax();
-            }
-            if (errorTensor.floatMin() < minError) {
-                minError = errorTensor.floatMin();
-            }
+            storeTestData(network, sample, TestType.TEST, 
+                    System.currentTimeMillis(), System.currentTimeMillis() - startTime);
         }
-        averageErrorTensor.divide(results.sampleCount);
-        results.avgError = averageErrorTensor.floatAverage();
-        results.minError = minError;
-        results.maxError = maxError;
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime);
-        results.runTime = duration / 1000000; //divide by 1000000 to get milliseconds.
         return results;
+    }
+
+    private static void storeTestData(Network network, Sample sample, TestType type, long timestamp, long time) {
+        Tensor errors = sample.target.copy();
+        errors.substract(NetworkUtils.getOutputLayer(network).states);
+        errors.abs();
+        network.testData.errors.add(errors.floatAverage());
+        network.testData.testTypes.add(type);
+        network.testData.timestamps.add(timestamp);
+        network.testData.runTimes.add((int) time);
     }
 
 }
