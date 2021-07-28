@@ -118,14 +118,19 @@ public class NetworkLogic {
     }
 
     public static TestResults test(Network network, Collection<Sample> samples) {
+        TestResults results = new TestResults();
+        for (Sample sample : samples) {
+            test(network, sample);
+        }
+        return results;
+    }
+
+    public static TestResults test(Network network, Sample sample) {
         long startTime = System.nanoTime();
         TestResults results = new TestResults();
-        results.sampleCount = samples.size();
-        for (Sample sample : samples) {
-            propagate(network, sample.input);
-            storeTestData(network, sample, TestType.TEST, 
-                    System.currentTimeMillis(), System.currentTimeMillis() - startTime);
-        }
+        propagate(network, sample.input);
+        storeTestData(network, sample, TestType.TEST,
+                System.currentTimeMillis(), System.currentTimeMillis() - startTime);
         return results;
     }
 
