@@ -16,6 +16,8 @@
 package volgyerdo.neural.logic;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import volgyerdo.math.fast.FastMath;
 import volgyerdo.neural.structure.TestAnalyses;
@@ -49,33 +51,38 @@ public class TestAnalysesLogic {
         double sum = 0;
         double product = 1;
         long runTimeSum = 0;
-        List<Float> errors = new ArrayList<>(dataSize);
+        List<TestRecord> sortedData = new ArrayList<>(data);
+        Collections.sort(sortedData, new ErrorComparator());
         for (TestRecord record : data) {
             sum += record.error;
             product *= record.error;
             runTimeSum += record.runTime;
-            errors.add(record.error);
         }
         double errorArithmeticMean = sum / dataSize;
         double errorGeometricMean = Math.pow(product, 1. / dataSize);
-        double errorMedian = errors.get(dataSize / 2);
+        double errorMedian = sortedData.get(dataSize / 2).error;
         double deviationSum = 0;
         for (TestRecord record : data) {
             deviationSum += FastMath.pow2(record.error - errorArithmeticMean);
         }
-        double standardDeviation = Math.pow(deviationSum / errors.size(), 0.5);
+        double standardDeviation = Math.pow(deviationSum / dataSize, 0.5);
         analyses.errorArithmeticMean = (float) errorArithmeticMean;
         analyses.errorGeometricMean = (float) errorGeometricMean;
         analyses.errorMedian = (float) errorMedian;
         analyses.errorStandardDeviation = (float) standardDeviation;
-        analyses.minError = errors.get(0);
-        analyses.maxError = errors.get(errors.size() - 1);
+        analyses.minError = data.get(0).error;
+        analyses.maxError = data.get(dataSize - 1).error;
         analyses.runTime = runTimeSum;
         analyses.runPeriod = data.get(dataSize - 1).timestamp - data.get(0).timestamp;
         return analyses;
     }
 
-    private TestAnalysesLogic() {
+    private static class ErrorComparator implements Comparator<TestRecord> {
+
+        @Override
+        public int compare(TestRecord r1, TestRecord r2) {
+            return Float.compare(r1.error, r2.error);
+        }
     }
 
 }
