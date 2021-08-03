@@ -16,6 +16,7 @@
 package volgyerdo.neural.logic;
 
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Random;
 import volgyerdo.math.primitive.PrimitiveUtils;
 import volgyerdo.math.tensor.Tensor;
@@ -23,8 +24,6 @@ import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Link;
 import volgyerdo.neural.structure.TestAnalyses;
-import volgyerdo.neural.structure.TestResults;
-import volgyerdo.neural.structure.TestRowAnalyses;
 
 /**
  *
@@ -73,17 +72,6 @@ public class NetworkUtils {
         }
         return randomArray;
     }
-
-    public static void printTestResults(TestResults res){
-        System.out.println();
-        System.out.println();
-        System.out.print("Avg: " + FORMAT.format(res.avgError) + "; ");
-        System.out.print("Min: " + FORMAT.format(res.minError) + "; ");
-        System.out.print("Max: " + FORMAT.format(res.maxError) + "; ");
-        System.out.print("Runtime: " + res.runTime + " ms ");
-        System.out.println();
-        System.out.println();
-    }
     
     public static void printAnalysis(TestAnalyses analysis){
         System.out.println();
@@ -94,9 +82,9 @@ public class NetworkUtils {
         System.out.println();
     }
     
-    public static void printRowAnalysis(TestRowAnalyses rowAnalysis){
+    public static void printRowAnalysis(List<TestAnalyses> rowAnalysis){
         System.out.println();
-        for(TestAnalyses analysis : rowAnalysis.analyses){
+        for(TestAnalyses analysis : rowAnalysis){
             System.out.print(FORMAT.format(analysis.errorArithmeticMean) + ";");
             System.out.print(FORMAT.format(analysis.errorGeometricMean) + ";");
             System.out.print(FORMAT.format(analysis.errorMedian) + ";");
@@ -107,7 +95,7 @@ public class NetworkUtils {
     }
     
     public static int getTrainingCycle(Network network){
-        return network.testData.errors.size() - 1;
+        return network.testData.size() - 1;
     }
     
     private NetworkUtils() {

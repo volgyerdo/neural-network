@@ -16,12 +16,10 @@
 package volgyerdo.neural.logic;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import volgyerdo.math.fast.FastMath;
 import volgyerdo.neural.structure.TestAnalyses;
-import volgyerdo.neural.structure.TestRowAnalyses;
-import volgyerdo.neural.structure.TestData;
+import volgyerdo.neural.structure.TestRecord;
 
 /**
  *
@@ -29,31 +27,43 @@ import volgyerdo.neural.structure.TestData;
  */
 public class TestAnalysesLogic {
 
-    public static TestAnalyses analyze(TestData data) {
+    public static List<TestAnalyses> analyzeRow(List<TestRecord> data) {
+        if (data == null || data.isEmpty()) {
+            return new ArrayList<>();
+        }
+        int dataSize = data.size();
+        List<TestAnalyses> analyses = new ArrayList<>(dataSize);
+        for (int i = 1; i <= dataSize; i++) {
+            List<TestRecord> subList = data.subList(Math.max(0, i - NetworkConstants.ANALYSES_ROW_LENGTH), i);
+            analyses.add(analyze(subList));
+        }
+        return analyses;
+    }
+
+    public static TestAnalyses analyze(List<TestRecord> data) {
         TestAnalyses analyses = new TestAnalyses();
-        if (data == null || data.errors.isEmpty()) {
+        if (data == null || data.isEmpty()) {
             return analyses;
         }
-        List<Float> errors = new ArrayList<>(data.errors);
-        Collections.sort(errors);
+        int dataSize = data.size();
         double sum = 0;
         double product = 1;
-        for (float error : errors) {
-            sum += error;
-            product *= error;
+        long runTimeSum = 0;
+        List<Float> errors = new ArrayList<>(dataSize);
+        for (TestRecord record : data) {
+            sum += record.error;
+            product *= record.error;
+            runTimeSum += record.runTime;
+            errors.add(record.error);
         }
-        double errorArithmeticMean = sum / errors.size();
-        double errorGeometricMean = Math.pow(product, 1. / errors.size());
-        double errorMedian = errors.get(errors.size() / 2);
+        double errorArithmeticMean = sum / dataSize;
+        double errorGeometricMean = Math.pow(product, 1. / dataSize);
+        double errorMedian = errors.get(dataSize / 2);
         double deviationSum = 0;
-        for (float error : errors) {
-            deviationSum += FastMath.pow2(error - errorArithmeticMean);
+        for (TestRecord record : data) {
+            deviationSum += FastMath.pow2(record.error - errorArithmeticMean);
         }
         double standardDeviation = Math.pow(deviationSum / errors.size(), 0.5);
-        long runTimeSum = 0;
-        for (int runTime : data.runTimes) {
-            runTime += runTime;
-        }
         analyses.errorArithmeticMean = (float) errorArithmeticMean;
         analyses.errorGeometricMean = (float) errorGeometricMean;
         analyses.errorMedian = (float) errorMedian;
@@ -61,23 +71,7 @@ public class TestAnalysesLogic {
         analyses.minError = errors.get(0);
         analyses.maxError = errors.get(errors.size() - 1);
         analyses.runTime = runTimeSum;
-        analyses.runPeriod = data.timestamps.get(data.timestamps.size() - 1) - data.timestamps.get(0);
-        return analyses;
-    }
-
-    public static TestRowAnalyses rowAnalyze(TestData data) {
-        TestRowAnalyses analyses = new TestRowAnalyses();
-        if (data == null || data.errors.isEmpty()) {
-            return analyses;
-        }
-        List<Float> errors = new ArrayList<>(data.errors);
-        analyses.analyses = new ArrayList<>(errors.size());
-        TestData testData = new TestData();
-        for (int i = 1; i <= errors.size(); i++) {
-            List<Float> subList = errors.subList(Math.max(0, i - NetworkConstants.ANALYSES_ROW_LENGTH), i);
-            testData.errors = subList;
-            analyses.analyses.add(analyze(testData));
-        }
+        analyses.runPeriod = data.get(dataSize - 1).timestamp - data.get(0).timestamp;
         return analyses;
     }
 

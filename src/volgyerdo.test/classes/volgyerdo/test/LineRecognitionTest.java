@@ -27,10 +27,12 @@ import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
+import volgyerdo.neural.logic.TestAnalysesLogic;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
-import volgyerdo.neural.structure.TestResults;
+import volgyerdo.neural.structure.TestAnalyses;
+import volgyerdo.neural.structure.TestRecord;
 
 /**
  *
@@ -79,25 +81,15 @@ public class LineRecognitionTest {
         System.out.println("fitting...");
         NetworkLogic.train(network, trainingSamples, TRAIN_CYCLES);
         
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
         System.out.println("\nTraining:\n");
-        TestResults training = NetworkLogic.test(network, trainingSamples);
-        NetworkUtils.printTestResults(training);
+        List<TestRecord> testData = NetworkLogic.test(network, trainingSamples);
+        TestAnalyses analysis = TestAnalysesLogic.analyze(testData);
+        NetworkUtils.printAnalysis(analysis);
 
         System.out.println("\nControl:\n");
-        TestResults control = NetworkLogic.test(network, controlSamples);
-        NetworkUtils.printTestResults(control);
-        //Live teszt
-        //guessNumber(network, 100);
-        
-
-//        //mátrix teszt
-//        int lines = 2;
-//        for (int i = 0; i < 10; i++) {
-//            System.out.println(lines);
-//            Tensor teszt = generateTensorWithLines(lines);
-//            System.out.println(teszt.toString(true));
-//        }
+        List<TestRecord> controlData = NetworkLogic.test(network, controlSamples);
+        TestAnalyses controlAnalysis = TestAnalysesLogic.analyze(controlData);
+        NetworkUtils.printAnalysis(controlAnalysis);
     }
     
     private static void generateSamples(Collection<Sample> samples, int count){

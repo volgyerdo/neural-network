@@ -15,6 +15,7 @@
  */
 package volgyerdo.neural.logic;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -23,8 +24,7 @@ import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Sample;
-import volgyerdo.neural.structure.TestResults;
-import volgyerdo.neural.structure.TestType;
+import volgyerdo.neural.structure.TestRecord;
 
 /**
  *
@@ -73,9 +73,10 @@ public class NetworkLogic {
         long startTime = System.currentTimeMillis();
         NetworkLogic.propagate(network, sample.input);
         NetworkLogic.backPropagate(network, sample.target);
-        storeTestData(network, sample, TestType.TRAIN,
-                System.currentTimeMillis(), System.currentTimeMillis() - startTime);
-        sample.lastTrainCycle = network.testData.errors.size() - 1;
+        network.testData.add(
+                createTestRecord(network, sample,
+                        System.currentTimeMillis(), System.currentTimeMillis() - startTime));
+        sample.lastTrainCycle = network.testData.size() - 1;
     }
 
     private static Sample getRandomSample(List<Sample> samples) {
@@ -117,31 +118,30 @@ public class NetworkLogic {
         }
     }
 
-    public static TestResults test(Network network, Collection<Sample> samples) {
-        TestResults results = new TestResults();
+    public static List<TestRecord> test(Network network, Collection<Sample> samples) {
+        List<TestRecord> testData = new ArrayList<>();
         for (Sample sample : samples) {
-            test(network, sample);
+            testData.add(test(network, sample));
         }
-        return results;
+        return testData;
     }
 
-    public static TestResults test(Network network, Sample sample) {
-        long startTime = System.nanoTime();
-        TestResults results = new TestResults();
+    public static TestRecord test(Network network, Sample sample) {
+        long startTime = System.currentTimeMillis();
         propagate(network, sample.input);
-        storeTestData(network, sample, TestType.TEST,
+        return createTestRecord(network, sample,
                 System.currentTimeMillis(), System.currentTimeMillis() - startTime);
-        return results;
     }
 
-    private static void storeTestData(Network network, Sample sample, TestType type, long timestamp, long time) {
+    private static TestRecord createTestRecord(Network network, Sample sample, long timestamp, long time) {
         Tensor errors = sample.target.copy();
         errors.substract(NetworkUtils.getOutputLayer(network).states);
         errors.abs();
-        network.testData.errors.add(errors.floatAverage());
-        network.testData.testTypes.add(type);
-        network.testData.timestamps.add(timestamp);
-        network.testData.runTimes.add((int) time);
+        TestRecord testRecord = new TestRecord();
+        testRecord.error = errors.floatAverage();
+        testRecord.timestamp = timestamp;
+        testRecord.runTime = (int) time;
+        return testRecord;
     }
 
 }
