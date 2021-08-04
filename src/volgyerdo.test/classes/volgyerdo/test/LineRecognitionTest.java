@@ -41,9 +41,9 @@ import volgyerdo.neural.structure.TestRecord;
 public class LineRecognitionTest {
 
     private static final Random RANDOM_INT = new Random();
-    private static int LINE_LENGHT = 2; //min0 max5
+    private static int LINE_LENGHT = 3; //min0 max5
     private static int LINE_COUNT = 4; //min 0 max4
-    private static int TRAINING_SAMPLE_COUNT = 10;
+    private static int TRAINING_SAMPLE_COUNT = 100;
     private static int ROWCOUNT = 5;
     private static int TRAIN_CYCLES = 5000; //forward and back prop (4000-8000)
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
@@ -90,6 +90,7 @@ public class LineRecognitionTest {
         List<TestRecord> controlData = NetworkLogic.test(network, controlSamples);
         TestAnalyses controlAnalysis = TestAnalysesLogic.analyze(controlData);
         NetworkUtils.printAnalysis(controlAnalysis);
+        guessNumber(network,100);
     }
     
     private static void generateSamples(Collection<Sample> samples, int count){

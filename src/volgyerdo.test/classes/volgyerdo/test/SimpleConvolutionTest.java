@@ -20,8 +20,9 @@ import volgyerdo.neural.logic.LayerFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
-import volgyerdo.neural.structure.ConvolutionalLayer;
+import volgyerdo.neural.logic.SampleFactory;
 import volgyerdo.neural.structure.Network;
+import volgyerdo.neural.structure.Sample;
 
 /**
  *
@@ -36,42 +37,34 @@ public class SimpleConvolutionTest {
         dimensions = new int[]{4, 4};
         int kernelDimensions[];
         kernelDimensions = new int[]{3,3};
-        Tensor inputStates = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
+        Tensor inputStates = Tensor.create(Tensor.TYPE.FLOAT, 4);
         inputStates.fill(0.5f);
         
         //network
         Network network = NetworkFactory.createNetwork();
-        NetworkLogic.setLearningRate(network, 0.1f);
+        NetworkLogic.setLearningRate(network, 0.01f);
+        //NetworkLogic.randomizeWeights(network);
         
         //layers
-        
-        
         NetworkFactory.addInputLayer(network,
-                LayerFactory.createInputLayer(dimensions));
+                LayerFactory.createInputLayer(4));
         NetworkFactory.addConvolutionalLayer(network, 
-                LayerFactory.createConvolutionalLayer(dimensions), kernelDimensions);
+                LayerFactory.createConvolutionalLayer(4), 3);
+        
         //prop
-        Tensor input = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
+        Tensor input = Tensor.create(Tensor.TYPE.FLOAT, 3);
         input.fill(1f);
         NetworkLogic.propagate(network, input);
+        Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 3);
+        
+        Sample sample = SampleFactory.createSample(input, target);
+        
+        NetworkLogic.train(network, sample);
         
         //print
         System.out.println("1st\nInput:\n");
         System.out.println(NetworkUtils.getInputDimensions(network).toString(true));
         System.out.println("Output\n");
         System.out.println(NetworkUtils.getOutputDimensions(network).toString(true));
-//        
-
-//
-//        NetworkUtils.getInputDimensions(network).toString(true);
-//        NetworkUtils.getOutputDimensions(network).toString(true);
-//
-//        Tensor target = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
-//        target.fill(1);
-//        NetworkLogic.backPropagate(network, target);
-//
-//        System.out.println(NetworkUtils.getInputDimensions(network).toString(true));
-//        System.out.println(NetworkUtils.getOutputDimensions(network).toString(true));
-
     }
 }
