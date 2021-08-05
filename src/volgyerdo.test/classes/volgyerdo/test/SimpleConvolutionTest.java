@@ -21,6 +21,7 @@ import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
+import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 
@@ -51,20 +52,23 @@ public class SimpleConvolutionTest {
         NetworkFactory.addConvolutionalLayer(network, 
                 LayerFactory.createConvolutionalLayer(4), 3);
         
+        
         //prop
-        Tensor input = Tensor.create(Tensor.TYPE.FLOAT, 3);
+        Tensor input = Tensor.create(Tensor.TYPE.FLOAT, 4);
         input.fill(1f);
-        NetworkLogic.propagate(network, input);
-        Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 3);
+        //NetworkLogic.propagate(network, input);
+        Tensor target = Tensor.create(Tensor.TYPE.FLOAT, 4);
+        target.setFloatArray(new float[]{0.2f, 0.6f, 0.8f, 1f});
         
         Sample sample = SampleFactory.createSample(input, target);
         
         NetworkLogic.train(network, sample);
+        NetworkLogic.train(network, sample);
         
         //print
-        System.out.println("1st\nInput:\n");
-        System.out.println(NetworkUtils.getInputDimensions(network).toString(true));
-        System.out.println("Output\n");
-        System.out.println(NetworkUtils.getOutputDimensions(network).toString(true));
+
+        System.out.println("Kernel:\n");
+        System.out.println(((ConvolutionalLayer)network.layers.get(1)).kernel.toString(false));
+        System.out.println(((ConvolutionalLayer)network.layers.get(2)).kernel.toString(false));
     }
 }

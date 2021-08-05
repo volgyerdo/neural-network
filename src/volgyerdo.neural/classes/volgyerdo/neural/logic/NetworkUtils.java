@@ -33,11 +33,11 @@ public class NetworkUtils {
     
     private static final DecimalFormat FORMAT = new DecimalFormat("0.0000");
 
-    public static Tensor getInputDimensions(Network network) {
+    public static Tensor getInputStates(Network network) {
         return getInputLayer(network).states;
     }
 
-    public static Tensor getOutputDimensions(Network network) {
+    public static Tensor getOutputStates(Network network) {
         return getOutputLayer(network).states;
     }
 

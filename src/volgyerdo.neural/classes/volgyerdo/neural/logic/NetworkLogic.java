@@ -113,8 +113,8 @@ public class NetworkLogic {
         delta.substract(actualOutput);
         for (int i = network.layers.size() - 1; i > 0; i--) {
             Layer layer = network.layers.get(i);
-            Layer nextLayer = network.layers.get(i - 1);
-            delta = LayerLogic.backPropagate(layer, nextLayer, delta);
+            Layer prevLayer = network.layers.get(i - 1);
+            delta = LayerLogic.backPropagate(layer, prevLayer, delta);
         }
     }
 
