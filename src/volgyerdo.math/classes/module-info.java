@@ -6,8 +6,9 @@
 
 module volgyerdo.math {
 
+    exports volgyerdo.math.collection;
     exports volgyerdo.math.fast;
-    exports volgyerdo.math.tensor;
     exports volgyerdo.math.primitive;
+    exports volgyerdo.math.tensor;
 
 }

@@ -15,7 +15,6 @@
  */
 package volgyerdo.neural.logic;
 
-import java.text.DecimalFormat;
 import volgyerdo.math.tensor.IndexIterator;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
@@ -120,10 +119,7 @@ public class LayerLogic {
             output[outputId] /= layer.neurons.length;
             neurons[layer.outputIds[outputId]].state = output[outputId];
         }
-//        DecimalFormat format = new DecimalFormat("0.0000");
-//        for (int outputId = 0; outputId < layer.outputIds.length; outputId++) {
-//            System.out.print(format.format(output[outputId]) + ";");
-//        }
+
     }
 
     public static Tensor backPropagate(Layer layer, Layer prevLayer, Tensor delta) {

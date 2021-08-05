@@ -75,20 +75,31 @@ public class NetworkUtils {
     
     public static void printAnalysis(TestAnalyses analysis){
         System.out.println();
-        System.out.println("Arithmetic mean: " + FORMAT.format(analysis.errorArithmeticMean));
-        System.out.println("Geometric mean: " + FORMAT.format(analysis.errorGeometricMean));
-        System.out.println("Median: " + FORMAT.format(analysis.errorMedian));
-        System.out.println("Standard deviation: " + FORMAT.format(analysis.errorStandardDeviation));
+        System.out.println("Error arithmetic mean: " + FORMAT.format(analysis.errorArithmeticMean));
+        System.out.println("Error geometric mean: " + FORMAT.format(analysis.errorGeometricMean));
+        System.out.println("Error median: " + FORMAT.format(analysis.errorMedian));
+        System.out.println("Error standard deviation: " + FORMAT.format(analysis.errorStandardDeviation));
+        System.out.println("Error minimum: " + FORMAT.format(analysis.minError));
+        System.out.println("Error maximum: " + FORMAT.format(analysis.maxError));
+        System.out.println("Running period: " + FORMAT.format(analysis.runPeriod));
+        System.out.println("Running time: " + FORMAT.format(analysis.runTime));
         System.out.println();
     }
     
     public static void printRowAnalysis(List<TestAnalyses> rowAnalysis){
         System.out.println();
+        System.out.println(
+                "Error arithmetic mean;Error geometric mean;Error median;Error standard deviation;"
+                        + "Error minimum;Error maximum;Running period;Running time");
         for(TestAnalyses analysis : rowAnalysis){
             System.out.print(FORMAT.format(analysis.errorArithmeticMean) + ";");
             System.out.print(FORMAT.format(analysis.errorGeometricMean) + ";");
             System.out.print(FORMAT.format(analysis.errorMedian) + ";");
-            System.out.print(FORMAT.format(analysis.errorStandardDeviation));
+            System.out.print(FORMAT.format(analysis.errorStandardDeviation) + ";");
+            System.out.print(FORMAT.format(analysis.minError) + ";");
+            System.out.print(FORMAT.format(analysis.maxError) + ";");
+            System.out.print(FORMAT.format(analysis.runPeriod) + ";");
+            System.out.print(FORMAT.format(analysis.runTime));
             System.out.println();
         }
         System.out.println();
