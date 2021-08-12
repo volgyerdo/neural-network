@@ -109,6 +109,7 @@ public class LayerLogic {
                 }
             }
             for (int neuronId = 0; neuronId < neurons.length; neuronId++) {
+                newStates[neuronId] += layer.biases[neuronId];
                 neurons[neuronId].state = ActivationLogic.activate(newStates[neuronId], neurons[neuronId].activation);
             }
             for (int outputId = 0; outputId < layer.outputIds.length; outputId++) {
@@ -168,33 +169,34 @@ public class LayerLogic {
     private static Tensor backPropagate(GraphLayer layer, Layer prevLayer, Tensor delta) {
         Neuron[] neurons = layer.neurons;
         Link[] links = layer.links;
+        float[] biases = layer.biases;
         float[] localErrors = new float[neurons.length];
-        for (int i = 0; i < neurons.length; i++) {
-            IndexIterator deltaIterator = delta.indexIterator();
-            int[] outputIds = layer.outputIds;
-            int outputId = 0;
-            while (deltaIterator.hasNext() && outputId < outputIds.length) {
-                localErrors[outputId] = delta.getFloatValue(deltaIterator.next());
-                outputId++;
-            }
-            Link link;
-            Neuron neuron;
-            for (int neuronId = 0; neuronId < neurons.length; neuronId++) {
-                neuron = neurons[neuronId];
-                float localError = 0;
-                for (int linkId = 0; linkId < links.length; linkId++) {
-                    link = links[linkId];
-                    if (link.inputId == neuronId) {
-                        localError += link.weight * localErrors[link.outputId];
-                    }
-                    localErrors[neuronId]
-                            = localError * ActivationLogic.deactivate(neuron.state,
-                                    neuron.activation);
+        IndexIterator deltaIterator = delta.indexIterator();
+        int[] outputIds = layer.outputIds;
+        int outputId = 0;
+        while (deltaIterator.hasNext() && outputId < outputIds.length) {
+            localErrors[outputId] = delta.getFloatValue(deltaIterator.next());
+            outputId++;
+        }
+        Neuron neuron;
+        for (int neuronId = 0; neuronId < neurons.length; neuronId++) {
+            neuron = neurons[neuronId];
+            float localError = 0;
+            for (int linkId = 0; linkId < links.length; linkId++) {
+                Link link = links[linkId];
+                if (link.inputId == neuronId) {
+                    localError += link.weight * localErrors[link.outputId];
                 }
             }
+            localErrors[neuronId]
+                    = localError * ActivationLogic.deactivate(neuron.state,
+                            neuron.activation);
+        }
+        for(Link link : links){
+            link.weight += localErrors[link.outputId] * neurons[link.inputId].state * layer.learningRate;
+            biases[link.outputId] += localErrors[link.outputId] * layer.learningRate;
         }
         Tensor newDelta = prevLayer.states.createSimilar();
-        IndexIterator deltaIterator = prevLayer.states.indexIterator();
         int[] inputIds = layer.inputIds;
         int inputId = 0;
         while (deltaIterator.hasNext() && inputId < inputIds.length) {
