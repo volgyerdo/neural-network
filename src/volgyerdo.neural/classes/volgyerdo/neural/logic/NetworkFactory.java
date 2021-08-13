@@ -56,7 +56,11 @@ public class NetworkFactory {
             System.arraycopy(layer.states.dimensions, 0, weightsDimensions, 0, layer.states.dimensions.length);
             System.arraycopy(previousLayer.states.dimensions, 0, weightsDimensions, layer.states.dimensions.length, previousLayer.states.dimensions.length);
             layer.weights = Tensor.create(Tensor.TYPE.FLOAT, weightsDimensions);
+            layer.weightsLearningRates = Tensor.create(Tensor.TYPE.FLOAT, weightsDimensions);
+            layer.weightsLearningRates.fill(NetworkConstants.DEFAULT_LEARNING_RATE);
             layer.bias = Tensor.create(Tensor.TYPE.FLOAT, layer.states.dimensions);
+            layer.biasLearningRates = Tensor.create(Tensor.TYPE.FLOAT, layer.states.dimensions);
+            layer.biasLearningRates.fill(NetworkConstants.DEFAULT_LEARNING_RATE);
         }
         network.layers.add(layer);
     }
@@ -75,7 +79,9 @@ public class NetworkFactory {
 
     public static void addConvolutionalLayer(Network network, ConvolutionalLayer layer, int... kernelDimensions) {
         layer.kernel = Tensor.create(Tensor.TYPE.FLOAT, kernelDimensions);
-        layer.bias = Tensor.create(Tensor.TYPE.FLOAT, 1);
+        layer.kernelLearningRates = Tensor.create(Tensor.TYPE.FLOAT, kernelDimensions);
+        layer.kernelLearningRates.fill(NetworkConstants.DEFAULT_LEARNING_RATE);
+        layer.biasLearningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
         network.layers.add(layer);
     }
 

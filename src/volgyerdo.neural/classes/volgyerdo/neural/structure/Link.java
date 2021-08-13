@@ -24,4 +24,6 @@ public class Link {
     public int inputId;
     public int outputId;
     public float weight;
+    public float learningRate;
+    
 }

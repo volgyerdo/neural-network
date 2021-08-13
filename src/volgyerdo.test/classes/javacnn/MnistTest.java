@@ -62,7 +62,7 @@ public class MnistTest {
         layers.add(new FullyConnectedLayer(def, 2));
         layers.add(new SoftMaxLayer(def));
         */
-        JavaCNN net = new JavaCNN(layers);
+        JavaCNN net = new JavaCNN(layers);       
         Trainer trainer = new AdaGradTrainer(net, 20, 0.001f);
 
         //Reader mrTest = new MnistReader("mnist/t10k-labels-idx1-ubyte", "mnist/t10k-images-idx3-ubyte");

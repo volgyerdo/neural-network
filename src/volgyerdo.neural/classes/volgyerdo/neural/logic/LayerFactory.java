@@ -40,7 +40,6 @@ public class LayerFactory {
         DenseLayer layer = new DenseLayer();
         layer.states = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
         layer.activations = ActivationFactory.createDefaultActivations(dimensions);
-        layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
         return layer;
     }
 
@@ -48,7 +47,6 @@ public class LayerFactory {
         ConvolutionalLayer layer = new ConvolutionalLayer();
         layer.states = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
         layer.activations = ActivationFactory.createDefaultActivations(dimensions);
-        layer.learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
         return layer;
     }
 

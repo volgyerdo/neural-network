@@ -18,6 +18,7 @@ package volgyerdo.neural.logic;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Random;
+import volgyerdo.math.primitive.ArrayUtils;
 import volgyerdo.math.primitive.PrimitiveUtils;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
@@ -56,12 +57,29 @@ public class NetworkUtils {
         weights.randomize(
                 -NetworkConstants.DEFAULT_WEIGHT_RADIUS, NetworkConstants.DEFAULT_WEIGHT_RADIUS);
     }
+    
+    public static void randomizeBias(Tensor bias) {
+        if (bias == null) {
+            return;
+        }
+        bias.randomize(
+                -NetworkConstants.DEFAULT_WEIGHT_RADIUS, NetworkConstants.DEFAULT_WEIGHT_RADIUS);
+    }
+    
+    public static float randomizeBias() {
+        return PrimitiveUtils.random(
+                -NetworkConstants.DEFAULT_WEIGHT_RADIUS, NetworkConstants.DEFAULT_WEIGHT_RADIUS);
+    }
 
     public static void randomizeWeigths(Link[] links) {
         for (int i = 0; i < links.length; i++) {
             links[i].weight = PrimitiveUtils.random(
                     -NetworkConstants.DEFAULT_WEIGHT_RADIUS, NetworkConstants.DEFAULT_WEIGHT_RADIUS);
         }
+    }
+    
+    public static void randomizeBias(float[] bias) {
+        ArrayUtils.randomize(bias, -NetworkConstants.DEFAULT_WEIGHT_RADIUS, NetworkConstants.DEFAULT_WEIGHT_RADIUS);
     }
 
     public static int[] randomizeCoordinates(int[] bounds) {

@@ -16,7 +16,6 @@
 package volgyerdo.neural.structure;
 
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.logic.NetworkConstants;
 
 /**
  *
@@ -25,8 +24,9 @@ import volgyerdo.neural.logic.NetworkConstants;
 public class DenseLayer extends Layer{
    
     public Tensor weights;
+    public Tensor weightsLearningRates;
     public Tensor bias;
+    public Tensor biasLearningRates;
     public Tensor activations;
-    public float learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
     
 }

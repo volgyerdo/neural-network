@@ -15,6 +15,8 @@
  */
 package volgyerdo.neural.logic;
 
+import volgyerdo.math.primitive.ArrayUtils;
+import volgyerdo.math.primitive.PrimitiveUtils;
 import volgyerdo.math.tensor.IndexIterator;
 import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
@@ -43,14 +45,17 @@ public class LayerLogic {
 
     private static void randomize(DenseLayer layer) {
         NetworkUtils.randomizeWeigths(layer.weights);
+        NetworkUtils.randomizeBias(layer.bias);
     }
 
     private static void randomize(ConvolutionalLayer layer) {
         NetworkUtils.randomizeWeigths(layer.kernel);
+        layer.bias = NetworkUtils.randomizeBias();
     }
 
     private static void randomize(GraphLayer layer) {
         NetworkUtils.randomizeWeigths(layer.links);
+        NetworkUtils.randomizeBias(layer.biases);
     }
 
     public static void propagate(Layer prevLayer, Layer layer) {
@@ -78,7 +83,7 @@ public class LayerLogic {
         Tensor kernel = layer.kernel.copy();
 
         Tensor outputStates = prevLayer.states.convolve(kernel);
-        outputStates = outputStates.convolve(layer.bias);
+        outputStates.multiply(layer.bias);
 
         ActivationLogic.activate(outputStates, layer.activations);
 
@@ -139,12 +144,12 @@ public class LayerLogic {
         delta.hadamardProduct(layer.states);
 
         Tensor deltaW = delta.multiply(prevLayer.states, 0);
-        deltaW.multiply(layer.learningRate);
+        deltaW.hadamardProduct(layer.weightsLearningRates);
 
         layer.weights.add(deltaW);
 
         Tensor deltaBias = delta.copy();
-        deltaBias.multiply(layer.learningRate);
+        deltaBias.hadamardProduct(layer.biasLearningRates);
         layer.bias.add(deltaBias);
 
         return delta.multiply(layer.weights, layer.states.dimensions.length);
@@ -155,13 +160,13 @@ public class LayerLogic {
         delta.hadamardProduct(layer.states);
 
         Tensor deltaKernel = prevLayer.states.convolvePartial(delta, layer.kernel.dimensions);
-        deltaKernel.multiply(layer.learningRate);
+        deltaKernel.hadamardProduct(layer.kernelLearningRates);
 
         layer.kernel.add(deltaKernel);
 
-        Tensor deltaBias = delta.sum();
-        deltaBias.multiply(layer.learningRate);
-        layer.bias.add(deltaBias);
+        float deltaBias = delta.floatSum();
+        deltaBias *= layer.biasLearningRate;
+        layer.bias += deltaBias;
 
         return delta.convolve(layer.kernel);
     }
@@ -193,8 +198,8 @@ public class LayerLogic {
                             neuron.activation);
         }
         for(Link link : links){
-            link.weight += localErrors[link.outputId] * neurons[link.inputId].state * layer.learningRate;
-            biases[link.outputId] += localErrors[link.outputId] * layer.learningRate;
+            link.weight += localErrors[link.outputId] * neurons[link.inputId].state * link.learningRate;
+            biases[link.outputId] += localErrors[link.outputId] * link.learningRate;
         }
         Tensor newDelta = prevLayer.states.createSimilar();
         int[] inputIds = layer.inputIds;
@@ -207,9 +212,15 @@ public class LayerLogic {
 
     public static void setLearningRate(Layer layer, float learningRate) {
         if (layer instanceof DenseLayer) {
-            ((DenseLayer) layer).learningRate = learningRate;
+            ((DenseLayer) layer).weightsLearningRates.fill(learningRate);
+            ((DenseLayer) layer).biasLearningRates.fill(learningRate);
         } else if (layer instanceof ConvolutionalLayer) {
-            ((ConvolutionalLayer) layer).learningRate = learningRate;
+            ((ConvolutionalLayer) layer).kernelLearningRates.fill(learningRate);
+            ((ConvolutionalLayer) layer).biasLearningRate = learningRate;
+        } else if (layer instanceof GraphLayer) {
+            for(Link link : ((GraphLayer) layer).links){
+                link.learningRate = learningRate;
+            }
         }
     }
 

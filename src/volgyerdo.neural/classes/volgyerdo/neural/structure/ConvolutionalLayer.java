@@ -16,7 +16,6 @@
 package volgyerdo.neural.structure;
 
 import volgyerdo.math.tensor.Tensor;
-import volgyerdo.neural.logic.NetworkConstants;
 
 /**
  *
@@ -25,8 +24,10 @@ import volgyerdo.neural.logic.NetworkConstants;
 public class ConvolutionalLayer extends Layer{
 
     public Tensor kernel;
-    public Tensor bias;
+    public Tensor kernelLearningRates;
+    public Tensor learningRate;
+    public float bias;
+    public float biasLearningRate;
     public Tensor activations;
-    public float learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
     
 }
