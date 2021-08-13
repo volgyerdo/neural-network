@@ -15,7 +15,6 @@
  */
 package volgyerdo.test;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import volgyerdo.neural.logic.ActivationFactory;
@@ -25,11 +24,10 @@ import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
 import volgyerdo.neural.logic.TestAnalysesLogic;
-import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 import volgyerdo.neural.structure.TestAnalyses;
-import volgyerdo.neural.structure.TestRowAnalyses;
+import volgyerdo.neural.structure.TestRecord;
 
 /**
  *
@@ -37,8 +35,6 @@ import volgyerdo.neural.structure.TestRowAnalyses;
  */
 public class RandomArrayTest {
 
-    private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
-    
     public static void main(String[] args) {
         Network network = NetworkFactory.createNetwork();
 
@@ -135,49 +131,16 @@ public class RandomArrayTest {
                 "ugufzgvvqdandagjjzzbbztserzawc"), new float[]{0f, 1f}));
 
         NetworkLogic.train(network, samples, 10000);
-
-        System.out.println("\nAfter training:\n");
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
-        double errorHand = 0;
-        double errorReal = 0;
-        int n = 0;
-        for (Sample sample : samples) {
-            NetworkLogic.propagate(network, sample.input);
-            System.out.println("Original: " + sample.target.getFloatValue(0) + " - " + sample.target.getFloatValue(1) + " > "
-                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(1))
-                    + " (error=" + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1)) +")");
-            errorHand += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
-            errorReal += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
-            n++;
-        }
-        errorHand /= n;
-        errorReal /= n;
-        System.out.println("Average error: " + errorHand + " - " + errorReal);
-
-        System.out.println();
-
-        for (Sample sample : controlSamples) {
-            NetworkLogic.propagate(network, sample.input);
-            System.out.println("Control: " + sample.target.getFloatValue(0) + " - " + sample.target.getFloatValue(1) + " > "
-                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(1))
-                    + " (error=" + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1)) +")");
-            errorHand += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
-            errorReal += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
-            n++;
-        }
-        errorHand /= n;
-        errorReal /= n;
-        System.out.println("Average error: " + errorHand + " - " + errorReal);
         
-        TestAnalyses analysis = TestAnalysesLogic.analyze(network.testData);
+        System.out.println("\nTraining:\n");
+        List<TestRecord> testData = NetworkLogic.test(network, samples);
+        TestAnalyses analysis = TestAnalysesLogic.analyze(testData);
         NetworkUtils.printAnalysis(analysis);
-        
-        TestRowAnalyses rowAnalysis = TestAnalysesLogic.rowAnalyze(network.testData);
-        NetworkUtils.printRowAnalysis(rowAnalysis);
+
+        System.out.println("\nControl:\n");
+        List<TestRecord> controlData = NetworkLogic.test(network, controlSamples);
+        TestAnalyses controlAnalysis = TestAnalysesLogic.analyze(controlData);
+        NetworkUtils.printAnalysis(controlAnalysis);
     }
 
     private static float[] convertStrToFloat(String str) {

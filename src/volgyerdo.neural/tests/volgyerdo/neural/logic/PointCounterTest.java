@@ -43,6 +43,9 @@ public class PointCounterTest {
     private static final double MAX_AVERAGE_ERROR = 0.15;
     private static final double MIN_AVERAGE_MATCH = 0.8;
 
+    public PointCounterTest() {
+    }
+
     @Test
     public void layeredPointCounterTest() {
         Network network = NetworkFactory.createNetwork();

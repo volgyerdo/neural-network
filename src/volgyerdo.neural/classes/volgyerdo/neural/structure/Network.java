@@ -24,6 +24,6 @@ import java.util.List;
 public class Network{
     
     public List<Layer> layers;
-    public TestData testData;
+    public List<TestRecord> testData;
     
 }

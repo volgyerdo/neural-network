@@ -15,7 +15,6 @@
  */
 package volgyerdo.test;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import volgyerdo.neural.logic.ActivationFactory;
@@ -24,11 +23,10 @@ import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
 import volgyerdo.neural.logic.TestAnalysesLogic;
-import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 import volgyerdo.neural.structure.TestAnalyses;
-import volgyerdo.neural.structure.TestRowAnalyses;
+import volgyerdo.neural.structure.TestRecord;
 
 /**
  *
@@ -36,8 +34,6 @@ import volgyerdo.neural.structure.TestRowAnalyses;
  */
 public class SimpleTest {
 
-    private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
-    
     public static void main(String[] args) {
         Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 4);
         NetworkLogic.setLearningRate(network, 0.5f);
@@ -50,26 +46,9 @@ public class SimpleTest {
 
         NetworkLogic.train(network, samples, 5000);
 
-        System.out.println("\nAfter training:\n");
-
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
-
-        for (Sample sample : samples) {
-            NetworkLogic.propagate(network, sample.input);
-            double error1 = outputLayer.states.getFloatValue(0) - sample.target.getFloatValue(0);
-            double error2 = outputLayer.states.getFloatValue(0) - sample.target.getFloatValue(0);
-            System.out.println(sample.target.getFloatValue(0)
-                    + " -> " + FORMAT.format(outputLayer.states.getFloatValue(0)) + " (error="
-                    + (FORMAT.format(error1)) + ")");
-            System.out.println(sample.target.getFloatValue(1) + " -> " + FORMAT.format(outputLayer.states.getFloatValue(1))
-                    + " (error=" + (FORMAT.format(error2)) + ")");
-        }
-        
-        TestAnalyses analysis = TestAnalysesLogic.analyze(network.testData);
-        NetworkUtils.printAnalysis(analysis);
-        
-        TestRowAnalyses rowAnalysis = TestAnalysesLogic.rowAnalyze(network.testData);
-        NetworkUtils.printRowAnalysis(rowAnalysis);
+        List<TestRecord> controlData = NetworkLogic.test(network, samples);
+        TestAnalyses controlAnalysis = TestAnalysesLogic.analyze(controlData);
+        NetworkUtils.printAnalysis(controlAnalysis);
     }
 
 

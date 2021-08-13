@@ -15,14 +15,14 @@
  */
 package volgyerdo.neural.structure;
 
-import java.util.List;
-
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class TestRowAnalyses {
-
-    public List<TestAnalyses> analyses;
+public class TestRecord {
+    
+    public float error;
+    public long timestamp;
+    public int runTime;
     
 }

@@ -13,14 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package volgyerdo.neural.structure;
+package volgyerdo.math.collection;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public enum TestType {
+public class CollectionUtils {
+
+    public static Object getLastElement(List list){
+        if(list == null || list.isEmpty()){
+            throw new NoSuchElementException();
+        }
+        return list.get(list.size() - 1);
+    }
     
-    TRAIN, TEST
-    
+    private CollectionUtils() {
+    }
+ 
 }

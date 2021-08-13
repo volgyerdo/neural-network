@@ -31,6 +31,9 @@ import volgyerdo.neural.structure.Sample;
 public class SimpleNetworkTest {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
+
+    public SimpleNetworkTest() {
+    }
     
     @Test
     public void layeredSimpleTest() {

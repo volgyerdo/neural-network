@@ -16,6 +16,7 @@
 package volgyerdo.neural.logic;
 
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Random;
 import volgyerdo.math.primitive.PrimitiveUtils;
 import volgyerdo.math.tensor.Tensor;
@@ -23,8 +24,6 @@ import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Link;
 import volgyerdo.neural.structure.TestAnalyses;
-import volgyerdo.neural.structure.TestResults;
-import volgyerdo.neural.structure.TestRowAnalyses;
 
 /**
  *
@@ -34,11 +33,11 @@ public class NetworkUtils {
     
     private static final DecimalFormat FORMAT = new DecimalFormat("0.0000");
 
-    public static Tensor getInputDimensions(Network network) {
+    public static Tensor getInputStates(Network network) {
         return getInputLayer(network).states;
     }
 
-    public static Tensor getOutputDimensions(Network network) {
+    public static Tensor getOutputStates(Network network) {
         return getOutputLayer(network).states;
     }
 
@@ -73,41 +72,41 @@ public class NetworkUtils {
         }
         return randomArray;
     }
-
-    public static void printTestResults(TestResults res){
-        System.out.println();
-        System.out.println();
-        System.out.print("Avg: " + FORMAT.format(res.avgError) + "; ");
-        System.out.print("Min: " + FORMAT.format(res.minError) + "; ");
-        System.out.print("Max: " + FORMAT.format(res.maxError) + "; ");
-        System.out.print("Runtime: " + res.runTime + " ms ");
-        System.out.println();
-        System.out.println();
-    }
     
     public static void printAnalysis(TestAnalyses analysis){
         System.out.println();
-        System.out.println("Arithmetic mean: " + FORMAT.format(analysis.errorArithmeticMean));
-        System.out.println("Geometric mean: " + FORMAT.format(analysis.errorGeometricMean));
-        System.out.println("Median: " + FORMAT.format(analysis.errorMedian));
-        System.out.println("Standard deviation: " + FORMAT.format(analysis.errorStandardDeviation));
+        System.out.println("Error arithmetic mean: " + FORMAT.format(analysis.errorArithmeticMean));
+        System.out.println("Error geometric mean: " + FORMAT.format(analysis.errorGeometricMean));
+        System.out.println("Error median: " + FORMAT.format(analysis.errorMedian));
+        System.out.println("Error standard deviation: " + FORMAT.format(analysis.errorStandardDeviation));
+        System.out.println("Error minimum: " + FORMAT.format(analysis.minError));
+        System.out.println("Error maximum: " + FORMAT.format(analysis.maxError));
+        System.out.println("Running period: " + FORMAT.format(analysis.runPeriod));
+        System.out.println("Running time: " + FORMAT.format(analysis.runTime));
         System.out.println();
     }
     
-    public static void printRowAnalysis(TestRowAnalyses rowAnalysis){
+    public static void printRowAnalysis(List<TestAnalyses> rowAnalysis){
         System.out.println();
-        for(TestAnalyses analysis : rowAnalysis.analyses){
+        System.out.println(
+                "Error arithmetic mean;Error geometric mean;Error median;Error standard deviation;"
+                        + "Error minimum;Error maximum;Running period;Running time");
+        for(TestAnalyses analysis : rowAnalysis){
             System.out.print(FORMAT.format(analysis.errorArithmeticMean) + ";");
             System.out.print(FORMAT.format(analysis.errorGeometricMean) + ";");
             System.out.print(FORMAT.format(analysis.errorMedian) + ";");
-            System.out.print(FORMAT.format(analysis.errorStandardDeviation));
+            System.out.print(FORMAT.format(analysis.errorStandardDeviation) + ";");
+            System.out.print(FORMAT.format(analysis.minError) + ";");
+            System.out.print(FORMAT.format(analysis.maxError) + ";");
+            System.out.print(FORMAT.format(analysis.runPeriod) + ";");
+            System.out.print(FORMAT.format(analysis.runTime));
             System.out.println();
         }
         System.out.println();
     }
     
     public static int getTrainingCycle(Network network){
-        return network.testData.errors.size() - 1;
+        return network.testData.size() - 1;
     }
     
     private NetworkUtils() {

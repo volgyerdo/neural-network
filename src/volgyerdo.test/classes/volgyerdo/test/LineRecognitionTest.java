@@ -27,10 +27,12 @@ import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
+import volgyerdo.neural.logic.TestAnalysesLogic;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
-import volgyerdo.neural.structure.TestResults;
+import volgyerdo.neural.structure.TestAnalyses;
+import volgyerdo.neural.structure.TestRecord;
 
 /**
  *
@@ -39,9 +41,9 @@ import volgyerdo.neural.structure.TestResults;
 public class LineRecognitionTest {
 
     private static final Random RANDOM_INT = new Random();
-    private static int LINE_LENGHT = 2; //min0 max5
+    private static int LINE_LENGHT = 3; //min0 max5
     private static int LINE_COUNT = 4; //min 0 max4
-    private static int TRAINING_SAMPLE_COUNT = 10;
+    private static int TRAINING_SAMPLE_COUNT = 100;
     private static int ROWCOUNT = 5;
     private static int TRAIN_CYCLES = 5000; //forward and back prop (4000-8000)
     private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
@@ -79,25 +81,16 @@ public class LineRecognitionTest {
         System.out.println("fitting...");
         NetworkLogic.train(network, trainingSamples, TRAIN_CYCLES);
         
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
         System.out.println("\nTraining:\n");
-        TestResults training = NetworkLogic.test(network, trainingSamples);
-        NetworkUtils.printTestResults(training);
+        List<TestRecord> testData = NetworkLogic.test(network, trainingSamples);
+        TestAnalyses analysis = TestAnalysesLogic.analyze(testData);
+        NetworkUtils.printAnalysis(analysis);
 
         System.out.println("\nControl:\n");
-        TestResults control = NetworkLogic.test(network, controlSamples);
-        NetworkUtils.printTestResults(control);
-        //Live teszt
-        //guessNumber(network, 100);
-        
-
-//        //mátrix teszt
-//        int lines = 2;
-//        for (int i = 0; i < 10; i++) {
-//            System.out.println(lines);
-//            Tensor teszt = generateTensorWithLines(lines);
-//            System.out.println(teszt.toString(true));
-//        }
+        List<TestRecord> controlData = NetworkLogic.test(network, controlSamples);
+        TestAnalyses controlAnalysis = TestAnalysesLogic.analyze(controlData);
+        NetworkUtils.printAnalysis(controlAnalysis);
+        guessNumber(network,100);
     }
     
     private static void generateSamples(Collection<Sample> samples, int count){

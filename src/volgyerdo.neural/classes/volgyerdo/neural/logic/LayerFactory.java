@@ -83,6 +83,7 @@ public class LayerFactory {
                 graphLayer.links[i * neuronCount + j] = link;
             }
         }
+        graphLayer.biases = new float[neuronCount];
         graphLayer.inputIds = inputIds;
         graphLayer.outputIds = outputIds;
         return graphLayer;

@@ -23,7 +23,6 @@ import volgyerdo.neural.structure.GraphLayer;
 import volgyerdo.neural.structure.InputLayer;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
-import volgyerdo.neural.structure.TestData;
 
 /**
  *
@@ -34,8 +33,7 @@ public class NetworkFactory {
     public static Network createNetwork() {
         Network network = new Network();
         network.layers = new ArrayList<>();
-        network.testData = new TestData();
-        network.testData.errors = new ArrayList<>();
+        network.testData = new ArrayList<>();
         return network;
     }
 
