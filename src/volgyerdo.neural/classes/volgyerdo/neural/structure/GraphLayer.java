@@ -15,6 +15,8 @@
  */
 package volgyerdo.neural.structure;
 
+import volgyerdo.neural.logic.NetworkConstants;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
@@ -23,6 +25,9 @@ public class GraphLayer extends Layer{
     
     public Neuron[] neurons;
     public Link[] links;
+    public float[] biases;
     public int[] inputIds;
     public int[] outputIds;
+    public float learningRate = NetworkConstants.DEFAULT_LEARNING_RATE;
+    
 }
