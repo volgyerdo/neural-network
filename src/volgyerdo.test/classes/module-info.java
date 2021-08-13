@@ -18,5 +18,6 @@ module volgyerdo.test {
     
     requires volgyerdo.math;
     requires volgyerdo.neural;
+    requires java.desktop;
     
 }
