@@ -17,6 +17,7 @@ package javacnn.tests;
 
 import javacnn.data.OutputDefinition;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javacnn.JavaCNN;
 import javacnn.data.DataBlock;
@@ -45,7 +46,7 @@ public class SimpleConvTest {
         net.forward(db, true);
         int n = net.getBackPropagationResult().size();
         for (int i = 0; i < n; i++) {
-            System.out.println(net.getBackPropagationResult().get(i).getWeights());
+            System.out.println(Arrays.toString(net.getBackPropagationResult().get(i).getWeights()));
         }
 
         
