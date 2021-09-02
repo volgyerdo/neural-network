@@ -21,11 +21,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import static org.junit.Assert.assertTrue;
-import volgyerdo.math.tensor.Tensor;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 import org.junit.Test;
+import volgyerdo.commons.math.tensor.Tensor;
 
 /**
  *
