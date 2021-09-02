@@ -15,12 +15,10 @@
  */
 package volgyerdo.neural.logic;
 
-import volgyerdo.commons.primitive.ArrayUtils;
-import volgyerdo.commons.primitive.PrimitiveUtils;
 import volgyerdo.commons.math.tensor.IndexIterator;
 import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
-import volgyerdo.neural.structure.ConvolutionalLayer;
+import volgyerdo.neural.structure.ConvoLayer;
 import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.GraphLayer;
 import volgyerdo.neural.structure.Layer;
@@ -36,8 +34,8 @@ public class LayerLogic {
     public static void randomize(Layer layer) {
         if (layer instanceof DenseLayer) {
             randomize((DenseLayer) layer);
-        } else if (layer instanceof ConvolutionalLayer) {
-            randomize((ConvolutionalLayer) layer);
+        } else if (layer instanceof ConvoLayer) {
+            randomize((ConvoLayer) layer);
         } else if (layer instanceof GraphLayer) {
             randomize((GraphLayer) layer);
         }
@@ -48,7 +46,7 @@ public class LayerLogic {
         NetworkUtils.randomizeBias(layer.bias);
     }
 
-    private static void randomize(ConvolutionalLayer layer) {
+    private static void randomize(ConvoLayer layer) {
         NetworkUtils.randomizeWeigths(layer.kernel);
         layer.bias = NetworkUtils.randomizeBias();
     }
@@ -61,8 +59,8 @@ public class LayerLogic {
     public static void propagate(Layer prevLayer, Layer layer) {
         if (layer instanceof DenseLayer) {
             propagate(prevLayer, (DenseLayer) layer);
-        } else if (layer instanceof ConvolutionalLayer) {
-            propagate(prevLayer, (ConvolutionalLayer) layer);
+        } else if (layer instanceof ConvoLayer) {
+            propagate(prevLayer, (ConvoLayer) layer);
         } else if (layer instanceof GraphLayer) {
             propagate(prevLayer, (GraphLayer) layer);
         }
@@ -79,7 +77,7 @@ public class LayerLogic {
         layer.states = outputStates;
     }
 
-    private static void propagate(Layer prevLayer, ConvolutionalLayer layer) {
+    private static void propagate(Layer prevLayer, ConvoLayer layer) {
         Tensor kernel = layer.kernel.copy();
 
         Tensor outputStates = prevLayer.states.convolve(kernel);
@@ -131,8 +129,8 @@ public class LayerLogic {
     public static Tensor backPropagate(Layer layer, Layer prevLayer, Tensor delta) {
         if (layer instanceof DenseLayer) {
             return backPropagate((DenseLayer) layer, prevLayer, delta);
-        } else if (layer instanceof ConvolutionalLayer) {
-            return backPropagate((ConvolutionalLayer) layer, prevLayer, delta);
+        } else if (layer instanceof ConvoLayer) {
+            return backPropagate((ConvoLayer) layer, prevLayer, delta);
         } else if (layer instanceof GraphLayer) {
             return backPropagate((GraphLayer) layer, prevLayer, delta);
         }
@@ -155,7 +153,7 @@ public class LayerLogic {
         return delta.multiply(layer.weights, layer.states.dimensions.length);
     }
 
-    private static Tensor backPropagate(ConvolutionalLayer layer, Layer prevLayer, Tensor delta) {
+    private static Tensor backPropagate(ConvoLayer layer, Layer prevLayer, Tensor delta) {
         ActivationLogic.deactivate(layer.states, layer.activations);
         delta.hadamardProduct(layer.states);
 
@@ -214,9 +212,9 @@ public class LayerLogic {
         if (layer instanceof DenseLayer) {
             ((DenseLayer) layer).weightsLearningRates.fill(learningRate);
             ((DenseLayer) layer).biasLearningRates.fill(learningRate);
-        } else if (layer instanceof ConvolutionalLayer) {
-            ((ConvolutionalLayer) layer).kernelLearningRates.fill(learningRate);
-            ((ConvolutionalLayer) layer).biasLearningRate = learningRate;
+        } else if (layer instanceof ConvoLayer) {
+            ((ConvoLayer) layer).kernelLearningRates.fill(learningRate);
+            ((ConvoLayer) layer).biasLearningRate = learningRate;
         } else if (layer instanceof GraphLayer) {
             for(Link link : ((GraphLayer) layer).links){
                 link.learningRate = learningRate;
@@ -227,8 +225,8 @@ public class LayerLogic {
     public static void setActivation(Layer layer, Activation activation) {
         if (layer instanceof DenseLayer) {
             ((DenseLayer) layer).activations.fillWithObject(() -> ActivationFactory.createCopy(activation));
-        } else if (layer instanceof ConvolutionalLayer) {
-            ((ConvolutionalLayer) layer).activations.fillWithObject(() -> ActivationFactory.createCopy(activation));
+        } else if (layer instanceof ConvoLayer) {
+            ((ConvoLayer) layer).activations.fillWithObject(() -> ActivationFactory.createCopy(activation));
         }
     }
 }

@@ -21,7 +21,7 @@ import volgyerdo.commons.math.tensor.Tensor;
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class ConvolutionalLayer extends Layer{
+public class ConvoLayer extends Layer{
 
     public Tensor kernel;
     public Tensor kernelLearningRates;

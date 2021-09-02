@@ -19,9 +19,8 @@ import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.logic.LayerFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
-import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
-import volgyerdo.neural.structure.ConvolutionalLayer;
+import volgyerdo.neural.structure.ConvoLayer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 
@@ -68,7 +67,7 @@ public class SimpleConvolutionTest {
         //print
 
         System.out.println("Kernel:\n");
-        System.out.println(((ConvolutionalLayer)network.layers.get(1)).kernel.toString(false));
-        System.out.println(((ConvolutionalLayer)network.layers.get(2)).kernel.toString(false));
+        System.out.println(((ConvoLayer)network.layers.get(1)).kernel.toString(false));
+        System.out.println(((ConvoLayer)network.layers.get(2)).kernel.toString(false));
     }
 }

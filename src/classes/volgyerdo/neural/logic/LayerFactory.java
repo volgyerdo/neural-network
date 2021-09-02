@@ -17,7 +17,7 @@ package volgyerdo.neural.logic;
 
 import volgyerdo.commons.math.fast.FastMath;
 import volgyerdo.commons.math.tensor.Tensor;
-import volgyerdo.neural.structure.ConvolutionalLayer;
+import volgyerdo.neural.structure.ConvoLayer;
 import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.GraphLayer;
 import volgyerdo.neural.structure.InputLayer;
@@ -43,8 +43,8 @@ public class LayerFactory {
         return layer;
     }
 
-    public static ConvolutionalLayer createConvolutionalLayer(int... dimensions) {
-        ConvolutionalLayer layer = new ConvolutionalLayer();
+    public static ConvoLayer createConvolutionalLayer(int... dimensions) {
+        ConvoLayer layer = new ConvoLayer();
         layer.states = Tensor.create(Tensor.TYPE.FLOAT, dimensions);
         layer.activations = ActivationFactory.createDefaultActivations(dimensions);
         return layer;

@@ -17,7 +17,7 @@ package volgyerdo.neural.logic;
 
 import java.util.ArrayList;
 import volgyerdo.commons.math.tensor.Tensor;
-import volgyerdo.neural.structure.ConvolutionalLayer;
+import volgyerdo.neural.structure.ConvoLayer;
 import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.GraphLayer;
 import volgyerdo.neural.structure.InputLayer;
@@ -71,13 +71,13 @@ public class NetworkFactory {
         Network network = NetworkFactory.createNetwork();
         addInputLayer(network, LayerFactory.createInputLayer(dimensions));
         for (int i = 0; i < layerCount; i++) {
-            ConvolutionalLayer layer = LayerFactory.createConvolutionalLayer(dimensions);
+            ConvoLayer layer = LayerFactory.createConvolutionalLayer(dimensions);
             addConvolutionalLayer(network, layer, dimensions);
         }
         return network;
     }
 
-    public static void addConvolutionalLayer(Network network, ConvolutionalLayer layer, int... kernelDimensions) {
+    public static void addConvolutionalLayer(Network network, ConvoLayer layer, int... kernelDimensions) {
         layer.kernel = Tensor.create(Tensor.TYPE.FLOAT, kernelDimensions);
         layer.kernelLearningRates = Tensor.create(Tensor.TYPE.FLOAT, kernelDimensions);
         layer.kernelLearningRates.fill(NetworkConstants.DEFAULT_LEARNING_RATE);
