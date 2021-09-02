@@ -15,7 +15,7 @@
  */
 package volgyerdo.neural.logic;
 
-import volgyerdo.math.tensor.Tensor;
+import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 
 /**

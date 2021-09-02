@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import volgyerdo.math.fast.FastMath;
+import volgyerdo.commons.math.fast.FastMath;
 import volgyerdo.neural.structure.TestAnalyses;
 import volgyerdo.neural.structure.TestRecord;
 

@@ -15,7 +15,7 @@
  */
 package volgyerdo.test;
 
-import volgyerdo.math.tensor.Tensor;
+import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.structure.Network;

@@ -15,7 +15,7 @@
  */
 package volgyerdo.neural.structure;
 
-import volgyerdo.math.tensor.Tensor;
+import volgyerdo.commons.math.tensor.Tensor;
 
 /**
  *

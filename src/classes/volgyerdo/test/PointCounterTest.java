@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import volgyerdo.math.tensor.Tensor;
+import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 import volgyerdo.neural.structure.TestAnalyses;

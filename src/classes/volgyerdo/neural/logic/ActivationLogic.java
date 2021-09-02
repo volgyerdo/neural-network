@@ -16,10 +16,10 @@
 package volgyerdo.neural.logic;
 
 import volgyerdo.neural.structure.Activation;
-import volgyerdo.math.fast.FastMath;
-import volgyerdo.math.tensor.FloatTensor;
-import volgyerdo.math.tensor.ObjectTensor;
-import volgyerdo.math.tensor.Tensor;
+import volgyerdo.commons.math.fast.FastMath;
+import volgyerdo.commons.math.tensor.FloatTensor;
+import volgyerdo.commons.math.tensor.ObjectTensor;
+import volgyerdo.commons.math.tensor.Tensor;
 
 /**
  *

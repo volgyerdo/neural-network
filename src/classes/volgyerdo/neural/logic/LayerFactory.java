@@ -15,8 +15,8 @@
  */
 package volgyerdo.neural.logic;
 
-import volgyerdo.math.fast.FastMath;
-import volgyerdo.math.tensor.Tensor;
+import volgyerdo.commons.math.fast.FastMath;
+import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
 import volgyerdo.neural.structure.GraphLayer;

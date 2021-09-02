@@ -15,10 +15,10 @@
  */
 package volgyerdo.neural.logic;
 
-import volgyerdo.math.primitive.ArrayUtils;
-import volgyerdo.math.primitive.PrimitiveUtils;
-import volgyerdo.math.tensor.IndexIterator;
-import volgyerdo.math.tensor.Tensor;
+import volgyerdo.commons.primitive.ArrayUtils;
+import volgyerdo.commons.primitive.PrimitiveUtils;
+import volgyerdo.commons.math.tensor.IndexIterator;
+import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.ConvolutionalLayer;
 import volgyerdo.neural.structure.DenseLayer;
