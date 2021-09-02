@@ -52,7 +52,7 @@ public class ConvolutionalTest {
             samples.add(generateSample1(20));
         }
 
-        NetworkLogic.train(network, samples, 50000);
+        NetworkLogic.train(network, samples, 50000, maximumError / 2, 10);
 
         List<TestRecord> testResults = NetworkLogic.test(network, samples);
         TestAnalyses analyzes = TestAnalysesLogic.analyze(testResults);
@@ -121,7 +121,7 @@ public class ConvolutionalTest {
                 new float[]{0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0},
                 new float[]{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0}));
 
-        NetworkLogic.train(network, samples, 2000);
+        NetworkLogic.train(network, samples, 2000, maximumError / 2, 10);
 
         List<TestRecord> testResults = NetworkLogic.test(network, samples);
         TestAnalyses analyzes = TestAnalysesLogic.analyze(testResults);
@@ -178,7 +178,7 @@ public class ConvolutionalTest {
                 new float[]{0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0},
                 new float[]{0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0}));
 
-        NetworkLogic.train(network, samples, 10000);
+        NetworkLogic.train(network, samples, 10000, maximumError / 2, 10);
 
         List<TestRecord> testResults = NetworkLogic.test(network, samples);
         TestAnalyses analyzes = TestAnalysesLogic.analyze(testResults);

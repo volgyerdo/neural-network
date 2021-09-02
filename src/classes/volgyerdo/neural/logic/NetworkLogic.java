@@ -24,6 +24,7 @@ import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Sample;
+import volgyerdo.neural.structure.TestAnalyses;
 import volgyerdo.neural.structure.TestRecord;
 
 /**
@@ -61,21 +62,31 @@ public class NetworkLogic {
         }
     }
 
-    public static void train(Network network, List<Sample> samples) {
+    public static boolean train(Network network, List<Sample> samples, int periods, double maxError, int iterations) {
         checkSamples(network, samples);
-        do {
-            Sample sample = getRandomSample(samples);
-            train(network, sample);
-        } while (NetworkUtils.getTrainingCycle(network) < 1000);
+        for (int i = 0; i < iterations; i++) {
+            NetworkLogic.randomizeWeights(network);
+            for (int j = 0; j < periods; j++) {
+                Sample sample = getRandomSample(samples);
+                train(network, sample);
+                TestAnalyses analyses = TestAnalysesLogic.analyzeLastRow(network.testData);
+                if (analyses != null) {
+                    if (analyses.errorArithmeticMean < maxError) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public static void train(Network network, Sample sample) {
         long startTime = System.currentTimeMillis();
         NetworkLogic.propagate(network, sample.input);
-        NetworkLogic.backPropagate(network, sample.target);
         network.testData.add(
                 createTestRecord(network, sample,
                         System.currentTimeMillis(), System.currentTimeMillis() - startTime));
+        NetworkLogic.backPropagate(network, sample.target);
         sample.lastTrainCycle = network.testData.size() - 1;
     }
 

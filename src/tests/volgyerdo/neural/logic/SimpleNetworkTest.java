@@ -37,7 +37,7 @@ public class SimpleNetworkTest {
     
     @Test
     public void layeredSimpleTest() {
-        double maximumError = 0.005;
+        double maximumError = 0.01;
 
         Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 3);
         NetworkLogic.setLearningRate(network, 0.1f);
@@ -48,7 +48,7 @@ public class SimpleNetworkTest {
         samples.add(SampleFactory.createSample(new float[]{0f, 1f}, new float[]{0.9f, -0.5f}));
         samples.add(SampleFactory.createSample(new float[]{1f, 0f}, new float[]{0.4f, 0.1f}));
 
-        NetworkLogic.train(network, samples, 2000);
+        NetworkLogic.train(network, samples, 5000);
 
         System.out.println("\nAfter training:\n");
 

@@ -39,8 +39,8 @@ public class XorTest {
     public static void main(String[] args) {
         Network network = NetworkFactory.createNetwork();
 
-        NetworkFactory.addDenseLayer(network,
-                LayerFactory.createDenseLayer(2));
+        NetworkFactory.addInputLayer(network,
+                LayerFactory.createInputLayer(2));
         NetworkFactory.addDenseLayer(network, 
                 LayerFactory.createDenseLayer(10));
         NetworkFactory.addDenseLayer(network, 
@@ -56,7 +56,7 @@ public class XorTest {
         samples.add(SampleFactory.createSample(new float[]{0f, 1f}, new float[]{1f}));
         samples.add(SampleFactory.createSample(new float[]{1f, 1f}, new float[]{0f}));
 
-        NetworkLogic.train(network, samples);
+        NetworkLogic.train(network, samples, 10000, 0.1, 10);
 
         System.out.println("\nAfter training:\n");
         Layer outputLayer = NetworkUtils.getOutputLayer(network);
