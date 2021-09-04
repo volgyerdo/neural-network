@@ -29,14 +29,12 @@ import volgyerdo.neural.structure.TestRecord;
  */
 public class TestAnalysesLogic {
 
-    public static TestAnalyses analyzeLastRow(List<TestRecord> data) {
+    public static TestAnalyses analyzeLastRow(List<TestRecord> data, int rowLength) {
         if (data == null || data.isEmpty()) {
             return null;
         }
-        if (data.size() < NetworkConstants.ANALYSES_ROW_LENGTH) {
-            return null;
-        }
-        List<TestRecord> subList = data.subList(data.size() - NetworkConstants.ANALYSES_ROW_LENGTH, data.size());
+        List<TestRecord> subList = data.subList(
+                Math.max(0, data.size() - rowLength), data.size());
         return analyze(subList);
     }
 

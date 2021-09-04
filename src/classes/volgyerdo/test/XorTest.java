@@ -56,7 +56,7 @@ public class XorTest {
         samples.add(SampleFactory.createSample(new float[]{0f, 1f}, new float[]{1f}));
         samples.add(SampleFactory.createSample(new float[]{1f, 1f}, new float[]{0f}));
 
-        NetworkLogic.train(network, samples, 10000, 0.1, 10);
+        NetworkLogic.train(network, samples, 10000, 0.05, 10);
 
         System.out.println("\nAfter training:\n");
         Layer outputLayer = NetworkUtils.getOutputLayer(network);

@@ -64,14 +64,18 @@ public class NetworkLogic {
 
     public static boolean train(Network network, List<Sample> samples, int periods, double maxError, int iterations) {
         checkSamples(network, samples);
+        int testRowLength = samples.size() * 3;
+        int n = 0;
         for (int i = 0; i < iterations; i++) {
             NetworkLogic.randomizeWeights(network);
             for (int j = 0; j < periods; j++) {
+                n++;
                 Sample sample = getRandomSample(samples);
                 train(network, sample);
-                TestAnalyses analyses = TestAnalysesLogic.analyzeLastRow(network.testData);
-                if (analyses != null) {
+                if (network.testData.size() >= testRowLength) {
+                    TestAnalyses analyses = TestAnalysesLogic.analyzeLastRow(network.testData, testRowLength);
                     if (analyses.errorArithmeticMean < maxError) {
+                        System.out.println("Iterations: " + n);
                         return true;
                     }
                 }
