@@ -93,6 +93,7 @@ public class NetworkUtils {
     
     public static void printAnalysis(TestAnalyses analysis){
         System.out.println();
+        System.out.println("Sample size: " + analysis.sampleSize);
         System.out.println("Error arithmetic mean: " + FORMAT.format(analysis.errorArithmeticMean));
         System.out.println("Error geometric mean: " + FORMAT.format(analysis.errorGeometricMean));
         System.out.println("Error median: " + FORMAT.format(analysis.errorMedian));

@@ -24,7 +24,6 @@ import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Sample;
-import volgyerdo.neural.structure.TestAnalyses;
 import volgyerdo.neural.structure.TestRecord;
 
 /**
@@ -72,10 +71,12 @@ public class NetworkLogic {
                 n++;
                 Sample sample = getRandomSample(samples);
                 train(network, sample);
-                if (network.testData.size() >= testRowLength) {
-                    TestAnalyses analyses = TestAnalysesLogic.analyzeLastRow(network.testData, testRowLength);
-                    if (analyses.errorArithmeticMean < maxError) {
-                        System.out.println("Iterations: " + n);
+                List<TestRecord> testData = network.testData;
+                if (testData.size() >= testRowLength && j % 10 == 0) {
+                    if (TestAnalysesLogic.getErrorArithmeticMean(
+                            testData.subList(
+                                    testData.size() - testRowLength, testData.size()))
+                            < maxError / 2) {
                         return true;
                     }
                 }

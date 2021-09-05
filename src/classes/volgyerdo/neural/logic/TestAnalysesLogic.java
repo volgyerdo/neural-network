@@ -29,15 +29,6 @@ import volgyerdo.neural.structure.TestRecord;
  */
 public class TestAnalysesLogic {
 
-    public static TestAnalyses analyzeLastRow(List<TestRecord> data, int rowLength) {
-        if (data == null || data.isEmpty()) {
-            return null;
-        }
-        List<TestRecord> subList = data.subList(
-                Math.max(0, data.size() - rowLength), data.size());
-        return analyze(subList);
-    }
-
     public static List<TestAnalyses> analyzeRow(List<TestRecord> data) {
         if (data == null || data.isEmpty()) {
             return new ArrayList<>();
@@ -56,34 +47,113 @@ public class TestAnalysesLogic {
         if (data == null || data.isEmpty()) {
             return analyses;
         }
-        int dataSize = data.size();
+        analyses.sampleSize = data.size();
+        analyses.errorArithmeticMean = (float) getErrorArithmeticMean(data);
+        analyses.errorGeometricMean = (float) getErrorGeometricMean(data);
+        analyses.errorMedian = (float) getErrorMedian(data);
+        analyses.errorStandardDeviation = (float) getErrorStandardDeviation(data);
+        analyses.minError = (float) getMinError(data);
+        analyses.maxError = (float) getMaxError(data);
+        analyses.runTime = getRunTime(data);
+        analyses.runPeriod = getRunPeriod(data);
+        return analyses;
+    }
+
+    public static double getErrorArithmeticMean(List<TestRecord> data) {
+        if (data == null || data.isEmpty()) {
+            return 0;
+        }
         double sum = 0;
-        double product = 1;
-        long runTimeSum = 0;
-        List<TestRecord> sortedData = new ArrayList<>(data);
-        Collections.sort(sortedData, new ErrorComparator());
         for (TestRecord record : data) {
             sum += record.error;
-            product *= record.error;
-            runTimeSum += record.runTime;
         }
-        double errorArithmeticMean = sum / dataSize;
-        double errorGeometricMean = Math.pow(product, 1. / dataSize);
-        double errorMedian = sortedData.get(dataSize / 2).error;
+        return sum / data.size();
+    }
+
+    public static double getErrorGeometricMean(List<TestRecord> data) {
+        if (data == null || data.isEmpty()) {
+            return 0;
+        }
+        double product = 1;
+        for (TestRecord record : data) {
+            product *= record.error;
+        }
+        return Math.pow(product, 1. / data.size());
+    }
+
+    public static double getErrorMedian(List<TestRecord> data) {
+        if (data == null || data.isEmpty()) {
+            return 0;
+        }
+        List<TestRecord> sortedData = new ArrayList<>(data);
+        Collections.sort(sortedData, new ErrorComparator());
+        return sortedData.get(data.size() / 2).error;
+    }
+
+    public static double getErrorStandardDeviation(List<TestRecord> data) {
+        if (data == null || data.isEmpty()) {
+            return 0;
+        }
+        double errorArithmeticMean = getErrorArithmeticMean(data);
         double deviationSum = 0;
         for (TestRecord record : data) {
             deviationSum += FastMath.pow2(record.error - errorArithmeticMean);
         }
-        double standardDeviation = Math.pow(deviationSum / dataSize, 0.5);
-        analyses.errorArithmeticMean = (float) errorArithmeticMean;
-        analyses.errorGeometricMean = (float) errorGeometricMean;
-        analyses.errorMedian = (float) errorMedian;
-        analyses.errorStandardDeviation = (float) standardDeviation;
-        analyses.minError = data.get(0).error;
-        analyses.maxError = data.get(dataSize - 1).error;
-        analyses.runTime = runTimeSum;
-        analyses.runPeriod = data.get(dataSize - 1).timestamp - data.get(0).timestamp;
-        return analyses;
+        return Math.pow(deviationSum / data.size(), 0.5);
+    }
+
+    public static double getMinError(List<TestRecord> data) {
+        if (data == null || data.isEmpty()) {
+            return 0;
+        }
+        double min = Double.MAX_VALUE;
+        for (TestRecord record : data) {
+            if (min > record.error) {
+                min = record.error;
+            }
+        }
+        return min;
+    }
+
+    public static double getMaxError(List<TestRecord> data) {
+        if (data == null || data.isEmpty()) {
+            return 0;
+        }
+        double max = -Double.MAX_VALUE;
+        for (TestRecord record : data) {
+            if (max < record.error) {
+                max = record.error;
+            }
+        }
+        return max;
+    }
+
+    public static long getRunTime(List<TestRecord> data) {
+        if (data == null || data.isEmpty()) {
+            return 0;
+        }
+        long runTimeSum = 0;
+        for (TestRecord record : data) {
+            runTimeSum += record.runTime;
+        }
+        return runTimeSum;
+    }
+
+    public static long getRunPeriod(List<TestRecord> data) {
+        if (data == null || data.isEmpty()) {
+            return 0;
+        }
+        long min = Long.MAX_VALUE;
+        long max = Long.MIN_VALUE;
+        for (TestRecord record : data) {
+            if (max < record.timestamp) {
+                max = record.timestamp;
+            }
+            if (min > record.timestamp) {
+                min = record.timestamp;
+            }
+        }
+        return max - min;
     }
 
     private static class ErrorComparator implements Comparator<TestRecord> {

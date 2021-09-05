@@ -15,29 +15,27 @@
  */
 package volgyerdo.neural.logic;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
+import volgyerdo.neural.structure.TestAnalyses;
+import volgyerdo.neural.structure.TestRecord;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
 public class SimpleNetworkTest {
-
-    private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
-
+    
     public SimpleNetworkTest() {
     }
     
     @Test
     public void layeredSimpleTest() {
-        double maximumError = 0.01;
+        double maximumError = 0.1;
 
         Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 3);
         NetworkLogic.setLearningRate(network, 0.1f);
@@ -48,29 +46,18 @@ public class SimpleNetworkTest {
         samples.add(SampleFactory.createSample(new float[]{0f, 1f}, new float[]{0.9f, -0.5f}));
         samples.add(SampleFactory.createSample(new float[]{1f, 0f}, new float[]{0.4f, 0.1f}));
 
-        NetworkLogic.train(network, samples, 5000);
+        NetworkLogic.train(network, samples, 1000, maximumError, 10);
 
-        System.out.println("\nAfter training:\n");
-
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
-
-        for (Sample sample : samples) {
-            NetworkLogic.propagate(network, sample.input);
-            double error1 = outputLayer.states.getFloatValue(0) - sample.target.getFloatValue(0);
-            double error2 = outputLayer.states.getFloatValue(0) - sample.target.getFloatValue(0);
-            System.out.println(sample.target.getFloatValue(0)
-                    + " -> " + FORMAT.format(outputLayer.states.getFloatValue(0)) + " (error="
-                    + (FORMAT.format(error1)) + ")");
-            System.out.println(sample.target.getFloatValue(1) + " -> " + FORMAT.format(outputLayer.states.getFloatValue(1))
-                    + " (error=" + (FORMAT.format(error2)) + ")");
-            assertTrue("Sample error 1 is too large (" + error1 + ")", maximumError > Math.abs(error1));
-            assertTrue("Sample error 2 is too large (" + error2 + ")", maximumError > Math.abs(error2));
-        }
+        List<TestRecord> testResults = NetworkLogic.test(network, samples);
+        TestAnalyses analyzes = TestAnalysesLogic.analyze(testResults);
+        System.out.println("\n----------\nSimple network test 1: ");
+        NetworkUtils.printAnalysis(analyzes);
+        assertTrue("Error: " + analyzes.errorArithmeticMean, analyzes.errorArithmeticMean < maximumError);
     }
 
     @Test
     public void layeredXorTest() {
-        double maximumError = 0.01;
+        double maximumError = 0.1;
         
         Network network = NetworkFactory.createNetwork();
         
@@ -91,24 +78,18 @@ public class SimpleNetworkTest {
         samples.add(SampleFactory.createSample(new float[]{0f, 1f}, new float[]{1f}));
         samples.add(SampleFactory.createSample(new float[]{1f, 1f}, new float[]{0f}));
 
-        NetworkLogic.train(network, samples, 50000);
-
-        System.out.println("\nAfter training:\n");
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
-        for (Sample sample : samples) {
-            NetworkLogic.propagate(network, sample.input);
-            double error = sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0);
-            System.out.println(sample.input.getFloatValue(0) + " XOR " + sample.input.getFloatValue(1) + " = "
-                    + FORMAT.format(outputLayer.states.getFloatValue(0))
-                    + " (error=" + FORMAT.format(error) + ")");
-            assertTrue("Sample error is too large (" + error + ")", maximumError > Math.abs(error));
-        }
+        NetworkLogic.train(network, samples, 20000, maximumError, 10);
+        
+        List<TestRecord> testResults = NetworkLogic.test(network, samples);
+        TestAnalyses analyzes = TestAnalysesLogic.analyze(testResults);
+        System.out.println("\n----------\nSimple network test 2: ");
+        NetworkUtils.printAnalysis(analyzes);
+        assertTrue("Error: " + analyzes.errorArithmeticMean, analyzes.errorArithmeticMean < maximumError);
     }
 
     @Test
     public void layeredRandomArrayTest() {
-        double maximumTrainError = 0.08;
-        double maximumControlError = 0.2;
+        double maximumError = 0.1;
         
         Network network = NetworkFactory.createNetwork();
 
@@ -121,7 +102,7 @@ public class SimpleNetworkTest {
         NetworkFactory.addDenseLayer(network, 
                 LayerFactory.createDenseLayer(2));
 
-        NetworkLogic.setLearningRate(network, 0.01f);
+        NetworkLogic.setLearningRate(network, 0.02f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
 
@@ -204,48 +185,13 @@ public class SimpleNetworkTest {
         controlSamples.add(SampleFactory.createSample(convertStrToFloat(
                 "ugufzgvvqdandagjjzzbbztserzawc"), new float[]{0f, 1f}));
 
-        NetworkLogic.train(network, samples, 50000);
+        NetworkLogic.train(network, samples, 30000, maximumError, 10);
 
-        System.out.println("\nAfter training:\n");
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
-        double errorHand = 0;
-        double errorReal = 0;
-        int n = 0;
-        for (Sample sample : samples) {
-            NetworkLogic.propagate(network, sample.input);
-            System.out.println("Original: " + sample.target.getFloatValue(0) + " - " + sample.target.getFloatValue(1) + " > "
-                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(1))
-                    + " (error=" + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1)) +")");
-            errorHand += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
-            errorReal += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
-            n++;
-        }
-        errorHand /= n;
-        errorReal /= n;
-        System.out.println("Average error: " + errorHand + " - " + errorReal);
-        assertTrue("Train hand set error is too large (" + errorHand + ")", maximumTrainError > errorHand);
-        assertTrue("Train real set error is too large (" + errorReal + ")", maximumTrainError > errorReal);
-
-        System.out.println();
-
-        for (Sample sample : controlSamples) {
-            NetworkLogic.propagate(network, sample.input);
-            System.out.println("Control: " + sample.target.getFloatValue(0) + " - " + sample.target.getFloatValue(1) + " > "
-                    + FORMAT.format(outputLayer.states.getFloatValue(0)) + " - "
-                    + FORMAT.format(outputLayer.states.getFloatValue(1))
-                    + " (error=" + FORMAT.format(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0))
-                    + " - " + FORMAT.format(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1)) +")");
-            errorHand += Math.abs(sample.target.getFloatValue(0) - outputLayer.states.getFloatValue(0));
-            errorReal += Math.abs(sample.target.getFloatValue(1) - outputLayer.states.getFloatValue(1));
-            n++;
-        }
-        errorHand /= n;
-        errorReal /= n;
-        System.out.println("Average error: " + errorHand + " - " + errorReal);
-        assertTrue("Control hand set error is too large (" + errorHand + ")", maximumControlError > errorHand);
-        assertTrue("Control real set error is too large (" + errorReal + ")", maximumControlError > errorReal);
+        List<TestRecord> testResults = NetworkLogic.test(network, samples);
+        TestAnalyses analyzes = TestAnalysesLogic.analyze(testResults);
+        System.out.println("\n----------\nSimple network test 3: ");
+        NetworkUtils.printAnalysis(analyzes);
+        assertTrue("Error: " + analyzes.errorArithmeticMean, analyzes.errorArithmeticMean < maximumError);
     }
     
     private static float[] convertStrToFloat(String str) {

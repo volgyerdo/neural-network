@@ -26,6 +26,8 @@ import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 import org.junit.Test;
 import volgyerdo.commons.math.tensor.Tensor;
+import volgyerdo.neural.structure.TestAnalyses;
+import volgyerdo.neural.structure.TestRecord;
 
 /**
  *
@@ -33,21 +35,19 @@ import volgyerdo.commons.math.tensor.Tensor;
  */
 public class PointCounterTest {
 
-    private static final DecimalFormat FORMAT = new DecimalFormat("0.000");
     private static final Random RANDOM_INT = new Random();
     private static final int MATRIX_SIZE = 5;
     private static final int HIDDEN_LAYER_SIZE = 8;
     private static final int MAX_POINT_COUNT = 5;
     private static final int TRAINING_SAMPLE_COUNT = 700;
-    private static final int CONTROL_SAMPLE_COUNT = 700;
-    private static final double MAX_AVERAGE_ERROR = 0.15;
-    private static final double MIN_AVERAGE_MATCH = 0.8;
+    private static final double MAX_AVERAGE_ERROR = 0.2;
 
     public PointCounterTest() {
     }
 
     @Test
     public void layeredPointCounterTest() {
+        
         Network network = NetworkFactory.createNetwork();
 
         NetworkFactory.addInputLayer(network,
@@ -61,115 +61,20 @@ public class PointCounterTest {
         NetworkFactory.addDenseLayer(network,
                 LayerFactory.createDenseLayer(MAX_POINT_COUNT + 1));
 
-        NetworkLogic.setLearningRate(network, 0.015f);
+        NetworkLogic.setLearningRate(network, 0.05f);
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
 
-        List<Sample> trainingSamples = new ArrayList<>();
-        generateSamples(trainingSamples, TRAINING_SAMPLE_COUNT);
-        
-        System.out.println("\nBefore training:\n");
-        Layer outputLayer = NetworkUtils.getOutputLayer(network);
-        float averageError = 0;
-        int matches = 0;
-        for (Sample sample : trainingSamples) {
-            NetworkLogic.propagate(network, sample.input);
-            float[] errors = new float[MAX_POINT_COUNT + 1];
-            System.out.print("Error: ");
-            float resultValue = 0;
-            int resultIndex = 0;
-            for (int i = 0; i < MAX_POINT_COUNT + 1; i++) {
-                if(resultValue < outputLayer.states.getFloatValue(i)){
-                    resultValue = outputLayer.states.getFloatValue(i);
-                    resultIndex = i;
-                }
-                errors[i] = Math.abs(sample.target.getFloatValue(i) - outputLayer.states.getFloatValue(i));
-                averageError += errors[i];
-                if (i > 0) {
-                    System.out.print(",");
-                }
-                System.out.print(FORMAT.format(errors[i]));
-            }
-            if(Float.compare(sample.target.getFloatValue(resultIndex), 1) == 0){
-                System.out.print(" > OK");
-                matches++;
-            }
-            System.out.println();
-        }
-        averageError /= trainingSamples.size() * (MAX_POINT_COUNT + 1);
-        System.out.println("Average error: " + FORMAT.format(averageError));
-        System.out.println("Average match: " + FORMAT.format(matches/(double)trainingSamples.size()) + "\n");
+        List<Sample> samples = new ArrayList<>();
+        generateSamples(samples, TRAINING_SAMPLE_COUNT);
 
-        NetworkLogic.train(network, trainingSamples, 50000);
+        NetworkLogic.train(network, samples, 50000, MAX_AVERAGE_ERROR, 10);
 
-        System.out.println("\nAfter training:\n");
-        averageError = 0;
-        matches = 0;
-        for (Sample sample : trainingSamples) {
-            NetworkLogic.propagate(network, sample.input);
-            float[] errors = new float[MAX_POINT_COUNT + 1];
-            System.out.print("Error: ");
-            float resultValue = 0;
-            int resultIndex = 0;
-            for (int i = 0; i < MAX_POINT_COUNT + 1; i++) {
-                if(resultValue < outputLayer.states.getFloatValue(i)){
-                    resultValue = outputLayer.states.getFloatValue(i);
-                    resultIndex = i;
-                }
-                errors[i] = Math.abs(sample.target.getFloatValue(i) - outputLayer.states.getFloatValue(i));
-                averageError += errors[i];
-                if (i > 0) {
-                    System.out.print(",");
-                }
-                System.out.print(FORMAT.format(errors[i]));
-            }
-            if(Float.compare(sample.target.getFloatValue(resultIndex), 1) == 0){
-                System.out.print(" > OK");
-                matches++;
-            }
-            System.out.println();
-        }
-        averageError /= trainingSamples.size() * (MAX_POINT_COUNT + 1);
-        System.out.println("Average error: " + FORMAT.format(averageError));
-        System.out.println("Average match: " + FORMAT.format(matches/(double)trainingSamples.size()) + "\n");
-
-        List<Sample> controlSamples = new ArrayList<>();
-        generateSamples(controlSamples, CONTROL_SAMPLE_COUNT);
-        
-        System.out.println("\nControl:\n");
-        averageError = 0;
-        matches = 0;
-        for (Sample sample : controlSamples) {
-            NetworkLogic.propagate(network, sample.input);
-            float[] errors = new float[MAX_POINT_COUNT + 1];
-            System.out.print("Error: ");
-            float resultValue = 0;
-            int resultIndex = 0;
-            for (int i = 0; i < MAX_POINT_COUNT + 1; i++) {
-                if(resultValue < outputLayer.states.getFloatValue(i)){
-                    resultValue = outputLayer.states.getFloatValue(i);
-                    resultIndex = i;
-                }
-                errors[i] = Math.abs(sample.target.getFloatValue(i) - outputLayer.states.getFloatValue(i));
-                averageError += errors[i];
-                if (i > 0) {
-                    System.out.print(",");
-                }
-                System.out.print(FORMAT.format(errors[i]));
-            }
-            if(Float.compare(sample.target.getFloatValue(resultIndex), 1) == 0){
-                System.out.print(" > OK");
-                matches++;
-            }
-            System.out.println();
-        }
-        averageError /= controlSamples.size() * (MAX_POINT_COUNT + 1);
-        double averageMatch = matches/(double)trainingSamples.size();
-        System.out.println("Average error: " + FORMAT.format(averageError));
-        System.out.println("Average match: " + FORMAT.format(averageMatch) + "\n");
-        
-        assertTrue("Point counter test average error (" + averageError + ")", MAX_AVERAGE_ERROR > averageError);
-        assertTrue("Point counter test average match (" + averageMatch + ")", MIN_AVERAGE_MATCH < averageMatch);
+        List<TestRecord> testResults = NetworkLogic.test(network, samples);
+        TestAnalyses analyzes = TestAnalysesLogic.analyze(testResults);
+        System.out.println("\n----------\nPoint counter test: ");
+        NetworkUtils.printAnalysis(analyzes);
+        assertTrue("Error: " + analyzes.errorArithmeticMean, analyzes.errorArithmeticMean < MAX_AVERAGE_ERROR);
     }
 
     private void generateSamples(Collection<Sample> samples, int count) {

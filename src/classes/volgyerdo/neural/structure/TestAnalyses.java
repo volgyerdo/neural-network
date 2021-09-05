@@ -21,6 +21,7 @@ package volgyerdo.neural.structure;
  */
 public class TestAnalyses {
 
+    public int sampleSize;
     public float errorGeometricMean;
     public float errorArithmeticMean;
     public float errorMedian;
