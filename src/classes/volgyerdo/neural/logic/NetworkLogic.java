@@ -15,10 +15,13 @@
  */
 package volgyerdo.neural.logic;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.io.Serializable;
 import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
@@ -160,4 +163,17 @@ public class NetworkLogic {
         return testRecord;
     }
 
+    public static void serialize(Network network, OutputStream out){
+    
+    }
+    
+    public static Network deserializeNetwork(InputStream in){
+        return null;
+    }
+    
+    
+    public static Tensor deserializeTensor(InputStream in){
+        return null;
+    }
+    
 }

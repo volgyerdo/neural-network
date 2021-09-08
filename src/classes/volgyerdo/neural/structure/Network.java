@@ -16,12 +16,12 @@
 package volgyerdo.neural.structure;
 
 import java.util.List;
-
+import java.io.Serializable;
 /**
  *
  * @author antal
  */
-public class Network{
+public class Network implements Serializable{
     
     public List<Layer> layers;
     public List<TestRecord> testData;
