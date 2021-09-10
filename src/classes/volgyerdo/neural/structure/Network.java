@@ -23,6 +23,8 @@ import java.io.Serializable;
  */
 public class Network implements Serializable{
     
+    public static final long versionUID = 1L;
+    
     public List<Layer> layers;
     public List<TestRecord> testData;
     

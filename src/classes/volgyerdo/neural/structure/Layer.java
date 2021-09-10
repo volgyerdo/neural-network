@@ -15,13 +15,16 @@
  */
 package volgyerdo.neural.structure;
 
+import java.io.Serializable;
 import volgyerdo.commons.math.tensor.Tensor;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public abstract class Layer {
+public abstract class Layer implements Serializable{
+    
+    public static final long versionUID = 1L;
 
     public Tensor states;
     

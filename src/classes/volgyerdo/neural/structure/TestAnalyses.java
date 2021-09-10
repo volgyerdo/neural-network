@@ -15,11 +15,15 @@
  */
 package volgyerdo.neural.structure;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class TestAnalyses {
+public class TestAnalyses implements Serializable{
+    
+    public static final long versionUID = 1L;
 
     public int sampleSize;
     public float errorGeometricMean;

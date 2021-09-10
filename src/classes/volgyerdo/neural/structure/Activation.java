@@ -15,12 +15,16 @@
  */
 package volgyerdo.neural.structure;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Pocze Zsolt
  */
-public class Activation {
+public class Activation implements Serializable{
 
+    public static final long versionUID = 1L;
+    
     public float shiftX;
     public float shiftY;
     public float stretchX;

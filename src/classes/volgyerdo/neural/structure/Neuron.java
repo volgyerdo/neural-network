@@ -15,11 +15,15 @@
  */
 package volgyerdo.neural.structure;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class Neuron {
+public class Neuron implements Serializable{
+    
+    public static final long versionUID = 1L;
     
     public Activation activation;
     public float state;

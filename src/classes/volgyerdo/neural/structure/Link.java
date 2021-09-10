@@ -15,11 +15,15 @@
  */
 package volgyerdo.neural.structure;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class Link {
+public class Link implements Serializable{
+    
+    public static final long versionUID = 1L;
     
     public int inputId;
     public int outputId;

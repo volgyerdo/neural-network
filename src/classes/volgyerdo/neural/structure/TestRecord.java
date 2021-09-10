@@ -15,11 +15,15 @@
  */
 package volgyerdo.neural.structure;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class TestRecord {
+public class TestRecord implements Serializable{
+    
+    public static final long versionUID = 1L;
     
     public float error;
     public long timestamp;
