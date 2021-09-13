@@ -15,7 +15,12 @@
  */
 package volgyerdo.neural.logic;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -163,12 +168,21 @@ public class NetworkLogic {
         return testRecord;
     }
 
-    public static void serialize(Network network, OutputStream out){
-    
+    public static void serialize(Network network, FileOutputStream out) throws IOException{
+        ObjectOutputStream oos;
+        oos = new ObjectOutputStream(out);
+        oos.writeObject(network);
+        oos.flush();
+        oos.close();
     }
     
-    public static Network deserializeNetwork(InputStream in){
-        return null;
+    public static Network deserializeNetwork(FileInputStream in) throws IOException, ClassNotFoundException{
+        Network network;
+        ObjectInputStream ois;
+        ois = new ObjectInputStream(in);
+        network = (Network)ois.readObject();
+        ois.close();
+        return network;
     }
     
     
