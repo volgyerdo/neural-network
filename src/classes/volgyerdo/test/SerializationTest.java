@@ -15,7 +15,6 @@ import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.LayerFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
-import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.structure.Network;
 
 /**
@@ -50,7 +49,7 @@ public class SerializationTest {
         }
         System.out.println("----Serialization-----\n");
     
-        NetworkLogic.serialize(network, new FileOutputStream("file.txt"));
+        NetworkLogic.serializeNetwork(network, new FileOutputStream("file.txt"));
         
         Network serializedNetwork = NetworkLogic.deserializeNetwork(new FileInputStream("file.txt"));
         

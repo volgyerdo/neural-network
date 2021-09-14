@@ -21,12 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.io.Serializable;
 import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
@@ -168,7 +166,7 @@ public class NetworkLogic {
         return testRecord;
     }
 
-    public static void serialize(Network network, FileOutputStream out) throws IOException{
+    public static void serializeNetwork(Network network, FileOutputStream out) throws IOException{
         ObjectOutputStream oos;
         oos = new ObjectOutputStream(out);
         oos.writeObject(network);
@@ -183,11 +181,6 @@ public class NetworkLogic {
         network = (Network)ois.readObject();
         ois.close();
         return network;
-    }
-    
-    
-    public static Tensor deserializeTensor(InputStream in){
-        return null;
     }
     
 }
