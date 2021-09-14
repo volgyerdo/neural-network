@@ -15,6 +15,7 @@
  */
 package volgyerdo.neural.logic;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 import volgyerdo.commons.math.tensor.Tensor;
 import volgyerdo.neural.structure.Activation;
 import volgyerdo.neural.structure.Network;
@@ -166,21 +168,39 @@ public class NetworkLogic {
         return testRecord;
     }
 
-    public static void serializeNetwork(Network network, FileOutputStream out) throws IOException{
+    public static void serializeNetwork(Network network, ByteArrayOutputStream out) throws IOException {
+
+        //converting network to bytearray
+        byte[] bytearray;
+
         ObjectOutputStream oos;
-        oos = new ObjectOutputStream(out);
-        oos.writeObject(network);
-        oos.flush();
-        oos.close();
+        GZIPOutputStream zos = new GZIPOutputStream(out);
+
+        try {
+            oos = new ObjectOutputStream(out);
+            oos.writeObject(network);
+            oos.flush();
+            bytearray = out.toByteArray();
+
+            zos.write(bytearray);
+            
+
+        } finally {
+            try {
+                out.close();
+                zos.close();
+            } catch (IOException ex) {
+            }
+        }
     }
-    
-    public static Network deserializeNetwork(FileInputStream in) throws IOException, ClassNotFoundException{
+
+    public static Network deserializeNetwork(FileInputStream in) throws IOException, ClassNotFoundException {
         Network network;
         ObjectInputStream ois;
         ois = new ObjectInputStream(in);
-        network = (Network)ois.readObject();
+        network = (Network) ois.readObject();
         ois.close();
         return network;
     }
-    
+
 }

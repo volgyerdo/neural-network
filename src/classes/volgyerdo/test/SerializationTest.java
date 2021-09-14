@@ -5,6 +5,7 @@
  */
 package volgyerdo.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,7 +50,9 @@ public class SerializationTest {
         }
         System.out.println("----Serialization-----\n");
     
-        NetworkLogic.serializeNetwork(network, new FileOutputStream("file.txt"));
+        
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        NetworkLogic.serializeNetwork(network, bos);
         
         Network serializedNetwork = NetworkLogic.deserializeNetwork(new FileInputStream("file.txt"));
         
