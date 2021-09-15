@@ -6,9 +6,8 @@
 package volgyerdo.test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import volgyerdo.commons.math.tensor.FloatTensor;
 import volgyerdo.commons.math.tensor.Tensor;
@@ -54,7 +53,10 @@ public class SerializationTest {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         NetworkLogic.serializeNetwork(network, bos);
         
-        Network serializedNetwork = NetworkLogic.deserializeNetwork(new FileInputStream("file.txt"));
+        byte[] data = bos.toByteArray();
+        
+        Network serializedNetwork = NetworkLogic.deserializeNetwork(
+                new ByteArrayInputStream(data));
         
         for (int i = 0; i < serializedNetwork.layers.size(); i++) {
             //System.out.println(network.layers.toString());
