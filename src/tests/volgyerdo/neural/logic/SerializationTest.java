@@ -3,31 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package volgyerdo.test;
-
-import java.io.ByteArrayOutputStream;
+package volgyerdo.neural.logic;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import volgyerdo.commons.math.tensor.FloatTensor;
 import volgyerdo.commons.math.tensor.Tensor;
-import volgyerdo.neural.logic.ActivationFactory;
-import volgyerdo.neural.logic.ActivationFactory;
-import volgyerdo.neural.logic.LayerFactory;
-import volgyerdo.neural.logic.LayerFactory;
-import volgyerdo.neural.logic.NetworkFactory;
-import volgyerdo.neural.logic.NetworkFactory;
-import volgyerdo.neural.logic.NetworkLogic;
-import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.structure.Network;
 
 /**
  *
  * @author antal
  */
+
+
 public class SerializationTest {
+    public SerializationTest(){}
     
-    public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException{
+    @Test
+    public void checkNetworks() throws IOException, ClassNotFoundException{
+    
         Network network = NetworkFactory.createNetwork();
 
         NetworkFactory.addInputLayer(network, 
@@ -43,18 +40,17 @@ public class SerializationTest {
         NetworkLogic.setActivation(network, ActivationFactory.createSigmoid());
         NetworkLogic.randomizeWeights(network);
         
-        //NetworkUtils.randomizeWeigths(weights);
         Tensor inputtensor = FloatTensor.create(Tensor.TYPE.FLOAT, 5);
         inputtensor.fill(1f);
         NetworkLogic.propagate(network, inputtensor);
         
-        for (int i = 0; i < network.layers.size(); i++) {
-            //System.out.println(network.layers.toString());
-            System.out.println(network.layers.get(i).states.toString(true));
-        }
-        System.out.println("----Serialization-----\n");
-    
-        
+//        for (int i = 0; i < network.layers.size(); i++) {
+//            //System.out.println(network.layers.toString());
+//            System.out.println(network.layers.get(i).states.toString(true));
+//        }
+//        System.out.println("----Serialization-----\n");
+//    
+//        
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         NetworkLogic.serializeNetwork(network, bos);
         
@@ -63,18 +59,22 @@ public class SerializationTest {
         Network serializedNetwork = NetworkLogic.deserializeNetwork(
                 new ByteArrayInputStream(data));
         
-        for (int i = 0; i < serializedNetwork.layers.size(); i++) {
-            //System.out.println(network.layers.toString());
-            System.out.println(serializedNetwork.layers.get(i).states.toString(true));
-        }
-        
-        System.out.println("----Training Serialized network (dif. weights)-----\n");
-        NetworkLogic.randomizeWeights(serializedNetwork);
-        NetworkLogic.propagate(serializedNetwork, inputtensor);
-        
-        for (int i = 0; i < serializedNetwork.layers.size(); i++) {
-            //System.out.println(network.layers.toString());
-            System.out.println(serializedNetwork.layers.get(i).states.toString(true));
-        }
+//        for (int i = 0; i < serializedNetwork.layers.size(); i++) {
+//            //System.out.println(network.layers.toString());
+//            System.out.println(serializedNetwork.layers.get(i).states.toString(true));
+//        }
+//        
+//        System.out.println("----Training Serialized network (dif. weights)-----\n");
+//        NetworkLogic.randomizeWeights(serializedNetwork);
+//        NetworkLogic.propagate(serializedNetwork, inputtensor);
+//        
+//        for (int i = 0; i < serializedNetwork.layers.size(); i++) {
+//            //System.out.println(network.layers.toString());
+//            System.out.println(serializedNetwork.layers.get(i).states.toString(true));
+//        }
+        int a = 1;
+        int b = 1;
+        assertEquals(a,b);
+    
     }
 }
