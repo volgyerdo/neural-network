@@ -51,11 +51,8 @@ public class SerializationTest {
         Network serializedNetwork = NetworkLogic.deserializeNetwork(
                 new ByteArrayInputStream(data));
 
-        assertEquals("Networks don't match.", network, serializedNetwork);
-        assertEquals("Input layers don't match.", NetworkUtils.getInputLayer(network), NetworkUtils.getInputLayer(serializedNetwork));
-        assertEquals("Input states don't match.", NetworkUtils.getInputStates(network), NetworkUtils.getInputStates(serializedNetwork));
-        assertEquals("Output layers don't match.", NetworkUtils.getOutputLayer(network), NetworkUtils.getOutputLayer(serializedNetwork));
-        assertEquals("Output states don't match.", NetworkUtils.getOutputStates(network), NetworkUtils.getOutputStates(serializedNetwork));
-
+        assertEquals(network, serializedNetwork);
     }
+
+
 }

@@ -16,6 +16,7 @@
 package volgyerdo.neural.structure;
 
 import java.io.Serializable;
+import java.util.Objects;
 import volgyerdo.commons.math.tensor.Tensor;
 
 /**
@@ -29,5 +30,38 @@ public class Sample implements Serializable{
     public Tensor input;
     public Tensor target;
     public int lastTrainCycle;
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.input);
+        hash = 29 * hash + Objects.hashCode(this.target);
+        hash = 29 * hash + this.lastTrainCycle;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Sample other = (Sample) obj;
+        if (this.lastTrainCycle != other.lastTrainCycle) {
+            return false;
+        }
+        if (!Objects.equals(this.input, other.input)) {
+            return false;
+        }
+        if (!Objects.equals(this.target, other.target)) {
+            return false;
+        }
+        return true;
+    }
     
 }

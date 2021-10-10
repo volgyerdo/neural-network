@@ -29,5 +29,42 @@ public class Link implements Serializable{
     public int outputId;
     public float weight;
     public float learningRate;
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + this.inputId;
+        hash = 29 * hash + this.outputId;
+        hash = 29 * hash + Float.floatToIntBits(this.weight);
+        hash = 29 * hash + Float.floatToIntBits(this.learningRate);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Link other = (Link) obj;
+        if (this.inputId != other.inputId) {
+            return false;
+        }
+        if (this.outputId != other.outputId) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.weight) != Float.floatToIntBits(other.weight)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.learningRate) != Float.floatToIntBits(other.learningRate)) {
+            return false;
+        }
+        return true;
+    }
     
 }

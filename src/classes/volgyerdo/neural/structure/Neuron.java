@@ -16,6 +16,7 @@
 package volgyerdo.neural.structure;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -27,5 +28,34 @@ public class Neuron implements Serializable{
     
     public Activation activation;
     public float state;
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.activation);
+        hash = 29 * hash + Float.floatToIntBits(this.state);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Neuron other = (Neuron) obj;
+        if (Float.floatToIntBits(this.state) != Float.floatToIntBits(other.state)) {
+            return false;
+        }
+        if (!Objects.equals(this.activation, other.activation)) {
+            return false;
+        }
+        return true;
+    }
     
 }

@@ -28,5 +28,38 @@ public class TestRecord implements Serializable{
     public float error;
     public long timestamp;
     public int runTime;
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Float.floatToIntBits(this.error);
+        hash = 67 * hash + (int) (this.timestamp ^ (this.timestamp >>> 32));
+        hash = 67 * hash + this.runTime;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TestRecord other = (TestRecord) obj;
+        if (Float.floatToIntBits(this.error) != Float.floatToIntBits(other.error)) {
+            return false;
+        }
+        if (this.timestamp != other.timestamp) {
+            return false;
+        }
+        if (this.runTime != other.runTime) {
+            return false;
+        }
+        return true;
+    }
     
 }

@@ -32,4 +32,49 @@ public class Activation implements Serializable{
     public float swish;
     public float slope;
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Float.floatToIntBits(this.shiftX);
+        hash = 97 * hash + Float.floatToIntBits(this.shiftY);
+        hash = 97 * hash + Float.floatToIntBits(this.stretchX);
+        hash = 97 * hash + Float.floatToIntBits(this.stretchY);
+        hash = 97 * hash + Float.floatToIntBits(this.swish);
+        hash = 97 * hash + Float.floatToIntBits(this.slope);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Activation other = (Activation) obj;
+        if (Float.floatToIntBits(this.shiftX) != Float.floatToIntBits(other.shiftX)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.shiftY) != Float.floatToIntBits(other.shiftY)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.stretchX) != Float.floatToIntBits(other.stretchX)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.stretchY) != Float.floatToIntBits(other.stretchY)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.swish) != Float.floatToIntBits(other.swish)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.slope) != Float.floatToIntBits(other.slope)) {
+            return false;
+        }
+        return true;
+    }
+
 }

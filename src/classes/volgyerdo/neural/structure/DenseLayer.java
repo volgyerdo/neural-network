@@ -15,6 +15,7 @@
  */
 package volgyerdo.neural.structure;
 
+import java.util.Objects;
 import volgyerdo.commons.math.tensor.Tensor;
 
 /**
@@ -28,5 +29,49 @@ public class DenseLayer extends Layer{
     public Tensor bias;
     public Tensor biasLearningRates;
     public Tensor activations;
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 67 * hash + Objects.hashCode(this.weights);
+        hash = 67 * hash + Objects.hashCode(this.weightsLearningRates);
+        hash = 67 * hash + Objects.hashCode(this.bias);
+        hash = 67 * hash + Objects.hashCode(this.biasLearningRates);
+        hash = 67 * hash + Objects.hashCode(this.activations);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        if(!super.equals(obj)){
+            return false;
+        }
+        final DenseLayer other = (DenseLayer) obj;
+        if (!Objects.equals(this.weights, other.weights)) {
+            return false;
+        }
+        if (!Objects.equals(this.weightsLearningRates, other.weightsLearningRates)) {
+            return false;
+        }
+        if (!Objects.equals(this.bias, other.bias)) {
+            return false;
+        }
+        if (!Objects.equals(this.biasLearningRates, other.biasLearningRates)) {
+            return false;
+        }
+        if (!Objects.equals(this.activations, other.activations)) {
+            return false;
+        }
+        return true;
+    }
     
 }

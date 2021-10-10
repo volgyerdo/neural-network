@@ -17,6 +17,7 @@ package volgyerdo.neural.structure;
 
 import java.util.List;
 import java.io.Serializable;
+import java.util.Objects;
 /**
  *
  * @author antal
@@ -27,5 +28,30 @@ public class Network implements Serializable{
     
     public List<Layer> layers;
     public List<TestRecord> testData;
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.layers);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Network other = (Network) obj;
+        if (!Objects.equals(this.layers, other.layers)) {
+            return false;
+        }
+        return true;
+    }
     
 }

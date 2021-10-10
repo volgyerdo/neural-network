@@ -15,6 +15,8 @@
  */
 package volgyerdo.neural.structure;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
@@ -26,5 +28,49 @@ public class GraphLayer extends Layer{
     public float[] biases;
     public int[] inputIds;
     public int[] outputIds;
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 79 * hash + Arrays.deepHashCode(this.neurons);
+        hash = 79 * hash + Arrays.deepHashCode(this.links);
+        hash = 79 * hash + Arrays.hashCode(this.biases);
+        hash = 79 * hash + Arrays.hashCode(this.inputIds);
+        hash = 79 * hash + Arrays.hashCode(this.outputIds);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        if(!super.equals(obj)){
+            return false;
+        }
+        final GraphLayer other = (GraphLayer) obj;
+        if (!Arrays.deepEquals(this.neurons, other.neurons)) {
+            return false;
+        }
+        if (!Arrays.deepEquals(this.links, other.links)) {
+            return false;
+        }
+        if (!Arrays.equals(this.biases, other.biases)) {
+            return false;
+        }
+        if (!Arrays.equals(this.inputIds, other.inputIds)) {
+            return false;
+        }
+        if (!Arrays.equals(this.outputIds, other.outputIds)) {
+            return false;
+        }
+        return true;
+    }
     
 }

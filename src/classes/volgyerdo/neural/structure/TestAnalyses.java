@@ -34,5 +34,62 @@ public class TestAnalyses implements Serializable{
     public float maxError;
     public long runTime;
     public long runPeriod;
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + this.sampleSize;
+        hash = 47 * hash + Float.floatToIntBits(this.errorGeometricMean);
+        hash = 47 * hash + Float.floatToIntBits(this.errorArithmeticMean);
+        hash = 47 * hash + Float.floatToIntBits(this.errorMedian);
+        hash = 47 * hash + Float.floatToIntBits(this.errorStandardDeviation);
+        hash = 47 * hash + Float.floatToIntBits(this.minError);
+        hash = 47 * hash + Float.floatToIntBits(this.maxError);
+        hash = 47 * hash + (int) (this.runTime ^ (this.runTime >>> 32));
+        hash = 47 * hash + (int) (this.runPeriod ^ (this.runPeriod >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TestAnalyses other = (TestAnalyses) obj;
+        if (this.sampleSize != other.sampleSize) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.errorGeometricMean) != Float.floatToIntBits(other.errorGeometricMean)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.errorArithmeticMean) != Float.floatToIntBits(other.errorArithmeticMean)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.errorMedian) != Float.floatToIntBits(other.errorMedian)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.errorStandardDeviation) != Float.floatToIntBits(other.errorStandardDeviation)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.minError) != Float.floatToIntBits(other.minError)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.maxError) != Float.floatToIntBits(other.maxError)) {
+            return false;
+        }
+        if (this.runTime != other.runTime) {
+            return false;
+        }
+        if (this.runPeriod != other.runPeriod) {
+            return false;
+        }
+        return true;
+    }
     
 }
