@@ -27,7 +27,6 @@ public class Network implements Serializable{
     public static final long versionUID = 1L;
     
     public List<Layer> layers;
-    public List<TestRecord> testData;
 
     @Override
     public int hashCode() {

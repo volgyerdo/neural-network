@@ -33,7 +33,6 @@ public class NetworkFactory {
     public static Network createNetwork() {
         Network network = new Network();
         network.layers = new ArrayList<>();
-        network.testData = new ArrayList<>();
         return network;
     }
 

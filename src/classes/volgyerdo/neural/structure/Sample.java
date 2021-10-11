@@ -29,14 +29,12 @@ public class Sample implements Serializable{
     
     public Tensor input;
     public Tensor target;
-    public int lastTrainCycle;
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 29 * hash + Objects.hashCode(this.input);
         hash = 29 * hash + Objects.hashCode(this.target);
-        hash = 29 * hash + this.lastTrainCycle;
         return hash;
     }
 
@@ -52,9 +50,6 @@ public class Sample implements Serializable{
             return false;
         }
         final Sample other = (Sample) obj;
-        if (this.lastTrainCycle != other.lastTrainCycle) {
-            return false;
-        }
         if (!Objects.equals(this.input, other.input)) {
             return false;
         }

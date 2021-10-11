@@ -41,6 +41,24 @@ public class InformationTest {
         System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
+        String[] array = new String[]{"vdsf4", "gfdbőh", "fdt", "zurő", "dbhsdh6", "78nméáüő20", "ac,áűüöog", "hgt43", "28", "öójg", "bewfdsa"};
+        double sInfo = 0;
+        double cInfo = 0;
+        for(String str : array){
+            sInfo += ShannonInformation.information(str);
+            cInfo += CompressionInformation.information(str);
+        }
+        System.out.println("Array1" + " (Shannon): " + sInfo);
+        System.out.println("Array2" + " (Compression): " + cInfo);
+        
+        s = "vdsf4gfdbőhfdtzurődbhsdh678nméáüő20ac,áűüöoghgt4328öójgbewfdsa";
+        String str = "";
+        for(int i = 0; i < s.length(); i++){
+            str = str + String.format("%8s", Integer.toBinaryString(s.charAt(i) & 0xFF)).replace(' ', '0');
+        }
+        System.out.println(str + " (Shannon): " + ShannonInformation.information(str));
+        System.out.println(str + " (Compression): " + CompressionInformation.information(str));
+        
         s = "ababababababababababababababababababababababababababababababab";
         System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));

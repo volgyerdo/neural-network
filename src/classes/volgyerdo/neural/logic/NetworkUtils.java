@@ -124,10 +124,6 @@ public class NetworkUtils {
         System.out.println();
     }
     
-    public static int getTrainingCycle(Network network){
-        return network.testData.size() - 1;
-    }
-    
     private NetworkUtils() {
 
     }

@@ -60,46 +60,58 @@ public class NetworkLogic {
         }
     }
 
-    public static void train(Network network, List<Sample> samples, int periods) {
+    public static List<TestRecord> train(Network network, List<Sample> samples, int periods) {
+        return train(network, samples, periods, null);
+    }
+    
+    public static List<TestRecord> train(Network network, List<Sample> samples, int periods, Runnable action) {
         checkSamples(network, samples);
+        List<TestRecord> testData = new ArrayList<>();
         for (int cycle = 0; cycle < periods; cycle++) {
             Sample sample = getRandomSample(samples);
-            train(network, sample);
+            testData.add(train(network, sample));
+            if (action != null) {
+                action.run();
+            }
         }
+        return testData;
+    }
+    
+    public static List<TestRecord> train(Network network, List<Sample> samples, int periods, double maxError, int iterations){
+        return train(network, samples, periods, maxError, iterations, null);
     }
 
-    public static boolean train(Network network, List<Sample> samples, int periods, double maxError, int iterations) {
+    public static List<TestRecord> train(Network network, List<Sample> samples, int periods, double maxError, int iterations, Runnable action) {
         checkSamples(network, samples);
         int testRowLength = samples.size() * 3;
         int n = 0;
+        List<TestRecord> testData = new ArrayList<>();
         for (int i = 0; i < iterations; i++) {
             NetworkLogic.randomizeWeights(network);
             for (int j = 0; j < periods; j++) {
                 n++;
                 Sample sample = getRandomSample(samples);
-                train(network, sample);
-                List<TestRecord> testData = network.testData;
+                testData.add(train(network, sample));
                 if (testData.size() >= testRowLength && j % 10 == 0) {
                     if (TestAnalysesLogic.getErrorArithmeticMean(
                             testData.subList(
                                     testData.size() - testRowLength, testData.size()))
                             < maxError / 2) {
-                        return true;
+                        return testData;
                     }
                 }
             }
         }
-        return false;
+        return testData;
     }
 
-    public static void train(Network network, Sample sample) {
+    public static TestRecord train(Network network, Sample sample) {
         long startTime = System.currentTimeMillis();
         NetworkLogic.propagate(network, sample.input);
-        network.testData.add(
-                createTestRecord(network, sample,
-                        System.currentTimeMillis(), System.currentTimeMillis() - startTime));
+        TestRecord testRecord = createTestRecord(network, sample,
+                System.currentTimeMillis(), System.currentTimeMillis() - startTime);
         NetworkLogic.backPropagate(network, sample.target);
-        sample.lastTrainCycle = network.testData.size() - 1;
+        return testRecord;
     }
 
     private static Sample getRandomSample(List<Sample> samples) {
@@ -168,15 +180,13 @@ public class NetworkLogic {
     }
 
     public static void serializeNetwork(Network network, OutputStream outputStream) throws IOException {
-        try(GZIPOutputStream zipStream = new GZIPOutputStream(outputStream);
-                ObjectOutputStream objectStream = new ObjectOutputStream(zipStream)){
+        try ( GZIPOutputStream zipStream = new GZIPOutputStream(outputStream);  ObjectOutputStream objectStream = new ObjectOutputStream(zipStream)) {
             objectStream.writeObject(network);
         }
     }
 
     public static Network deserializeNetwork(InputStream inputStream) throws IOException, ClassNotFoundException {
-        try(GZIPInputStream zipStream = new GZIPInputStream(inputStream);
-                ObjectInputStream objectStream = new ObjectInputStream(zipStream)){
+        try ( GZIPInputStream zipStream = new GZIPInputStream(inputStream);  ObjectInputStream objectStream = new ObjectInputStream(zipStream)) {
             return (Network) objectStream.readObject();
         }
     }
