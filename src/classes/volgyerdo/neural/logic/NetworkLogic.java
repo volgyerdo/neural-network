@@ -32,6 +32,7 @@ import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Sample;
 import volgyerdo.neural.structure.TestRecord;
+import volgyerdo.neural.structure.TrainAction;
 
 /**
  *
@@ -63,25 +64,25 @@ public class NetworkLogic {
     public static List<TestRecord> train(Network network, List<Sample> samples, int periods) {
         return train(network, samples, periods, null);
     }
-    
-    public static List<TestRecord> train(Network network, List<Sample> samples, int periods, Runnable action) {
+
+    public static List<TestRecord> train(Network network, List<Sample> samples, int periods, TrainAction action) {
         checkSamples(network, samples);
         List<TestRecord> testData = new ArrayList<>();
         for (int cycle = 0; cycle < periods; cycle++) {
             Sample sample = getRandomSample(samples);
             testData.add(train(network, sample));
             if (action != null) {
-                action.run();
+                action.action(network, testData);
             }
         }
         return testData;
     }
-    
-    public static List<TestRecord> train(Network network, List<Sample> samples, int periods, double maxError, int iterations){
+
+    public static List<TestRecord> train(Network network, List<Sample> samples, int periods, double maxError, int iterations) {
         return train(network, samples, periods, maxError, iterations, null);
     }
 
-    public static List<TestRecord> train(Network network, List<Sample> samples, int periods, double maxError, int iterations, Runnable action) {
+    public static List<TestRecord> train(Network network, List<Sample> samples, int periods, double maxError, int iterations, TrainAction action) {
         checkSamples(network, samples);
         int testRowLength = samples.size() * 3;
         int n = 0;
@@ -92,6 +93,9 @@ public class NetworkLogic {
                 n++;
                 Sample sample = getRandomSample(samples);
                 testData.add(train(network, sample));
+                if (action != null) {
+                    action.action(network, testData);
+                }
                 if (testData.size() >= testRowLength && j % 10 == 0) {
                     if (TestAnalysesLogic.getErrorArithmeticMean(
                             testData.subList(

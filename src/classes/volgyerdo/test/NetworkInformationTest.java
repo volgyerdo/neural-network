@@ -17,6 +17,7 @@ package volgyerdo.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import volgyerdo.commons.stat.ShannonInformation;
 import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
@@ -27,29 +28,41 @@ import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 import volgyerdo.neural.structure.TestAnalyses;
 import volgyerdo.neural.structure.TestRecord;
+import volgyerdo.neural.structure.TrainAction;
 
 /**
  *
  * @author Volgyerdo Nonprofit Kft.
  */
-public class SimpleTest {
+public class NetworkInformationTest {
 
     public static void main(String[] args) {
         Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 4);
         NetworkLogic.setLearningRate(network, 0.5f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());
+        
+        System.out.println("Before randomization: " + ShannonInformation.information(network));
+        
         NetworkLogic.randomizeWeights(network);
+        
+        System.out.println("After randomization: " + ShannonInformation.information(network));
 
         List<Sample> samples = new ArrayList<>();
         samples.add(SampleFactory.createSample(new float[]{0f, 1f}, new float[]{0.9f, -0.5f}));
         samples.add(SampleFactory.createSample(new float[]{1f, 0f}, new float[]{0.4f, 0.1f}));
 
-        NetworkLogic.train(network, samples, 5000);
+        NetworkLogic.train(network, samples, 5000, new TrainAction() {
+            @Override
+            public void action(Network network, List<TestRecord> testData) {
+                System.out.println(testData.get(testData.size() - 1).error
+                + ";" + ShannonInformation.information(network));
+            }
+
+        });
 
         List<TestRecord> testData = NetworkLogic.test(network, samples);
         TestAnalyses controlAnalysis = TestAnalysesLogic.analyze(testData);
         NetworkUtils.printAnalysis(controlAnalysis);
     }
-
 
 }
