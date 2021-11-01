@@ -17,6 +17,7 @@ package volgyerdo.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import volgyerdo.commons.math.tensor.FloatTensor;
 import volgyerdo.commons.stat.ShannonInformation;
 import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.NetworkFactory;
@@ -24,6 +25,8 @@ import volgyerdo.neural.logic.NetworkLogic;
 import volgyerdo.neural.logic.NetworkUtils;
 import volgyerdo.neural.logic.SampleFactory;
 import volgyerdo.neural.logic.TestAnalysesLogic;
+import volgyerdo.neural.structure.DenseLayer;
+import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Sample;
 import volgyerdo.neural.structure.TestAnalyses;
@@ -40,12 +43,12 @@ public class NetworkInformationTest {
         Network network = NetworkFactory.createDenseNetwork(new int[]{2}, 4);
         NetworkLogic.setLearningRate(network, 0.5f);
         NetworkLogic.setActivation(network, ActivationFactory.createTanH());
-        
-        System.out.println("Before randomization: " + ShannonInformation.information(network));
-        
+
+        System.out.println("Before randomization: " + getWeightAndBiasInfo(network));
+
         NetworkLogic.randomizeWeights(network);
-        
-        System.out.println("After randomization: " + ShannonInformation.information(network));
+
+        System.out.println("After randomization: " + getWeightAndBiasInfo(network));
 
         List<Sample> samples = new ArrayList<>();
         samples.add(SampleFactory.createSample(new float[]{0f, 1f}, new float[]{0.9f, -0.5f}));
@@ -55,7 +58,7 @@ public class NetworkInformationTest {
             @Override
             public void action(Network network, List<TestRecord> testData) {
                 System.out.println(testData.get(testData.size() - 1).error
-                + ";" + ShannonInformation.information(network));
+                        + ";" + getWeightAndBiasInfo(network));
             }
 
         });
@@ -63,6 +66,19 @@ public class NetworkInformationTest {
         List<TestRecord> testData = NetworkLogic.test(network, samples);
         TestAnalyses controlAnalysis = TestAnalysesLogic.analyze(testData);
         NetworkUtils.printAnalysis(controlAnalysis);
+    }
+
+    private static double getWeightAndBiasInfo(Network network) {
+        double information = 0;
+        for (Layer layer : network.layers) {
+            if (layer instanceof DenseLayer) {
+                information += ShannonInformation.information(
+                        ((FloatTensor) ((DenseLayer) layer).weights).values);
+                information += ShannonInformation.information(
+                        ((FloatTensor) ((DenseLayer) layer).bias).values);
+            }
+        }
+        return information;
     }
 
 }
