@@ -34,6 +34,7 @@ public class NewInformationTest {
         information("Random string (0-9, a-z, A-Z)", "EK8Pi5sv2npTfzoaMNp87QtT5kbIUQkTJzHwICCstSmg4aksHTMwztgHFg3j8AoIobN3FycCLidGeyROiNyG5itB9kxyez1LZjFFHIBjipE7hidZyiJmilXM0mwnxzlzWSfQ0xP1OuFpWosMwS1cjYt4nyv4ONx1FceWkAf8SdvDGZVzeVzq2EmOqRF6Im2iudcYRswj");
 
         information("English string", "It might not be the first thing you notice when visiting Calvert Vaux Park, where Brooklyn meets Coney Island. But stand with your back to the highway and your nose to the public housing blocks across");
+        
         information("Abab string", "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab");
 
         information("Aaaabbbb", "aaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbb");
@@ -56,14 +57,14 @@ public class NewInformationTest {
         double N = s.length();
         double n = atomicSet.size();
         double absoluteMax = maxInformation(N, n, 1);
-        for (int r = 1; r < N; r++) {
+        for (int r = 1; r <= N / 2; r++) {
             String[] parts = breakApart(s, r);
             double maxInfo = maxInformation(N, n, r);
             double actualInfo = ShannonInformation.information(parts);
             information += Math.min(actualInfo, maxInfo) / maxInfo * absoluteMax;
 
         }
-        System.out.println("\n" + note + " (" + s.length() + "): " + (information / (N - 1)));
+        System.out.println("\n" + note + " (" + s.length() + "): " + (information / (N / 2)));
     }
 
     private static double maxInformation(double N, double n, double r) {
