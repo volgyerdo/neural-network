@@ -81,7 +81,7 @@ public class LayerLogic {
         Tensor kernel = layer.kernel.copy();
 
         Tensor outputStates = prevLayer.states.convolve(kernel);
-        outputStates.multiply(layer.bias);
+        outputStates.add(layer.bias);
 
         ActivationLogic.activate(outputStates, layer.activations);
 
@@ -166,7 +166,7 @@ public class LayerLogic {
         deltaBias *= layer.biasLearningRate;
         layer.bias += deltaBias;
 
-        return delta.convolve(layer.kernel);
+        return delta.convolve(layer.kernel.rotate());
     }
 
     private static Tensor backPropagate(GraphLayer layer, Layer prevLayer, Tensor delta) {

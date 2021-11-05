@@ -32,6 +32,7 @@ public class ActivationFactory {
         activations.fillWithObject(() -> createDefaultActivation());
         return activations;
     }
+    
     public static Activation createDefaultActivation() {
         return ActivationFactory.createCopy(NetworkConstants.DEFAULT_ACTIVATION);
     }

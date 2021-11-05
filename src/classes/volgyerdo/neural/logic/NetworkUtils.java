@@ -21,6 +21,9 @@ import java.util.Random;
 import volgyerdo.commons.primitive.ArrayUtils;
 import volgyerdo.commons.primitive.PrimitiveUtils;
 import volgyerdo.commons.math.tensor.Tensor;
+import volgyerdo.neural.structure.ConvoLayer;
+import volgyerdo.neural.structure.DenseLayer;
+import volgyerdo.neural.structure.GraphLayer;
 import volgyerdo.neural.structure.Layer;
 import volgyerdo.neural.structure.Network;
 import volgyerdo.neural.structure.Link;
@@ -122,6 +125,24 @@ public class NetworkUtils {
             System.out.println();
         }
         System.out.println();
+    }
+    
+    public static void printWeights(Network network){
+       for(Layer layer : network.layers){
+            if(layer instanceof DenseLayer){
+                DenseLayer dLayer = (DenseLayer)layer;
+                System.out.println(dLayer.weights.toString(true));
+            }else if(layer instanceof ConvoLayer){
+                ConvoLayer cLayer = (ConvoLayer)layer;
+                System.out.println(cLayer.kernel.toString(true));
+            }else if(layer instanceof GraphLayer){
+                GraphLayer gLayer = (GraphLayer)layer;
+                System.out.println();
+                for(Link link : gLayer.links){
+                    System.out.print(link.weight + ", ");
+                }
+            }
+        }
     }
     
     private NetworkUtils() {
