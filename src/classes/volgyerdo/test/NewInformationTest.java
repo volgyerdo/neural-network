@@ -7,6 +7,7 @@ package volgyerdo.test;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +19,7 @@ import volgyerdo.commons.stat.ShannonInformation;
  */
 public class NewInformationTest {
 
-    private static DecimalFormat format = new DecimalFormat("0.######");
+    private static DecimalFormat format = new DecimalFormat("0.0000");
 
     public static void main(String[] args) {
         String s;
@@ -32,9 +33,9 @@ public class NewInformationTest {
         information("ax50, bx50, cx50, dx50", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddddddddddddddddddddd");
 
         information("Random string (0-9, a-z, A-Z)", "EK8Pi5sv2npTfzoaMNp87QtT5kbIUQkTJzHwICCstSmg4aksHTMwztgHFg3j8AoIobN3FycCLidGeyROiNyG5itB9kxyez1LZjFFHIBjipE7hidZyiJmilXM0mwnxzlzWSfQ0xP1OuFpWosMwS1cjYt4nyv4ONx1FceWkAf8SdvDGZVzeVzq2EmOqRF6Im2iudcYRswj");
-
+       
         information("English string", "It might not be the first thing you notice when visiting Calvert Vaux Park, where Brooklyn meets Coney Island. But stand with your back to the highway and your nose to the public housing blocks across");
-        
+      
         information("Abab string", "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab");
 
         information("Aaaabbbb", "aaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbbaaaabbbb");
@@ -61,10 +62,22 @@ public class NewInformationTest {
             String[] parts = breakApart(s, r);
             double maxInfo = maxInformation(N, n, r);
             double actualInfo = ShannonInformation.information(parts);
-            information += Math.min(actualInfo, maxInfo) / maxInfo * absoluteMax;
+            actualInfo = actualInfo / maxInfo * absoluteMax;
+            if (actualInfo > 0) {
+                actualInfo *= (actualInfo + (s.length() - lengthOfParts(parts)) * Math.log((double) r
+                        / (60.11 * Math.exp(-1.6872 * (absoluteMax / N)))))
+                        / actualInfo;
+            }
+            System.out.println(format.format(actualInfo));
+            information += actualInfo;
 
         }
-        System.out.println("\n" + note + " (" + s.length() + "): " + (information / (N / 2)));
+        System.out.println("\n" + note + " (" + s.length() + "): " + (information / (N / 2)) + "\n");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static double maxInformation(double N, double n, double r) {
@@ -80,23 +93,31 @@ public class NewInformationTest {
         for (int start = 0; start < text.length(); start += size) {
             String subString = text.substring(start, Math.min(text.length(), start + size));
             if (subString.length() == size) {
+//                ret.add(subString);
+//            } else {
+//                boolean found = false;
+//                for(String s : ret){
+//                    if(s.startsWith(subString)){
+//                        found = true;
+//                        ret.add(s);
+//                        break;
+//                    }
+//                }
+//                if(!found){
                 ret.add(subString);
-            } else {
-                boolean found = false;
-                for(String s : ret){
-                    if(s.startsWith(subString)){
-                        found = true;
-                        ret.add(s);
-                        break;
-                    }
-                }
-                if(!found){
-                    ret.add(subString);
-                }
+//                }
             }
         }
         String[] array = ret.toArray(new String[ret.size()]);
         return array;
+    }
+
+    private static int lengthOfParts(String[] parts) {
+        int length = 0;
+        for (String part : parts) {
+            length += part.length();
+        }
+        return length;
     }
 
 }
