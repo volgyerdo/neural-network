@@ -20,15 +20,24 @@ import volgyerdo.commons.stat.ShannonInformation;
 public class SpectrumInformationTest {
 
     private static DecimalFormat format = new DecimalFormat("0.0000");
+    private static DecimalFormat shortFormat = new DecimalFormat("0");
 
     public static void main(String[] args) {
+
+        information("1", "0010101111001001");
+        information("2", "1010101010101010");
+        information("3", "1111111100000000");
+
+        
         information("Random DNS", "cagtttctagctatattagcgggcacgactccactgcgcctatgcggaagcttgatcaaattttgaccagatcttaggtaacctgaacaagtcagttcgtaggcgtcgattggccgacgggtgcgaagaaaaaagtgatcgttgtccaacatctctagtacccaccgttgtgatgtacgttatacggacacgagcatatt");
 
-        information("Covid DNS", "cggcagtgaggacaatcagacaactactattcaaacaattgttgaggttcaacctcaattagagatggaacttacaccagttgttcagactattgaagtgaatagttttagtggttatttaaaacttactgacaatgtatacattaaaaatgcagacattgtggaagaagctaaaaaggtaaaaccaacagtggttgtt");
+        information("Covid DNS", "cggcagtgaggacaatcagacaactactattcaaacaattgttgaggttcaacctcaattagagatggaacttacaccagttgttcagactattgaagtgaatagttttagtggttatttaaaacttactgacaatgtatacattaaaaatgcagacattgtggaagaagctaaaaaggtaaaaccaacagtggttgtta");
 
         information("Cyclic DNS", "agctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagctagct");
 
         information("ax50, bx50, cx50, dx50", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddddddddddddddddddddd");
+        
+        information("ax100, cx100", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
 
         information("50xR1, 50xR1, 50xR1, 50xR1", "cagtttctagctatattagcgggcacgactccactgcgcctatgcggaagcagtttctagctatattagcgggcacgactccactgcgcctatgcggaagcagtttctagctatattagcgggcacgactccactgcgcctatgcggaagcagtttctagctatattagcgggcacgactccactgcgcctatgcggaag");
         
@@ -50,6 +59,8 @@ public class SpectrumInformationTest {
     }
 
     private static void information(String note, String s) {
+        double minimumInfo = 0;
+        double absoluteMax = 0;
         String[] atomicParts = breakApart(s, 1);
         Set<String> atomicSet = new HashSet<>();
         for (String p : atomicParts) {
@@ -57,25 +68,32 @@ public class SpectrumInformationTest {
         }
         int N = s.length();
         int n = atomicSet.size();
-        double atomicInfo = ShannonEntropy.entropy(atomicParts);
-        double absoluteMax = maxInformation(N, n, 1);
-        double info = Double.MAX_VALUE;
-        for (int r = 1; r <= N / 2; r++) {
-            String[] parts = breakApart(s, r);
-            double maxInfo = maxInformation(N, n, r);
-            double actualInfo = ShannonInformation.information(parts);
-            actualInfo = actualInfo / maxInfo * absoluteMax;
-            if (actualInfo == 0) {
-                actualInfo = atomicInfo * r;
-            }
-//            System.out.println(format.format(actualInfo));
-            if (actualInfo < info) {
-                info = actualInfo;
+        if (n > 1) {
+            double atomicInfo = ShannonEntropy.entropy(atomicParts);
+            absoluteMax = maxInformation(N, n, 1);
+
+            for (int r = 1; r <= N / 2; r++) {
+                String[] parts = breakApart(s, r);
+                double maxInfo = maxInformation(N, n, r);
+                double actualInfo = ShannonInformation.information(parts);
+ 
+                actualInfo = actualInfo / maxInfo * absoluteMax;
+                if (actualInfo == 0) {
+                    actualInfo = atomicInfo * r;
+                }
+
+//                System.out.println(format.format(actualInfo));
+                
+                if (minimumInfo == 0 || actualInfo < minimumInfo) {
+                    minimumInfo = actualInfo;
+                }
             }
         }
-        System.out.println(note + " (" + s.length() + "): " + info);
+        System.out.println(note + " (" + s.length() + "):  "
+                + format.format(minimumInfo) + " (" + format.format(absoluteMax) + ", " + format.format(minimumInfo / absoluteMax * 100) + "%)");
+//        System.out.println(note + " (" + s.length() + "): " + format.format((absoluteMax - minimumInfo) / absoluteMax));
         try {
-            Thread.sleep(100);
+            Thread.sleep(50);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
@@ -100,13 +118,4 @@ public class SpectrumInformationTest {
         String[] array = ret.toArray(new String[ret.size()]);
         return array;
     }
-
-    private static int lengthOfParts(String[] parts) {
-        int length = 0;
-        for (String part : parts) {
-            length += part.length();
-        }
-        return length;
-    }
-
 }
