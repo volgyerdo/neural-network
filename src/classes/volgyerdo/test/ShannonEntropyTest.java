@@ -6,7 +6,7 @@
 package volgyerdo.test;
 
 import volgyerdo.commons.stat.ShannonEntropy;
-import volgyerdo.commons.stat.ShannonInformation;
+import volgyerdo.commons.stat.SpectrumInformation;
 
 /**
  *

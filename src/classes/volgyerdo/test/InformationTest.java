@@ -6,7 +6,7 @@
 package volgyerdo.test;
 
 import volgyerdo.commons.stat.CompressionInformation;
-import volgyerdo.commons.stat.ShannonInformation;
+import volgyerdo.commons.stat.SpectrumInformation;
 
 /**
  *
@@ -18,34 +18,34 @@ public class InformationTest {
         String s;
         
         s = "abcdefghijklmnop";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "Hello, World!";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "hello world";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "123123123123";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "aaaa";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "vdsf4gfdbőhfdtzurődbhsdh678nméáüő20ac,áűüöoghgt4328öójgbewfdsa";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         String[] array = new String[]{"vdsf4", "gfdbőh", "fdt", "zurő", "dbhsdh6", "78nméáüő20", "ac,áűüöog", "hgt43", "28", "öójg", "bewfdsa"};
         double sInfo = 0;
         double cInfo = 0;
         for(String str : array){
-            sInfo += ShannonInformation.information(str);
+            sInfo += SpectrumInformation.information(str);
             cInfo += CompressionInformation.information(str);
         }
         System.out.println("Array1" + " (Shannon): " + sInfo);
@@ -56,27 +56,27 @@ public class InformationTest {
         for(int i = 0; i < s.length(); i++){
             str = str + String.format("%8s", Integer.toBinaryString(s.charAt(i) & 0xFF)).replace(' ', '0');
         }
-        System.out.println(str + " (Shannon): " + ShannonInformation.information(str));
+        System.out.println(str + " (Shannon): " + SpectrumInformation.information(str));
         System.out.println(str + " (Compression): " + CompressionInformation.information(str));
         
         s = "ababababababababababababababababababababababababababababababab";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "11111111111111111111111000000000000000000000000000000000000000";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "znTEcarbCXUll8O7vQwiTP5kdGM6bYDWmQK7ze40i9cbglnI6KIgsOM4Bndmsp";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "Répa, retek mogyoró, korán reggel ritkán rikkant a rigó!";
-        System.out.println(s + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println(s + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println(s + " (Compression): " + CompressionInformation.information(s));
         
         s = "In the near-equilibrium regime, with the input of B maintained at a reduced level, the\n" +
@@ -151,7 +151,7 @@ public class InformationTest {
 "b). The transition from conduction to convection is marked by increased thermal dissipation.\n" +
 "Hence, in this particular example the change from one mode to the other is itself governed by the\n" +
 "dispersion principle.";
-        System.out.println("Log English text" + " (Shannon): " + ShannonInformation.information(s));
+        System.out.println("Log English text" + " (Shannon): " + SpectrumInformation.information(s));
         System.out.println("Log English text" + " (Compression): " + CompressionInformation.information(s));
         
     }
