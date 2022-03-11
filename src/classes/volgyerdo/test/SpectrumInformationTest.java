@@ -6,8 +6,6 @@
 package volgyerdo.test;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 import volgyerdo.commons.stat.SpectrumInformation;
 
 /**
@@ -64,16 +62,7 @@ public class SpectrumInformationTest {
     }
 
     private static void information(String note, String value) {
-        System.out.println(note + ": " + format.format(SpectrumInformation.information(value))
-                + " - " + format.format(SpectrumInformation.information(parts(value))));
-    }
-
-    private static List<String> parts(String s) {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < s.length(); i++) {
-            list.add(s.substring(i, i + 1));
-        }
-        return list;
+        System.out.println(note + ": " + format.format(SpectrumInformation.information(value)));
     }
 
 }
