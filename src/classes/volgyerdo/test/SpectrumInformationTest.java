@@ -7,6 +7,7 @@ package volgyerdo.test;
 
 import java.text.DecimalFormat;
 import volgyerdo.commons.stat.SpectrumInformation;
+import volgyerdo.commons.stat.SpectrumInformation1;
 
 /**
  *
@@ -14,7 +15,7 @@ import volgyerdo.commons.stat.SpectrumInformation;
  */
 public class SpectrumInformationTest {
 
-    private static DecimalFormat format = new DecimalFormat("0.0000");
+    private static DecimalFormat format = new DecimalFormat("0");
 
     public static void main(String[] args) {
 
@@ -59,10 +60,16 @@ public class SpectrumInformationTest {
         information("Összes karakter x 3", "0123456789öüóqwertzuiopőúasdfghjkléáűíyxcvbnm,.-§'+!%/=()ÖÜÓQWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNM?:_¬~>*÷×$ß¤łŁ|Ä¶ŧ–€Í0123456789öüóqwertzuiopőúasdfghjkléáűíyxcvbnm,.-§'+!%/=()ÖÜÓQWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNM?:_¬~>*÷×$ß¤łŁ|Ä¶ŧ–€Í0123456789öüóqwertzuiopőúasdfghjkléáűíyxcvbnm,.-§'+!%/=()ÖÜÓQWERTZUIOPŐÚASDFGHJKLÉÁŰÍYXCVBNM?:_¬~>*÷×$ß¤łŁ|Ä¶ŧ–€Í");
 
         information("1-9 x 3", "123456789123456789123456789");
+        
+        information("A", "123456789123456789123456789");
+        
+        information("B", "223456789123456789123456789");
+        
+        information("1", "1");
     }
 
     private static void information(String note, String value) {
-        System.out.println(note + ": " + format.format(SpectrumInformation.information(value)));
+        System.out.println(note + ";" + value.length() + ";" + format.format(SpectrumInformation.information(value))+ ";" + format.format(SpectrumInformation1.information(value)));
     }
 
 }
