@@ -8,6 +8,7 @@ module volgyerdo.neural {
     
     requires java.desktop;
     requires volgyerdo.commons;
+    requires volgyerdo.information;
     
     exports volgyerdo.neural.logic;
     exports volgyerdo.neural.structure;

@@ -18,7 +18,7 @@ package volgyerdo.test;
 import java.util.ArrayList;
 import java.util.List;
 import volgyerdo.commons.math.tensor.FloatTensor;
-import volgyerdo.commons.stat.ShannonInformation;
+import volgyerdo.information.ShannonInformation;
 import volgyerdo.neural.logic.ActivationFactory;
 import volgyerdo.neural.logic.NetworkFactory;
 import volgyerdo.neural.logic.NetworkLogic;
